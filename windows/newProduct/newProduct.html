@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <title>Nuevo Producto</title>
+</head>
+
+<body>
+    <div class="container mt-3">
+        <h1>Alta de Nuevo Producto</h1>
+        <form id="productForm">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="productCode">Codigo</label>
+                        <input type="text" class="form-control" id="productCode"
+                            placeholder="Escriba o escanee codigo de barras." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productName">Nombre</label>
+                        <input type="text" class="form-control" id="productName" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <img class="img-thumbnail redonform-control w-50 mt-4" src="./sin_imagen.png" alt="" srcset="">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="productDescription" class="form-label mt-2">Descripcion</label>
+                <textarea class="form-control w-75" id="productDescription" rows="3"></textarea>
+            </div>
+            <div class="form-group w-75">
+                <label for="productCategory">Categoria</label>
+                <select class="form-select" id="productCategory">
+                    <option>Remeras</option>
+                    <option>Pantalones</option>
+                </select>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Controla Stock
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked="">
+                <label class="form-check-label" for="flexCheckChecked">
+                    Checked checkbox
+                </label>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="mt-5 btn btn-secondary">Cancelar</button>
+                <button type="submit" class="mt-5 btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
