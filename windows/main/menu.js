@@ -46,7 +46,7 @@ const menuTemplate = [
   {
     label: 'Compras',
     submenu: [
-      {label: 'Ingresar Compra', click: ()=>{}},
+      {label: 'Ingresar Compra', click: ()=>{windowManager.createWindow("newPurchase",600,600) }},
       {label: 'Eliminar Compra', click: ()=>{}},
       {type: 'separator'},
       {label: 'Ingresar Gasto', click: ()=>{}},
