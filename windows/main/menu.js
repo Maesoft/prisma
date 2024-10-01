@@ -35,7 +35,7 @@ const menuTemplate = [
   {
     label: 'Productos',
     submenu: [
-      { label: 'Nuevo Producto', click: () => { windowManager.createWindow("newProduct",600,600) } },
+      { label: 'Nuevo Producto', click: () => { windowManager.createWindow("newProduct",800,600) } },
       { label: 'Eliminar Producto', click: () => { /* Función para eliminar producto */ } },
       { label: 'Modificar Producto', click: () => { /* Función para modificar producto */ } },
       { type: 'separator' },
@@ -46,7 +46,7 @@ const menuTemplate = [
   {
     label: 'Compras',
     submenu: [
-      {label: 'Ingresar Compra', click: ()=>{windowManager.createWindow("newPurchase",600,600) }},
+      {label: 'Ingresar Compra', click: ()=>{windowManager.createWindow("newPurchase",800,600) }},
       {label: 'Eliminar Compra', click: ()=>{}},
       {type: 'separator'},
       {label: 'Ingresar Gasto', click: ()=>{}},
@@ -59,7 +59,7 @@ const menuTemplate = [
   {
     label: 'Ventas',
     submenu: [
-      {label: 'Ingresar Venta', click: ()=>{}},
+      {label: 'Ingresar Venta', click: ()=>{windowManager.createWindow("newSale",800,600)}},
       {label: 'Eliminar Venta', click: ()=>{}},
       {type: 'separator'},
       {label: 'Resumen de Ventas', click:()=>{}},

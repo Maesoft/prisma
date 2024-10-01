@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <title>Nueva Venta</title>
+</head>
+
+<body>
+    <div class="container mt-3">
+        <h1 class="text-center mb-4">Punto de Venta</h1>
+
+        <!-- Código del Cliente -->
+        <div class="input-container">
+            <div class="w-50">
+                <label for="codigoCliente" class="form-label">Código del Cliente</label>
+                <input type="text" id="codigoCliente" class="form-control" placeholder="Ingrese código de cliente"
+                    oninput="buscarCliente()">
+                <label id="nombreCliente" class="form-label text-muted">Nombre del Cliente</label>
+            </div>
+        </div>
+
+        <!-- Código de Barras del Producto -->
+        <div class="input-container">
+            <div class="mt-2 w-100">
+                <label for="codigoProducto" class="form-label">Código de Barras del Producto</label>
+                <input type="text" id="codigoProducto" class="form-control" placeholder="Ingrese código de barras"
+                    onkeypress="agregarProducto(event)">
+            </div>
+        </div>
+
+        <!-- Tabla de productos -->
+        <table class="mt-2 table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Código</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody id="tablaProductos">
+                <!-- Los productos se agregarán aquí -->
+            </tbody>
+        </table>
+
+        <!-- Total y botones -->
+
+        <div class="text-end">
+            <span class="label-total">Total: $</span>
+            <span id="total" class="label-total">0.00</span>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-success btn-custom me-2" onclick="cobrar()">Cobrar</button>
+            <button class="btn btn-danger btn-custom" onclick="cancelar()">Cancelar</button>
+        </div>
+    </div>
+
+</body>
+
+</html>
