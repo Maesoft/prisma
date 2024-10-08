@@ -13,7 +13,7 @@ const menuTemplate = [
   {
     label: 'Proveedores',
     submenu: [
-      { label: 'Nuevo Proveedor', click: () => { windowManager.createWindow("newProvider",800,600)} },
+      { label: 'Nuevo Proveedor', click: () => { windowManager.createWindow("newProvider",800,600,true)} },
       { label: 'Eliminar Proveedor', click: () => { /* Función para eliminar proveedor */ } },
       { label: 'Modificar Proveedor', click: () => { /* Función para modificar proveedor */ } },
       { type: 'separator' },
@@ -24,7 +24,7 @@ const menuTemplate = [
   {
     label: 'Clientes',
     submenu: [
-      { label: 'Nuevo Cliente', click: () => { windowManager.createWindow("newClient",800,600) } },
+      { label: 'Nuevo Cliente', click: () => { windowManager.createWindow("newClient",800,600,true) } },
       { label: 'Eliminar Cliente', click: () => { /* Función para eliminar cliente */ } },
       { label: 'Modificar Cliente', click: () => { /* Función para modificar cliente */ } },
       { type: 'separator' },
@@ -35,7 +35,7 @@ const menuTemplate = [
   {
     label: 'Productos',
     submenu: [
-      { label: 'Nuevo Producto', click: () => { windowManager.createWindow("newProduct",800,600) } },
+      { label: 'Nuevo Producto', click: () => { windowManager.createWindow("newProduct",800,600,true) } },
       { label: 'Eliminar Producto', click: () => { /* Función para eliminar producto */ } },
       { label: 'Modificar Producto', click: () => { /* Función para modificar producto */ } },
       { type: 'separator' },
@@ -46,7 +46,7 @@ const menuTemplate = [
   {
     label: 'Compras',
     submenu: [
-      {label: 'Ingresar Compra', click: ()=>{windowManager.createWindow("newPurchase",800,600) }},
+      {label: 'Ingresar Compra', click: ()=>{windowManager.createWindow("newPurchase",800,600,true) }},
       {label: 'Eliminar Compra', click: ()=>{}},
       {type: 'separator'},
       {label: 'Ingresar Gasto', click: ()=>{}},
@@ -59,7 +59,7 @@ const menuTemplate = [
   {
     label: 'Ventas',
     submenu: [
-      {label: 'Ingresar Venta', click: ()=>{windowManager.createWindow("newSale",800,600)}},
+      {label: 'Ingresar Venta', click: ()=>{windowManager.createWindow("newSale",800,600,true)}},
       {label: 'Eliminar Venta', click: ()=>{}},
       {type: 'separator'},
       {label: 'Resumen de Ventas', click:()=>{}},
@@ -69,7 +69,7 @@ const menuTemplate = [
   {
     label: 'Caja',
     submenu: [
-      {label: 'Apertura de Caja', click: ()=>{}},
+      {label: 'Apertura de Caja', click: ()=>{windowManager.createWindow("openCash",400,300,false)}},
       {label: 'Cierre de Caja', click: ()=>{}},
       {type: 'separator'},
       {label: 'Ingresos', click:()=>{}},

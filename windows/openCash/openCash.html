@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../css/bootstrap.min.css">
+  <title>Document</title>
+</head>
+<body class="overflow-hidden">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header text-center bg-primary text-white">
+          <h4>Apertura de Caja</h4>
+        </div>
+        <div class="card-body">
+          <form>
+            <div class="mb-3">
+              <label for="montoInicial" class="form-label">Monto Inicial:</label>
+              <input type="number" class="form-control" id="montoInicial" placeholder="Ingrese el monto inicial en caja"
+                required>
+            </div>
+            <div class="mb-3">
+              <label for="fechaHora" class="form-label">Fecha y Hora:</label>
+              <input type="text" class="form-control" id="fechaHora" value="" readonly>
+            </div>
+            <div class="d-flex justify-content-between">
+              <button type="submit" class="btn btn-primary">Abrir Caja</button>
+              <button type="button" onclick="window.close()" class="btn btn-secondary">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

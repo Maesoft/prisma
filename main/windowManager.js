@@ -22,7 +22,7 @@ class WindowManager {
     });
   }
 
-  createWindow(name, width, height) {
+  createWindow(name, width, height, frame) {
     if (this.windows[name]) {
       this.windows[name].show();
       return;
@@ -33,8 +33,7 @@ class WindowManager {
       modal: true,
       width,
       height,
-      minHeight:600,
-      minWidth:800,
+      frame,
       contextIsolation: true,
       webPreferences: {
         preload: path.join(__dirname, '../preload/preload.js')

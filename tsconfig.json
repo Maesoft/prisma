@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "strictPropertyInitialization": false, 
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "outDir": "./dist",
+        "sourceMap": true
+      },
+    "include": ["entity/**/*.ts"]
+}
