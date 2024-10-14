@@ -1,13 +1,15 @@
 {
-    "compilerOptions": {
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "strictPropertyInitialization": false, 
-        "strict": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "outDir": "./dist",
-        "sourceMap": true
-      },
-    "include": ["entity/**/*.ts"]
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictNullChecks": false,
+  },
+  "include": ["entities/**/*.ts"],   // Asegúrate que coincida con tu estructura
+  "exclude": ["node_modules", "dist"]  // Excluye carpetas innecesarias
 }
