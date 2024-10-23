@@ -11,8 +11,8 @@ export const AppDataSource = new DataSource({
 
 AppDataSource.initialize()
     .then(() => {
-        alert("¡Conexión a la base de datos establecida con éxito!");
+        console.log("¡Conexión a la base de datos establecida con éxito!");
     })
     .catch((err) => {
-        alert("Error al inicializar la conexión a la base de datos:"+err);
+        console.log("Error al inicializar la conexión a la base de datos:"+err);
     });

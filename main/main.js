@@ -1,14 +1,13 @@
 const { app, ipcMain, Menu } = require('electron');
-const { getRepository } = require('typeorm');  
-const {Provider}=require('../entities/Provider')
+const { Provider } = require('../entities/Provider')
+const { AppDataSource } = require ('./data-source');
 const WindowManager = require('./windowManager');
 const { menuTemplate } = require('../windows/main/menu');
 
-
-app.on('ready', () => {
+//Manejo de la App
+app.on('ready', async () => {
   WindowManager.createMainWindow();
-  const menu = Menu.buildFromTemplate(menuTemplate);
-  
+  const menu = Menu.buildFromTemplate(menuTemplate);  
   Menu.setApplicationMenu(menu);
 });
 
@@ -24,15 +23,15 @@ app.on('activate', () => {
   }
 });
 
+
+//Funciones que interactuan con la BD
 ipcMain.handle('add-provider', async (event, providerData)=> {
   try {
-    const providerRepository = getRepository(Provider);
+    const providerRepository = AppDataSource.getRepository(Provider)
     const newProvider = providerRepository.create(providerData); 
     await providerRepository.save(newProvider);
     return { success: true, message: 'Proveedor guardado exitosamente' };
-
   } catch (error) {
-
     console.error(error);
     return { success: false, message: 'Error al guardar el proveedor' };
   }

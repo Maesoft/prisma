@@ -10,6 +10,6 @@
     "emitDecoratorMetadata": true,
     "strictNullChecks": false,
   },
-  "include": ["entities/**/*.ts"],   // Asegúrate que coincida con tu estructura
+  "include": ["entities/**/*.ts", "main/**/*.ts"],   // Asegúrate que coincida con tu estructura
   "exclude": ["node_modules", "dist"]  // Excluye carpetas innecesarias
 }

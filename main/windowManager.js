@@ -15,7 +15,7 @@ class WindowManager {
         preload: path.join(__dirname, '../preload/preload.js')
       }
     });
-    
+
     this.mainWindow.loadFile(path.join(__dirname, '../windows/main/main.html'));
     this.mainWindow.on('closed', () => {
       this.mainWindow = null;
@@ -29,18 +29,20 @@ class WindowManager {
     }
 
     this.windows[name] = new BrowserWindow({
-      parent: this.mainWindow, 
+      parent: this.mainWindow,
       modal: true,
       width,
       height,
       frame,
       contextIsolation: true,
+      enableRemoteModule: false,
+      nodeIntegration: false,
       webPreferences: {
         preload: path.join(__dirname, '../preload/preload.js')
       }
     });
-    
-    // this.windows[name].webContents.openDevTools(); 
+
+    this.windows[name].webContents.openDevTools();
 
     this.windows[name].setMenu(null);
     this.windows[name].loadFile(path.join(__dirname, `../windows/${name}/${name}.html`));
