@@ -16,7 +16,7 @@ class WindowManager {
       }
     });
 
-    this.mainWindow.loadFile(path.join(__dirname, '../windows/main/main.html'));
+    this.mainWindow.loadFile(path.join(__dirname, '../windows/main.html'));
     this.mainWindow.on('closed', () => {
       this.mainWindow = null;
     });
@@ -45,7 +45,7 @@ class WindowManager {
     this.windows[name].webContents.openDevTools();
 
     this.windows[name].setMenu(null);
-    this.windows[name].loadFile(path.join(__dirname, `../windows/${name}/${name}.html`));
+    this.windows[name].loadFile(path.join(__dirname, `../windows/${name}.html`));
 
     this.windows[name].on('closed', () => {
       delete this.windows[name];

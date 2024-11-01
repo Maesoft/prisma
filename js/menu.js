@@ -1,4 +1,4 @@
-const windowManager = require("../../main/windowManager");
+const windowManager = require("../main/windowManager");
 
 const menuTemplate = [
   {
@@ -39,7 +39,6 @@ const menuTemplate = [
       { label: 'Eliminar Producto', click: () => { /* Función para eliminar producto */ } },
       { label: 'Modificar Producto', click: () => { /* Función para modificar producto */ } },
       { type: 'separator' },
-      { label: 'Resumen de Stock', click: () => { /* Función para resumen de stock */ } },
       { label: 'Lista de Precios', click: () => { /* Función para lista de precios */ } }
     ]
   },
@@ -64,6 +63,20 @@ const menuTemplate = [
       {type: 'separator'},
       {label: 'Resumen de Ventas', click:()=>{}},
       {label: 'Facturas', click:()=>{}}
+    ]
+  },
+  {
+    label: 'Stock',
+    submenu: [
+      {label: 'Ingreso de Stock', click: ()=>{windowManager.createWindow("stockEntry",400,300,false)}},
+      {label: 'Egreso de Stock', click: ()=>{windowManager.createWindow("stockIssue",400,300,false)}},
+      {type: 'separator'},
+      {label: 'Resumen de Stock', click:()=>{}},
+      {type: 'separator'},
+      {label: 'Stock Minimo', click:()=>{}},
+      {type: 'separator'},
+      {label: 'Comparar Stock Fisico', click:()=>{}},
+      {label: 'Consultar Movimientos', click:()=>{}},
     ]
   },
   {

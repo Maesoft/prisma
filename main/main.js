@@ -2,7 +2,7 @@ const { app, ipcMain, Menu } = require('electron');
 const { Provider } = require('../entities/Provider')
 const { AppDataSource } = require ('./data-source');
 const WindowManager = require('./windowManager');
-const { menuTemplate } = require('../windows/main/menu');
+const { menuTemplate } = require('../js/menu');
 
 //Manejo de la App
 app.on('ready', async () => {
