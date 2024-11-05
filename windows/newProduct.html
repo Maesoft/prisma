@@ -14,52 +14,61 @@
         <h1>Alta de Nuevo Producto</h1>
         <form id="productForm">
             <div class="row">
-                <div class="col">
+                <div class="col-md-6">
                     <div class="form-group">
-                        <label for="productCode">Codigo</label>
+                        <label for="productCode">Código</label>
                         <input type="text" class="form-control" id="productCode"
-                            placeholder="Escriba o escanee codigo de barras." required>
+                            placeholder="Escriba o escanee código de barras." required>
                     </div>
                     <div class="form-group">
                         <label for="productName">Nombre</label>
                         <input type="text" class="form-control" id="productName" required>
                     </div>
-                </div>
-                <div class="col">
+
                     <div class="form-group">
-                        <img class="img-thumbnail redonform-control w-50 mt-4" src="../assets/sin_imagen.png" alt="" srcset="">
+                        <label for="productDescription" class="form-label mt-2">Descripción</label>
+                        <textarea class="form-control" id="productDescription" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategory">Categoría</label>
+                        <select class="form-select" id="productCategory">
+                            <option>Remeras</option>
+                            <option>Pantalones</option>
+                        </select>
+                    </div>
+
+
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group text-center mt-2">
+                        <img class="img-thumbnail rounded w-75 mt-4" src="../assets/sin_imagen.png"
+                            alt="Imagen del producto">
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="productDescription" class="form-label mt-2">Descripcion</label>
-                <textarea class="form-control w-75" id="productDescription" rows="3"></textarea>
-            </div>
-            <div class="form-group w-75">
-                <label for="productCategory">Categoria</label>
-                <select class="form-select" id="productCategory">
-                    <option>Remeras</option>
-                    <option>Pantalones</option>
-                </select>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">
-                    Controla Stock
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked="">
-                <label class="form-check-label" for="flexCheckChecked">
-                    Controla Vencimiento
-                </label>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="mt-5 btn btn-secondary">Cancelar</button>
-                <button type="submit" class="mt-5 btn btn-primary">Guardar</button>
+                <div class="form-group">
+                    <div class="form-check mt-4 t">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Controla Stock
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                        <label class="form-check-label" for="flexCheckChecked">
+                            Controla Vencimiento
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group mt-5 text-center">
+                    <button type="button" class="btn btn-secondary"
+                        onclick="document.getElementById('productForm').reset();">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
             </div>
         </form>
     </div>
+
+    <script src="../js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

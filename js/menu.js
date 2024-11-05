@@ -13,7 +13,7 @@ const menuTemplate = [
   {
     label: 'Proveedores',
     submenu: [
-      { label: 'Nuevo Proveedor', click: () => { windowManager.createWindow("newProvider",800,600,true)} },
+      { label: 'Nuevo Proveedor', click: () => { windowManager.createWindow("newProvider",800,600,true,false)} },
       { label: 'Eliminar Proveedor', click: () => { /* Función para eliminar proveedor */ } },
       { label: 'Modificar Proveedor', click: () => { /* Función para modificar proveedor */ } },
       { type: 'separator' },
@@ -24,7 +24,7 @@ const menuTemplate = [
   {
     label: 'Clientes',
     submenu: [
-      { label: 'Nuevo Cliente', click: () => { windowManager.createWindow("newClient",800,600,true) } },
+      { label: 'Nuevo Cliente', click: () => { windowManager.createWindow("newClient",800,600,true, false) } },
       { label: 'Eliminar Cliente', click: () => { /* Función para eliminar cliente */ } },
       { label: 'Modificar Cliente', click: () => { /* Función para modificar cliente */ } },
       { type: 'separator' },
@@ -35,7 +35,7 @@ const menuTemplate = [
   {
     label: 'Productos',
     submenu: [
-      { label: 'Nuevo Producto', click: () => { windowManager.createWindow("newProduct",800,600,true) } },
+      { label: 'Nuevo Producto', click: () => { windowManager.createWindow("newProduct",800,600,true, false) } },
       { label: 'Eliminar Producto', click: () => { /* Función para eliminar producto */ } },
       { label: 'Modificar Producto', click: () => { /* Función para modificar producto */ } },
       { type: 'separator' },
@@ -45,7 +45,7 @@ const menuTemplate = [
   {
     label: 'Compras',
     submenu: [
-      {label: 'Ingresar Compra', click: ()=>{windowManager.createWindow("newPurchase",800,600,true) }},
+      {label: 'Ingresar Compra', click: ()=>{windowManager.createWindow("newPurchase",800,600,true, false) }},
       {label: 'Eliminar Compra', click: ()=>{}},
       {type: 'separator'},
       {label: 'Ingresar Gasto', click: ()=>{}},
@@ -58,7 +58,7 @@ const menuTemplate = [
   {
     label: 'Ventas',
     submenu: [
-      {label: 'Ingresar Venta', click: ()=>{windowManager.createWindow("newSale",800,600,true)}},
+      {label: 'Ingresar Venta', click: ()=>{windowManager.createWindow("newSale",800,600,true, false)}},
       {label: 'Eliminar Venta', click: ()=>{}},
       {type: 'separator'},
       {label: 'Resumen de Ventas', click:()=>{}},
@@ -68,8 +68,8 @@ const menuTemplate = [
   {
     label: 'Stock',
     submenu: [
-      {label: 'Ingreso de Stock', click: ()=>{windowManager.createWindow("stockEntry",400,300,false)}},
-      {label: 'Egreso de Stock', click: ()=>{windowManager.createWindow("stockIssue",400,300,false)}},
+      {label: 'Ingreso de Stock', click: ()=>{windowManager.createWindow("stockEntry",800,450,true,true)}},
+      {label: 'Egreso de Stock', click: ()=>{windowManager.createWindow("stockIssue",400,300,true, false)}},
       {type: 'separator'},
       {label: 'Resumen de Stock', click:()=>{}},
       {type: 'separator'},
@@ -82,7 +82,7 @@ const menuTemplate = [
   {
     label: 'Caja',
     submenu: [
-      {label: 'Apertura de Caja', click: ()=>{windowManager.createWindow("openCash",400,300,false)}},
+      {label: 'Apertura de Caja', click: ()=>{windowManager.createWindow("openCash",400,300,false, true)}},
       {label: 'Cierre de Caja', click: ()=>{}},
       {type: 'separator'},
       {label: 'Ingresos', click:()=>{}},

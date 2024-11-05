@@ -15,14 +15,14 @@ class WindowManager {
         preload: path.join(__dirname, '../preload/preload.js')
       }
     });
-
+    this.mainWindow.maximize()
     this.mainWindow.loadFile(path.join(__dirname, '../windows/main.html'));
     this.mainWindow.on('closed', () => {
       this.mainWindow = null;
     });
   }
 
-  createWindow(name, width, height, frame) {
+  createWindow(name, width, height, frame, modal) {
     if (this.windows[name]) {
       this.windows[name].show();
       return;
@@ -30,10 +30,15 @@ class WindowManager {
 
     this.windows[name] = new BrowserWindow({
       parent: this.mainWindow,
-      modal: true,
       width,
       height,
       frame,
+      modal,
+      resizable: false,
+      maximizable: false,
+      minimizable: true,
+      closable: true,
+      titleBarStyle: 'default',
       contextIsolation: true,
       enableRemoteModule: false,
       nodeIntegration: false,
