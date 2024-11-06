@@ -1,5 +1,4 @@
-document.getElementById('providerForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
+const newProvider = async () => {
   const providerData = {
     razon_social: document.getElementById('companyName').value,
     cuit: document.getElementById('cuit').value,
@@ -8,13 +7,12 @@ document.getElementById('providerForm').addEventListener('submit', async (e) => 
     email: document.getElementById('email').value,
     regimen: document.getElementById('regimen').value
   };
-
-  const result = await window.prismaFunctions.addProvider(providerData)
-
-  if (result.success) {
-    alert('Proveedor guardado exitosamente');
+  const query = await window.prismaFunctions.addProvider(providerData)
+  if (query.success) {
+    alert(query.message);
     window.close();
   } else {
-    alert(result.message);
+    alert(query.message);
   }
-});
+}
+

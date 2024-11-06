@@ -19,11 +19,11 @@ __decorate([
     __metadata("design:type", Number)
 ], Provider.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", String)
 ], Provider.prototype, "razon_social", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", Number)
 ], Provider.prototype, "cuit", void 0);
 __decorate([

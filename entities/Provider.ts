@@ -5,10 +5,10 @@ export class Provider {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({unique:true})
     razon_social: string;
 
-    @Column()
+    @Column({unique:true})
     cuit: number;
 
     @Column()

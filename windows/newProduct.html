@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css">
+    <script defer src="../js/products.js"></script>
     <title>Nuevo Producto</title>
 </head>
-
 <body>
     <div class="container mt-3">
         <h1>Alta de Nuevo Producto</h1>
@@ -41,34 +41,25 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group text-center mt-2">
-                        <img class="img-thumbnail rounded w-75 mt-4" src="../assets/sin_imagen.png"
+                        <img class="img-thumbnail rounded w-75 mt-4" id="productImage" src="../assets/sin_imagen.png"
                             alt="Imagen del producto">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-check mt-4 t">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
+                        <input class="form-check-input" type="checkbox" value="" id="productControlStock" checked>
+                        <label class="form-check-label" for="productControlStock">
                             Controla Stock
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                        <label class="form-check-label" for="flexCheckChecked">
-                            Controla Vencimiento
                         </label>
                     </div>
                 </div>
                 <div class="form-group mt-5 text-center">
-                    <button type="button" class="btn btn-secondary"
-                        onclick="document.getElementById('productForm').reset();">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.close()">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="newProduct()">Guardar</button>
                 </div>
             </div>
         </form>
     </div>
-
-    <script src="../js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

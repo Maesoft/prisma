@@ -33,6 +33,6 @@ ipcMain.handle('add-provider', async (event, providerData)=> {
     return { success: true, message: 'Proveedor guardado exitosamente' };
   } catch (error) {
     console.error(error);
-    return { success: false, message: 'Error al guardar el proveedor' };
+    return { success: false, message: error };
   }
 })
