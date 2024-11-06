@@ -15,4 +15,3 @@ const newProvider = async () => {
     alert(query.message);
   }
 }
-

@@ -9,6 +9,7 @@
     <script defer src="../js/products.js"></script>
     <title>Nuevo Producto</title>
 </head>
+
 <body>
     <div class="container mt-3">
         <h1>Alta de Nuevo Producto</h1>
@@ -31,31 +32,46 @@
                     </div>
                     <div class="form-group">
                         <label for="productCategory">Categoría</label>
-                        <select class="form-select" id="productCategory">
-                            <option>Remeras</option>
-                            <option>Pantalones</option>
-                        </select>
+                        <div class="row">
+                            <div class="col-10">
+                                <select class="form-select" id="productCategory">
+                                    <option>Remeras</option>
+                                    <option>Pantalones</option>
+                                </select>
+                            </div>
+                            <div class="col-2 mt-1">
+                                <button>➕</button>
+                            </div>
+                        </div>
                     </div>
-
-
+                    <div class="form-group">
+                        <label class="form-check-label" for="productControlStock">Stock Inicial</label>
+                        <input type="number" class="form-control" id="initialStock" value="0" required>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group text-center mt-2">
                         <img class="img-thumbnail rounded w-75 mt-4" id="productImage" src="../assets/sin_imagen.png"
                             alt="Imagen del producto">
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="form-check mt-4 t">
-                        <input class="form-check-input" type="checkbox" value="" id="productControlStock" checked>
-                        <label class="form-check-label" for="productControlStock">
-                            Controla Stock
-                        </label>
+                    <div class="row mt-4">
+                        <div class="form-group mt-1 col-4">
+                            <label for="productCost">Costo</label>
+                            <input type="text" class="form-control" id="productCost" placeholder="$ 0,00" required>
+                        </div>
+                        <div class="form-group mt-1 col-4">
+                            <label for="productPrice1">Precio Venta 1</label>
+                            <input type="number" class="form-control" id="productPrice1" placeholder="$ 0,00" required>
+                        </div>
+                        <div class="form-group mt-1 col-4">
+                            <label for="productPrice2">Precio Venta 2</label>
+                            <input type="number" class="form-control" id="productPrice2" placeholder="$ 0,00">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group mt-5 text-center">
-                    <button type="button" class="btn btn-secondary" onclick="window.close()">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="newProduct()">Guardar</button>
+                    <div class="form-group mt-5 text-center">
+                        <button type="button" class="btn btn-secondary" onclick="window.close()">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="newProduct()">Guardar</button>
+                    </div>
                 </div>
             </div>
         </form>
