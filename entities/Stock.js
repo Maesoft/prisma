@@ -9,53 +9,40 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Product = void 0;
+exports.Stock = void 0;
 const typeorm_1 = require("typeorm");
-const Category_1 = require("./Category");
-const Stock_1 = require("./Stock");
-let Product = class Product {
+const Product_1 = require("./Product");
+let Stock = class Stock {
 };
-exports.Product = Product;
+exports.Stock = Stock;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Product.prototype, "id", void 0);
+], Stock.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], Stock.prototype, "fecha", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Product_1.Product, (product) => product.stockMovements),
+    __metadata("design:type", Product_1.Product)
+], Stock.prototype, "producto", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Product.prototype, "nombre", void 0);
+], Stock.prototype, "detalle", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Product.prototype, "descripcion", void 0);
+], Stock.prototype, "operacion", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Category_1.Category, (category) => category.products),
-    __metadata("design:type", Category_1.Category)
-], Product.prototype, "category", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Product.prototype, "imagen", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)("int"),
     __metadata("design:type", Number)
-], Product.prototype, "stock", void 0);
+], Stock.prototype, "cantidad", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)("int"),
     __metadata("design:type", Number)
-], Product.prototype, "costo", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
-], Product.prototype, "precio1", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
-], Product.prototype, "precio2", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => Stock_1.Stock, (stock) => stock.producto),
-    __metadata("design:type", Array)
-], Product.prototype, "stockMovements", void 0);
-exports.Product = Product = __decorate([
+], Stock.prototype, "stockResultante", void 0);
+exports.Stock = Stock = __decorate([
     (0, typeorm_1.Entity)()
-], Product);
+], Stock);

@@ -1,12 +1,15 @@
 import { DataSource } from "typeorm";
 import { Provider } from "../entities/Provider";
+import { Category } from "../entities/Category";
+import { Product } from "../entities/Product";
+import { Stock } from "../entities/Stock";
 
 export const AppDataSource = new DataSource({
     type: "sqlite",
     database: "./db/prisma_contable.sqlite",  
     synchronize: true,  
     logging: true,
-    entities: [Provider],  
+    entities: [Provider, Category, Product, Stock],  
 });
 
 AppDataSource.initialize()

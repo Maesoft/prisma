@@ -11,18 +11,26 @@
 <body>
     <div class="container mt-3">
         <h1 class="text-center mb-4">Punto de Venta</h1>
-
-        <!-- Código del Cliente -->
-        <div class="input-container">
-            <div class="w-50">
-                <label for="codigoCliente" class="form-label">Código del Cliente</label>
-                <input type="text" id="codigoCliente" class="form-control" placeholder="Ingrese código de cliente"
-                    oninput="buscarCliente()">
-                <label id="nombreCliente" class="form-label text-muted">Nombre del Cliente</label>
+        <div class="row">
+            <div class="col-6">
+                <div class="input-container">
+                    <div class="w-50">
+                        <label for="codigoCliente" class="form-label">Código del Cliente</label>
+                        <input type="text" id="codigoCliente" class="form-control"
+                            placeholder="Ingrese código de cliente" oninput="buscarCliente()">
+                        <label id="nombreCliente" class="form-label text-muted">Nombre del Cliente</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 text-end">
+                <div class="input-container d-flex justify-content-end">
+                    <div class="w-50">
+                        <label for="fechaVenta" class="form-label text-muted">Fecha</label>
+                        <input type="date" id="fechaVenta" class="form-control ms-auto">
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- Código de Barras del Producto -->
         <div class="input-container">
             <div class="mt-2 w-100">
                 <label for="codigoProducto" class="form-label">Código de Barras del Producto</label>
@@ -30,8 +38,6 @@
                     onkeypress="agregarProducto(event)">
             </div>
         </div>
-
-        <!-- Tabla de productos -->
         <table class="mt-2 table table-striped">
             <thead class="table-dark">
                 <tr>
@@ -46,9 +52,8 @@
                 <!-- Los productos se agregarán aquí -->
             </tbody>
         </table>
-
+    
         <!-- Total y botones -->
-
         <div class="text-end">
             <span class="label-total">Total: $</span>
             <span id="total" class="label-total">0.00</span>
@@ -58,7 +63,4 @@
             <button class="btn btn-danger btn-custom" onclick="cancelar()">Cancelar</button>
         </div>
     </div>
-
-</body>
-
-</html>
+    

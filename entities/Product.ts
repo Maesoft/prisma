@@ -1,7 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Category } from "./Category"
+import { Stock } from "./Stock";
+
 @Entity()
 export class Product {
+
     @PrimaryGeneratedColumn()
     id: number
 
@@ -28,4 +31,7 @@ export class Product {
 
     @Column()
     precio2: number
+
+    @OneToMany(() => Stock, (stock) => stock.producto)
+    stockMovements: Stock[]; 
 }
