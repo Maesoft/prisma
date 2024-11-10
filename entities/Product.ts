@@ -9,13 +9,16 @@ export class Product {
     id: number
 
     @Column()
+    codigo: string
+
+    @Column()
     nombre: string
 
     @Column()
     descripcion: string
 
     @ManyToOne(() => Category, (category) => category.products)
-    category: Category;
+    categoria: Category;
 
     @Column()
     imagen: string

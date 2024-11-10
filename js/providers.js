@@ -1,4 +1,5 @@
 const newProvider = async () => {
+
   const providerData = {
     razon_social: document.getElementById('companyName').value,
     cuit: document.getElementById('cuit').value,
@@ -7,11 +8,14 @@ const newProvider = async () => {
     email: document.getElementById('email').value,
     regimen: document.getElementById('regimen').value
   };
-  const query = await window.prismaFunctions.addProvider(providerData)
-  if (query.success) {
-    alert(query.message);
+
+  const res = await window.prismaFunctions.addProvider(providerData)
+
+  if (res.success) {
+    alert(res.message);
     window.close();
   } else {
-    alert(query.message);
+    alert(res.message);
   }
+
 }

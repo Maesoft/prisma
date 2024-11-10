@@ -23,6 +23,10 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
+], Product.prototype, "codigo", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
 ], Product.prototype, "nombre", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
@@ -31,7 +35,7 @@ __decorate([
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Category_1.Category, (category) => category.products),
     __metadata("design:type", Category_1.Category)
-], Product.prototype, "category", void 0);
+], Product.prototype, "categoria", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)

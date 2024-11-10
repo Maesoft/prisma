@@ -1,8 +1,10 @@
 const { app, ipcMain, Menu } = require('electron');
-const { Provider } = require('../entities/Provider')
 const { AppDataSource } = require ('./data-source');
 const WindowManager = require('./windowManager');
 const { menuTemplate } = require('../js/menu');
+const { Product } = require('../entities/Product');
+const { Stock } = require('../entities/Stock');
+const { Provider } = require('../entities/Provider');
 
 //Manejo de la App
 app.on('ready', async () => {
@@ -31,6 +33,29 @@ ipcMain.handle('add-provider', async (event, providerData)=> {
     const newProvider = providerRepository.create(providerData); 
     await providerRepository.save(newProvider);
     return { success: true, message: 'Proveedor guardado exitosamente' };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: error };
+  }
+})
+
+ipcMain.handle('add-product', async (event, productData)=> {
+  try {
+    const productRepository = AppDataSource.getRepository(Product)
+    const newProduct = productRepository.create(productData); 
+    await productRepository.save(newProduct);
+
+    if(productData.productStock > 0){
+      const stockRepository = AppDataSource.getRepository(Stock)
+      const newStock = stockRepository.create({
+        producto: productData,
+
+
+      })
+
+    }
+
+    return { success: true, message: 'Producto guardado exitosamente' };
   } catch (error) {
     console.error(error);
     return { success: false, message: error };
