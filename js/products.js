@@ -1,4 +1,40 @@
+const loadCategories = async () => {
+    const res = await window.prismaFunctions.getCategories();
+    if (res.success) {
+        const categorySelect = document.getElementById('productCategory');
+        res.categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.id;
+            option.textContent = category.name;
+            categorySelect.appendChild(option);
+        });
+    } else {
+        alert(res.message);
+    }
+};
 
+const addCategory = async () => {
+    const newCategoryName = document.getElementById('newCategoryName').value;
+    const res = await window.prismaFunctions.addCategory(newCategoryName);
+    if (res.success) {
+        alert('Categoría añadida con éxito');
+        // Recargar categorías después de añadir una nueva
+        document.getElementById('productCategory').innerHTML = '';
+        await loadCategories();
+        // Cerrar el modal
+        document.getElementById('categoryModal').classList.remove('show');
+    } else {
+        alert(res.message);
+    }
+};
+const showModal = ()=>{
+    const showModal = () => {
+        const modal = document.getElementById('categoryModal');
+        modal.classList.toggle('show');  // Alternar la clase 'show' de Bootstrap
+        modal.style.display = modal.classList.contains('show') ? 'block' : 'none';  // Cambiar visibilidad
+    };
+    
+}
 const newProduct = async () => {
     const productData = {
         codigo : document.getElementById('productCode').value,
@@ -22,3 +58,5 @@ const newProduct = async () => {
     }
 
 }
+
+window.addEventListener('DOMContentLoaded', loadCategories);

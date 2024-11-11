@@ -1,15 +1,16 @@
 const { app, ipcMain, Menu } = require('electron');
-const { AppDataSource } = require ('./data-source');
+const { AppDataSource } = require('./data-source');
 const WindowManager = require('./windowManager');
 const { menuTemplate } = require('../js/menu');
 const { Product } = require('../entities/Product');
 const { Stock } = require('../entities/Stock');
 const { Provider } = require('../entities/Provider');
+const { Category } = require('../entities/Category');
 
 //Manejo de la App
 app.on('ready', async () => {
   WindowManager.createMainWindow();
-  const menu = Menu.buildFromTemplate(menuTemplate);  
+  const menu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(menu);
 });
 
@@ -27,10 +28,10 @@ app.on('activate', () => {
 
 
 //Funciones que interactuan con la BD
-ipcMain.handle('add-provider', async (event, providerData)=> {
+ipcMain.handle('add-provider', async (event, providerData) => {
   try {
     const providerRepository = AppDataSource.getRepository(Provider)
-    const newProvider = providerRepository.create(providerData); 
+    const newProvider = providerRepository.create(providerData);
     await providerRepository.save(newProvider);
     return { success: true, message: 'Proveedor guardado exitosamente' };
   } catch (error) {
@@ -38,14 +39,35 @@ ipcMain.handle('add-provider', async (event, providerData)=> {
     return { success: false, message: error };
   }
 })
+ipcMain.handle('get-categories', async () => {
+  try {
+    const categoriesRepository = AppDataSource.getRepository(Category);
+    const categories = await categoriesRepository.find();
+    return categories;
+  } catch (error) {
+    console.error(error)
+  }
+});
 
-ipcMain.handle('add-product', async (event, productData)=> {
+ipcMain.handle('add-category', async (event, name) => {
+  try {
+    const categoriesRepository = AppDataSource.getRepository(Category)
+    const newCategory = categoriesRepository.create({ name })
+    await categoriesRepository.save(newCategory);
+    return { success: false, message: error };
+
+  } catch (error) {
+    return { success: false, message: error };
+  }
+});
+
+ipcMain.handle('add-product', async (event, productData) => {
   try {
     const productRepository = AppDataSource.getRepository(Product)
-    const newProduct = productRepository.create(productData); 
+    const newProduct = productRepository.create(productData);
     await productRepository.save(newProduct);
 
-    if(productData.productStock > 0){
+    if (productData.productStock > 0) {
       const stockRepository = AppDataSource.getRepository(Stock)
       const newStock = stockRepository.create({
         producto: productData,
