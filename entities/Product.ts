@@ -8,10 +8,10 @@ export class Product {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({unique:true, nullable:false})
     codigo: string
 
-    @Column()
+    @Column({unique:true, nullable:false})
     nombre: string
 
     @Column()
@@ -23,16 +23,16 @@ export class Product {
     @Column()
     imagen: string
 
-    @Column()
+    @Column({default: 0})
     stock: number
 
-    @Column()
+    @Column({default: 0})
     costo: number
 
-    @Column()
+    @Column({default: 0})
     precio1: number
 
-    @Column()
+    @Column({default: 0})
     precio2: number
 
     @OneToMany(() => Stock, (stock) => stock.producto)

@@ -1,7 +1,24 @@
+const productImage = document.getElementById('productImage');
+const productImageInput = document.getElementById('productImageInput');
+
+productImage.addEventListener('click', ()=>{
+    document.getElementById('productImageInput').click();
+})
+productImageInput.addEventListener('change', (event)=>{
+    const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('productImage').src = e.target.result;
+            };
+            reader.readAsDataURL(file); // Cargar la imagen seleccionada
+        }
+})
 const loadCategories = async () => {
     const res = await window.prismaFunctions.getCategories();
     if (res.success) {
         const categorySelect = document.getElementById('productCategory');
+        categorySelect.innerHTML = ''; // Limpiar opciones previas
         res.categories.forEach(category => {
             const option = document.createElement('option');
             option.value = category.id;
@@ -14,48 +31,58 @@ const loadCategories = async () => {
 };
 
 const addCategory = async () => {
-    const newCategoryName = document.getElementById('newCategoryName').value;
-    const res = await window.prismaFunctions.addCategory({name:newCategoryName});
+    const newCategoryName = document.getElementById('newCategoryName').value.trim();
+    if (!newCategoryName) {
+        alert("Por favor, ingrese un nombre para la categoría.");
+        return;
+    }
+    const res = await window.prismaFunctions.addCategory({ name: newCategoryName });
     if (res.success) {
         alert(res.message);
-        // Recargar categorías después de añadir una nueva
         document.getElementById('productCategory').innerHTML = '';
+        document.getElementById('newCategoryName').value = '';
+        const modalElement = document.getElementById('categoryModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        modalInstance.hide();
         await loadCategories();
-        // Cerrar el modal
-        document.getElementById('categoryModal').classList.remove('show');
     } else {
         alert(res.message);
     }
 };
 
-    const showModal = () => {
-        const modal = document.getElementById('categoryModal');
-        modal.classList.toggle('show');  // Alternar la clase 'show' de Bootstrap
-        modal.style.display = modal.classList.contains('show') ? 'block' : 'none';  // Cambiar visibilidad
-    };
-    
+const showModal = () => {
+    const modal = document.getElementById('categoryModal');
+    modal.classList.toggle('show');
+    modal.style.display = modal.classList.contains('show') ? 'block' : 'none';
+};
+
 const newProduct = async () => {
     const productData = {
-        codigo : document.getElementById('productCode').value,
-        nombre : document.getElementById('productName').value,
-        descripcion : document.getElementById('productDescription').value,
-        categoria : document.getElementById('productCategory').value,
-        imagen : document.getElementById('productImage').src,
-        stock : parseInt(document.getElementById('initialStock').value,10),
-        costo : parseFloat(document.getElementById('productCost').value),
-        precio1 : parseFloat(document.getElementById('productPrice1').value),
-        precio2 : parseFloat(document.getElementById('productPrice2').value),
+        codigo: document.getElementById('productCode').value.trim(),
+        nombre: document.getElementById('productName').value.trim(),
+        descripcion: document.getElementById('productDescription').value.trim(),
+        categoria: document.getElementById('productCategory').value,
+        imagen: document.getElementById('productImage').src,
+        stock: parseInt(document.getElementById('initialStock').value, 10) || 0,
+        costo: parseFloat(document.getElementById('productCost').value) || 0,
+        precio1: parseFloat(document.getElementById('productPrice1').value) || 0,
+        precio2: parseFloat(document.getElementById('productPrice2').value) || 0,
+    };
+
+    if (productData.codigo === "" || productData.nombre === "") {
+        alert('El producto debe tener asignado un código y un nombre.');
+        return;
     }
 
     const res = await window.prismaFunctions.addProduct(productData);
 
-    if(res.sucess){
-        alert(res.message)
-        window.close()
-    }else{
-        alert(res.message)
+    if (res.success) {
+        alert(res.message);
+        document.getElementById('productForm').reset()
+    } else {
+        alert(res.message);
     }
+};
 
-}
 
 window.addEventListener('DOMContentLoaded', loadCategories);
