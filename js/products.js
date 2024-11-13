@@ -15,9 +15,9 @@ const loadCategories = async () => {
 
 const addCategory = async () => {
     const newCategoryName = document.getElementById('newCategoryName').value;
-    const res = await window.prismaFunctions.addCategory(newCategoryName);
+    const res = await window.prismaFunctions.addCategory({name:newCategoryName});
     if (res.success) {
-        alert('Categoría añadida con éxito');
+        alert(res.message);
         // Recargar categorías después de añadir una nueva
         document.getElementById('productCategory').innerHTML = '';
         await loadCategories();
@@ -27,14 +27,13 @@ const addCategory = async () => {
         alert(res.message);
     }
 };
-const showModal = ()=>{
+
     const showModal = () => {
         const modal = document.getElementById('categoryModal');
         modal.classList.toggle('show');  // Alternar la clase 'show' de Bootstrap
         modal.style.display = modal.classList.contains('show') ? 'block' : 'none';  // Cambiar visibilidad
     };
     
-}
 const newProduct = async () => {
     const productData = {
         codigo : document.getElementById('productCode').value,

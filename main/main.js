@@ -43,18 +43,21 @@ ipcMain.handle('get-categories', async () => {
   try {
     const categoriesRepository = AppDataSource.getRepository(Category);
     const categories = await categoriesRepository.find();
-    return categories;
+    return { success: true, categories };
   } catch (error) {
-    console.error(error)
+    console.error('Error al obtener categorías:', error);
+    throw new Error('Error al obtener categorías');
   }
 });
 
-ipcMain.handle('add-category', async (event, name) => {
+
+
+ipcMain.handle('add-category', async (event, categoryData) => {
   try {
     const categoriesRepository = AppDataSource.getRepository(Category)
-    const newCategory = categoriesRepository.create({ name })
+    const newCategory = categoriesRepository.create(categoryData)
     await categoriesRepository.save(newCategory);
-    return { success: false, message: error };
+    return { success: true, message: 'Categoria agregada correctamente!' };
 
   } catch (error) {
     return { success: false, message: error };
