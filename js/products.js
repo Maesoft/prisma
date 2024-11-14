@@ -11,14 +11,14 @@ productImageInput.addEventListener('change', (event)=>{
             reader.onload = (e) => {
                 document.getElementById('productImage').src = e.target.result;
             };
-            reader.readAsDataURL(file); // Cargar la imagen seleccionada
+            reader.readAsDataURL(file);
         }
 })
 const loadCategories = async () => {
     const res = await window.prismaFunctions.getCategories();
     if (res.success) {
         const categorySelect = document.getElementById('productCategory');
-        categorySelect.innerHTML = ''; // Limpiar opciones previas
+        categorySelect.innerHTML = '';
         res.categories.forEach(category => {
             const option = document.createElement('option');
             option.value = category.id;

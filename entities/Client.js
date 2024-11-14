@@ -9,43 +9,47 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Provider = void 0;
+exports.Client = void 0;
+const class_validator_1 = require("class-validator");
 const typeorm_1 = require("typeorm");
-let Provider = class Provider {
+let Client = class Client {
 };
-exports.Provider = Provider;
+exports.Client = Client;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Provider.prototype, "id", void 0);
+], Client.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)({ unique: true, nullable: false }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Debe asignarle un codigo al cliente.' }),
     __metadata("design:type", String)
-], Provider.prototype, "codigo", void 0);
+], Client.prototype, "codigo", void 0);
 __decorate([
     (0, typeorm_1.Column)({ unique: true, nullable: false }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Debe asignarle una Razon Social al cliente.' }),
     __metadata("design:type", String)
-], Provider.prototype, "razon_social", void 0);
+], Client.prototype, "razon_social", void 0);
 __decorate([
     (0, typeorm_1.Column)({ unique: true, nullable: false }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Debe asignarle un CUIT al cliente.' }),
     __metadata("design:type", Number)
-], Provider.prototype, "cuit", void 0);
+], Client.prototype, "cuit", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Provider.prototype, "direccion", void 0);
+], Client.prototype, "direccion", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Provider.prototype, "telefono", void 0);
+], Client.prototype, "telefono", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Provider.prototype, "email", void 0);
+], Client.prototype, "email", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Provider.prototype, "regimen", void 0);
-exports.Provider = Provider = __decorate([
+], Client.prototype, "regimen", void 0);
+exports.Client = Client = __decorate([
     (0, typeorm_1.Entity)()
-], Provider);
+], Client);

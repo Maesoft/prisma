@@ -1,3 +1,7 @@
 .sin-scroll{
     overflow: hidden;
 }
+
+#productImage:hover{
+    cursor: pointer;
+}

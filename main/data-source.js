@@ -6,12 +6,13 @@ const Provider_1 = require("../entities/Provider");
 const Category_1 = require("../entities/Category");
 const Product_1 = require("../entities/Product");
 const Stock_1 = require("../entities/Stock");
+const Client_1 = require("../entities/Client");
 exports.AppDataSource = new typeorm_1.DataSource({
     type: "sqlite",
     database: "./db/prisma_contable.sqlite",
     synchronize: true,
     logging: true,
-    entities: [Provider_1.Provider, Category_1.Category, Product_1.Product, Stock_1.Stock],
+    entities: [Provider_1.Provider, Category_1.Category, Product_1.Product, Stock_1.Stock, Client_1.Client],
 });
 exports.AppDataSource.initialize()
     .then(() => {

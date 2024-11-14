@@ -43,6 +43,20 @@ const menuTemplate = [
     ]
   },
   {
+    label: 'Stock',
+    submenu: [
+      {label: 'Ingreso de Stock', click: ()=>{windowManager.createWindow("stockEntry",800,450,true,true)}},
+      {label: 'Egreso de Stock', click: ()=>{windowManager.createWindow("stockIssue",400,300,true, false)}},
+      {type: 'separator'},
+      {label: 'Resumen de Stock', click:()=>{}},
+      {type: 'separator'},
+      {label: 'Stock Minimo', click:()=>{}},
+      {type: 'separator'},
+      {label: 'Comparar Stock Fisico', click:()=>{}},
+      {label: 'Consultar Movimientos', click:()=>{}},
+    ]
+  },
+  {
     label: 'Compras',
     submenu: [
       {label: 'Ingresar Compra', click: ()=>{windowManager.createWindow("newPurchase",800,600,true, false) }},
@@ -63,20 +77,6 @@ const menuTemplate = [
       {type: 'separator'},
       {label: 'Resumen de Ventas', click:()=>{}},
       {label: 'Facturas', click:()=>{}}
-    ]
-  },
-  {
-    label: 'Stock',
-    submenu: [
-      {label: 'Ingreso de Stock', click: ()=>{windowManager.createWindow("stockEntry",800,450,true,true)}},
-      {label: 'Egreso de Stock', click: ()=>{windowManager.createWindow("stockIssue",400,300,true, false)}},
-      {type: 'separator'},
-      {label: 'Resumen de Stock', click:()=>{}},
-      {type: 'separator'},
-      {label: 'Stock Minimo', click:()=>{}},
-      {type: 'separator'},
-      {label: 'Comparar Stock Fisico', click:()=>{}},
-      {label: 'Consultar Movimientos', click:()=>{}},
     ]
   },
   {

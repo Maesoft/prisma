@@ -1,13 +1,13 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
-export class Provider {
+export class Client {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({unique:true, nullable:false})
     codigo: string;
-   
+
     @Column({unique:true, nullable:false})
     razon_social: string;
 
@@ -24,5 +24,5 @@ export class Provider {
     email: string;
 
     @Column()
-    regimen: 'Monotributista' | 'Responsable Inscripto';
+    regimen: 'Monotributista' | 'Responsable Inscripto' | 'Consumidor Final';
 }

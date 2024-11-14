@@ -6,6 +6,7 @@ const { Product } = require('../entities/Product');
 const { Stock } = require('../entities/Stock');
 const { Provider } = require('../entities/Provider');
 const { Category } = require('../entities/Category');
+const { Client } = require('../entities/Client');
 
 //Manejo de la App
 app.on('ready', async () => {
@@ -33,27 +34,44 @@ ipcMain.handle('add-provider', async (event, providerData) => {
     const providerRepository = AppDataSource.getRepository(Provider)
     const newProvider = providerRepository.create(providerData);
     await providerRepository.save(newProvider);
-    return { 
+    return {
       success: true,
-      message: 'Proveedor guardado exitosamente.' 
+      message: 'Proveedor guardado exitosamente.'
     };
   } catch (error) {
-    return { 
+    return {
       success: false,
-      message: 'Ocurrio un error al guardar el proveedor, asegurese que los datos ingresados sean correctos.'
-     };
+      message: error
+    };
+  }
+})
+ipcMain.handle('add-client', async (event, clientData) => {
+  try {
+    const clientRepository = AppDataSource.getRepository(Client)
+    const newClient = clientRepository.create(clientData);
+    await clientRepository.save(newClient);
+    return {
+      success: true,
+      message: 'Cliente guardado exitosamente.'
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error
+    };
   }
 })
 ipcMain.handle('get-categories', async () => {
   try {
     const categoriesRepository = AppDataSource.getRepository(Category);
     const categories = await categoriesRepository.find();
-    return { 
+    return {
       success: true,
-      categories };
+      categories
+    };
   } catch (error) {
     return {
-      success: false, 
+      success: false,
       message: 'Error al obtener categorías.'
     };
   }
@@ -63,16 +81,16 @@ ipcMain.handle('add-category', async (event, categoryData) => {
     const categoriesRepository = AppDataSource.getRepository(Category)
     const newCategory = categoriesRepository.create(categoryData)
     await categoriesRepository.save(newCategory);
-    return { 
-      success: true, 
+    return {
+      success: true,
       message: 'Categoria guardada exitosamente.'
-     };
+    };
 
   } catch (error) {
-    return { 
-      success: false, 
+    return {
+      success: false,
       message: error
-     };
+    };
   }
 });
 ipcMain.handle('add-product', async (event, productData) => {
@@ -80,17 +98,6 @@ ipcMain.handle('add-product', async (event, productData) => {
     const productRepository = AppDataSource.getRepository(Product)
     const newProduct = productRepository.create(productData);
     await productRepository.save(newProduct);
-
-    if (productData.productStock > 0) {
-      const stockRepository = AppDataSource.getRepository(Stock)
-      const newStock = stockRepository.create({
-        producto: productData,
-
-
-      })
-
-    }
-
     return { success: true, message: 'Producto guardado exitosamente' };
   } catch (error) {
     console.error(error);
