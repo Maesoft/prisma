@@ -57,6 +57,7 @@ const showModal = () => {
 };
 
 const newProduct = async () => {
+    // Recoger datos del formulario
     const productData = {
         codigo: document.getElementById('productCode').value.trim(),
         nombre: document.getElementById('productName').value.trim(),
@@ -69,20 +70,52 @@ const newProduct = async () => {
         precio2: parseFloat(document.getElementById('productPrice2').value) || 0,
     };
 
+    // Validar datos esenciales
     if (productData.codigo === "" || productData.nombre === "") {
         alert('El producto debe tener asignado un código y un nombre.');
         return;
     }
 
-    const res = await window.prismaFunctions.addProduct(productData);
+    // Si el stock es mayor que 0, registrar el movimiento de stock
+    if (productData.stock > 0) {
+        const stockData = {
+            fecha: await window.prismaFunctions.getDateNow(),  // Obtener la fecha actual
+            producto: productData,
+            detalle: 'Stock inicial al dar de alta el producto.',
+            operacion: 'Ingreso',
+            cantidad: productData.stock,
+            stockResultante: productData.stock
+        };
 
-    if (res.success) {
-        alert(res.message);
-        document.getElementById('productForm').reset()
-    } else {
-        alert(res.message);
+        // Intentar insertar el movimiento de stock
+        try {
+            const stockRes = await window.prismaFunctions.addStock(stockData);
+            if (!stockRes.success) {
+                alert('Error al agregar el stock: ' + stockRes.message);
+                return;  // Detener la ejecución si el stock no se agrega correctamente
+            }
+        } catch (error) {
+            console.error("Error al agregar stock:", error);
+            alert('Hubo un problema al agregar el stock.');
+            return;
+        }
+    }
+
+    // Intentar agregar el producto
+    try {
+        const productRes = await window.prismaFunctions.addProduct(productData);
+        if (productRes.success) {
+            alert(productRes.message);
+            document.getElementById('productForm').reset();  // Resetear el formulario solo si el producto se guarda correctamente
+        } else {
+            alert('Error al agregar el producto: ' + productRes.message);
+        }
+    } catch (error) {
+        console.error("Error al agregar el producto:", error);
+        alert('Hubo un problema al agregar el producto.');
     }
 };
+
 
 
 window.addEventListener('DOMContentLoaded', loadCategories);

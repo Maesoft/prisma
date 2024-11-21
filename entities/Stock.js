@@ -21,7 +21,7 @@ __decorate([
 ], Stock.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
-    __metadata("design:type", Date)
+    __metadata("design:type", String)
 ], Stock.prototype, "fecha", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Product_1.Product, (product) => product.stockMovements),

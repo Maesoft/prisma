@@ -10,7 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Client = void 0;
-const class_validator_1 = require("class-validator");
 const typeorm_1 = require("typeorm");
 let Client = class Client {
 };
@@ -21,17 +20,14 @@ __decorate([
 ], Client.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)({ unique: true, nullable: false }),
-    (0, class_validator_1.IsNotEmpty)({ message: 'Debe asignarle un codigo al cliente.' }),
     __metadata("design:type", String)
 ], Client.prototype, "codigo", void 0);
 __decorate([
     (0, typeorm_1.Column)({ unique: true, nullable: false }),
-    (0, class_validator_1.IsNotEmpty)({ message: 'Debe asignarle una Razon Social al cliente.' }),
     __metadata("design:type", String)
 ], Client.prototype, "razon_social", void 0);
 __decorate([
     (0, typeorm_1.Column)({ unique: true, nullable: false }),
-    (0, class_validator_1.IsNotEmpty)({ message: 'Debe asignarle un CUIT al cliente.' }),
     __metadata("design:type", Number)
 ], Client.prototype, "cuit", void 0);
 __decorate([

@@ -41,7 +41,7 @@ class WindowManager {
       titleBarStyle: 'default',
       contextIsolation: true,
       enableRemoteModule: false,
-      nodeIntegration: false,
+      nodeIntegration: true,
       webPreferences: {
         preload: path.join(__dirname, '../preload/preload.js')
       }

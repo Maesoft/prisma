@@ -8,7 +8,7 @@ export class Stock {
     id: number;
 
     @CreateDateColumn()
-    fecha: Date;
+    fecha: string;
 
     @ManyToOne(() => Product, (product) => product.stockMovements)
     producto: Product;

@@ -6,5 +6,7 @@ contextBridge.exposeInMainWorld('prismaFunctions', {
     addClient: (clientData) => ipcRenderer.invoke('add-client', clientData),
     addProduct: (productData) => ipcRenderer.invoke('add-product', productData),
     addCategory: (categoryData) => ipcRenderer.invoke('add-category', categoryData),
+    addStock: (stockData) => ipcRenderer.invoke('add-stock', stockData),
     getCategories: ()=> ipcRenderer.invoke('get-categories'),
+    getDateNow: ()=> ipcRenderer.invoke('getDateNow'),
 })

@@ -104,3 +104,21 @@ ipcMain.handle('add-product', async (event, productData) => {
     return { success: false, message: error };
   }
 })
+ipcMain.handle('add-stock', async (event, stockData) => {
+  try {
+    const stockRepository = AppDataSource.getRepository(Stock);
+    const newStock = stockRepository.create(stockData);
+    await stockRepository.save(newStock)
+    return { success: true, message: 'Stock actualizado correctamente.' }
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: error };
+  }
+})
+ipcMain.handle('getDateNow', async ()=>{
+    const fecha=new Date()
+    const dia = fecha.getDate().toString().padStart(2,'0')
+    const mes = (fecha.getMonth() + 1).toString().padStart(2,'0')
+    const anio = fecha.getFullYear()
+    return `${dia}/${mes}/${anio}`
+})
