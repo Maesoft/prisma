@@ -38,6 +38,7 @@ const menuTemplate = [
       { label: 'Nuevo Producto', click: () => { windowManager.createWindow("newProduct",800,600,true, false) } },
       { label: 'Eliminar Producto', click: () => { /* Función para eliminar producto */ } },
       { label: 'Modificar Producto', click: () => { /* Función para modificar producto */ } },
+      { label: 'Ver Productos', click: () => { /* Función para lista de precios */ } },
       { type: 'separator' },
       { label: 'Lista de Precios', click: () => { /* Función para lista de precios */ } }
     ]

@@ -98,7 +98,7 @@ ipcMain.handle('add-product', async (event, productData) => {
     const productRepository = AppDataSource.getRepository(Product)
     const newProduct = productRepository.create(productData);
     await productRepository.save(newProduct);
-    return { success: true, message: 'Producto guardado exitosamente' };
+    return { success: true, message: 'Producto guardado exitosamente', productId: newProduct.id, };
   } catch (error) {
     console.error(error);
     return { success: false, message: error };
@@ -114,11 +114,4 @@ ipcMain.handle('add-stock', async (event, stockData) => {
     console.error(error);
     return { success: false, message: error };
   }
-})
-ipcMain.handle('getDateNow', async ()=>{
-    const fecha=new Date()
-    const dia = fecha.getDate().toString().padStart(2,'0')
-    const mes = (fecha.getMonth() + 1).toString().padStart(2,'0')
-    const anio = fecha.getFullYear()
-    return `${dia}/${mes}/${anio}`
 })

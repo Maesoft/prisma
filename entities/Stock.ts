@@ -8,9 +8,9 @@ export class Stock {
     id: number;
 
     @CreateDateColumn()
-    fecha: string;
+    fecha: Date;
 
-    @ManyToOne(() => Product, (product) => product.stockMovements)
+    @ManyToOne(() => Product, (product) => product.stockMovements,{onDelete: "CASCADE"})
     producto: Product;
 
     @Column()

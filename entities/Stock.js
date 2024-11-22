@@ -21,10 +21,10 @@ __decorate([
 ], Stock.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
-    __metadata("design:type", String)
+    __metadata("design:type", Date)
 ], Stock.prototype, "fecha", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Product_1.Product, (product) => product.stockMovements),
+    (0, typeorm_1.ManyToOne)(() => Product_1.Product, (product) => product.stockMovements, { onDelete: "CASCADE" }),
     __metadata("design:type", Product_1.Product)
 ], Stock.prototype, "producto", void 0);
 __decorate([
