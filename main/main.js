@@ -104,6 +104,15 @@ ipcMain.handle('add-product', async (event, productData) => {
     return { success: false, message: error };
   }
 })
+ipcMain.handle('get-products', async () => {
+  try {
+    const productRepository = AppDataSource.getRepository(Product);
+    const products = await productRepository.find({relations:["categoria"]});
+    return { success: true, products };
+  } catch (error) {
+    return { success: false, message: error };
+  }
+});
 ipcMain.handle('add-stock', async (event, stockData) => {
   try {
     const stockRepository = AppDataSource.getRepository(Stock);
