@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <script defer src="../js/stock.js"></script>
     <title>Actualizar Stock</title>
 </head>
+
 <body>
     <div class="container mt-3">
         <h1>Actualizar Stock</h1>
@@ -34,14 +36,17 @@
                         </div>
                         <div class="col-6">
                             <label for="addStock" class="form-label mt-2">Cantidad a Agregar</label>
-                            <input type="number" class="form-control" id="addStock" placeholder="Ingrese cantidad" required>
+                            <input type="number" class="form-control" id="newStock" placeholder="Ingrese cantidad"
+                                required>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary mt-4" onclick="actualizarStock()">Actualizar Stock</button>
+                    <button type="button" class="btn btn-primary mt-4" onclick="updateStock()">Actualizar
+                        Stock</button>
                 </div>
                 <div class="col-md-6 text-center">
                     <div class="form-group">
-                        <img id="itemImage" class="img-thumbnail w-75 mt-4" src="../assets/sin_imagen.png" alt="Imagen del producto">
+                        <img id="itemImage" class="img-thumbnail w-75 mt-4" src="../assets/sin_imagen.png"
+                            alt="Imagen del producto">
                     </div>
                     <h5 class="mt-3">Descripción:</h5>
                     <p id="itemDescription">Aquí va la descripción del producto.</p>
@@ -50,12 +55,16 @@
         </form>
     </div>
 </body>
-<div class="modal show" id="productSearchModal" tabindex="-1" aria-labelledby="productSearchModalLabel" aria-hidden="false" style="display: block;">
+<div class="modal show" id="productSearchModal" tabindex="-1" aria-labelledby="productSearchModalLabel"
+    aria-hidden="false" style="display: block;">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-primary">
                 <h5 class="modal-title" id="productSearchModalLabel">Buscar Producto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <button type="button" class="btn-close" onclick="window.close()"></button>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control bg-secondary" onchange="findProducts()">
             </div>
             <div class="modal-body">
                 <table id="productsTable">
@@ -68,13 +77,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        
+
                     </tbody>
                 </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="window.close()" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" onclick="searchProduct()">Buscar Producto</button>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-const getProducts = async () => {
+const loadProducts = async () => {
   const productsTableBody = document.querySelector("#productsTable tbody");
   try {
     const response = await window.prismaFunctions.getProducts();
@@ -28,7 +28,6 @@ const getProducts = async () => {
     console.error("Error al obtener los productos:", error);
   }
 };
-
 const loadProductIntoForm = (product) => {
   document.getElementById("itemId").value = product.id;
   document.getElementById("itemCode").value = product.codigo;
@@ -39,16 +38,31 @@ const loadProductIntoForm = (product) => {
   document.getElementById("itemDescription").innerText = product.descripcion;
   document.getElementById("productSearchModal").style.display = "none";
 };
+const updateStock = async () => {
+  const stockActual = Number(document.getElementById("currentStock").value)
+  const stockNuevo = Number(document.getElementById("newStock").value)
+  const idProduct = Number(document.getElementById("itemId").value)
 
-const actualizarStock = async () => {
-  const productData = {
+  if (!stockActual || !stockNuevo || !idProduct) {
+    alert("Uno de los campos es de tipo NaN.")
+    return
+  }
+  try {
+    const productData = {
+      stock: stockActual + stockNuevo
+    };
+    
+    const res = await window.prismaFunctions.editProduct(idProduct, productData)
+    alert(res.message)
+  } catch (error) {
+    alert(res.message)
+  }
 
-    stock: Number(document.getElementById("currentStock").value) + Number(document.getElementById("addStock").value)
-  };
+  
 
-  const res = await window.prismaFunctions.editProduct(Number(document.getElementById("itemId").value), productData)
-  console.log(productData);
+}
+const findProducts = () => {
   
 }
 
-window.addEventListener("DOMContentLoaded", getProducts);
+window.addEventListener("DOMContentLoaded", loadProducts);
