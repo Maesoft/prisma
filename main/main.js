@@ -27,7 +27,6 @@ app.on('activate', () => {
   }
 });
 
-
 //Funciones que interactuan con la BD
 ipcMain.handle('add-provider', async (event, providerData) => {
   try {
@@ -99,6 +98,29 @@ ipcMain.handle('add-product', async (event, productData) => {
     const newProduct = productRepository.create(productData);
     await productRepository.save(newProduct);
     return { success: true, message: 'Producto guardado exitosamente', productId: newProduct.id, };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: error };
+  }
+})
+ipcMain.handle('edit-product', async (event, id, productData) => {
+  try {
+    const productRepository = AppDataSource.getRepository(Product)
+
+    const editProduct = await productRepository.findOneBy({ id });
+  
+    editProduct.codigo = productData.codigo
+    editProduct.nombre = productData.nombre;
+    editProduct.descripcion = productData.descripcion;
+    editProduct.imagen = productData.imagen;
+    editProduct.stock = productData.stock;
+    editProduct.costo = productData.costo;
+    editProduct.precio1 = productData.precio1;
+    editProduct.precio2 = productData.precio2;
+
+    await productRepository.save(editProduct);
+
+    return { success: true, message: 'Producto editado exitosamente', productId: editProduct.id, };
   } catch (error) {
     console.error(error);
     return { success: false, message: error };
