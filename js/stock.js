@@ -24,7 +24,6 @@ const renderProducts = (productList) => {
   });
 };
 
-
 const loadProducts = async () => {
   try {
     const response = await window.prismaFunctions.getProducts();
@@ -33,7 +32,7 @@ const loadProducts = async () => {
       return;
     }
     products = response.products;
-    renderProducts(products)
+    renderProducts(products);
   } catch (error) {
     console.error("Error al obtener los productos:", error);
   }
@@ -48,27 +47,44 @@ const loadProductIntoForm = (product) => {
   document.getElementById("itemDescription").innerText = product.descripcion;
   document.getElementById("productSearchModal").style.display = "none";
 };
+
 const updateStock = async () => {
   const stockActual = Number(document.getElementById("currentStock").value);
   const stockNuevo = Number(document.getElementById("newStock").value);
   const idProduct = Number(document.getElementById("itemId").value);
+  const stockDesc = document.getElementById("detailStock").value;
 
   if (isNaN(stockActual) || isNaN(stockNuevo) || isNaN(idProduct)) {
     alert("Uno de los campos es de tipo NaN.");
     return;
   }
-  
+
   try {
     const productData = {
       stock: stockActual + stockNuevo,
     };
-    const res = await window.prismaFunctions.editProduct(
+    const resProduct = await window.prismaFunctions.editProduct(
       idProduct,
       productData
     );
-    alert(res.message);
+    const resStock = await window.prismaFunctions.addStock({
+      producto: { id: idProduct },
+      detalle: stockDesc,
+      operacion: stockNuevo > 0 ? "Ingreso" : "Egreso",
+      cantidad: stockNuevo,
+      stockResultante: stockActual + stockNuevo,
+    });
+    if (!resProduct.success || !resStock.success) {
+      alert(stockDesc);
+      return;
+    }
+    alert("Stock actualizado correctamente.");
+    loadProducts();
+    document.getElementById("stockForm").reset();
+    document.getElementById("productSearchModal").style.display = "block";
   } catch (error) {
-    alert(res.message);
+    console.error("Error al actualizar el stock:", error);
+    alert("Hubo un problema al actualizar el stock.");
   }
 };
 const findProducts = async () => {
@@ -76,7 +92,7 @@ const findProducts = async () => {
   const filteredProducts = products.filter((product) =>
     product.nombre.toLowerCase().includes(searchInput.toLowerCase())
   );
-  renderProducts(filteredProducts)
+  renderProducts(filteredProducts);
 };
 
 window.addEventListener("DOMContentLoaded", loadProducts);

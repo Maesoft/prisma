@@ -35,9 +35,9 @@
                             <input type="number" class="form-control" id="currentStock" disabled />
                         </div>
                         <div class="col-6">
-                            <label for="addStock" class="form-label mt-2">Cantidad a Agregar</label>
+                            <label for="addStock" class="form-label mt-2">Ajustar Stock</label>
                             <input type="number" class="form-control" id="newStock" placeholder="Ingrese cantidad"
-                                required />
+                                title="Ingrese un número positivo para aumentar o negativo para disminuir." required />
                         </div>
                     </div>
                     <div class="form-group">
@@ -51,7 +51,7 @@
                             alt="Imagen del producto" />
                     </div>
                     <h5 class="mt-3">Descripción:</h5>
-                    <p id="itemDescription">Aquí va la descripción del producto.</p>
+                    <p id="itemDescription"></p>
                     <button type="button" class="btn btn-primary mt-2" onclick="updateStock()">
                         Actualizar Stock
                     </button>

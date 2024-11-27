@@ -46,8 +46,7 @@ const menuTemplate = [
   {
     label: 'Stock',
     submenu: [
-      {label: 'Ingreso de Stock', click: ()=>{windowManager.createWindow("stockEntry",800,450,true,true)}},
-      {label: 'Egreso de Stock', click: ()=>{windowManager.createWindow("stockIssue",400,300,true, false)}},
+      {label: 'Ingreso/Egreso de Stock', click: ()=>{windowManager.createWindow("stockEntry",800,450,true,true)}},
       {type: 'separator'},
       {label: 'Resumen de Stock', click:()=>{}},
       {type: 'separator'},
