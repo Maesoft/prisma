@@ -2,23 +2,23 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <script defer src="../js/sales.js"></script>
     <title>Nueva Venta</title>
 </head>
 
 <body>
     <div class="container mt-3">
-        <h1 class="text-center mb-4">Punto de Venta</h1>
         <div class="row">
             <div class="col-6">
                 <div class="input-container">
                     <div class="w-50">
                         <label for="codigoCliente" class="form-label">Código del Cliente</label>
-                        <input type="text" id="codigoCliente" class="form-control"
-                            placeholder="Ingrese código de cliente" oninput="buscarCliente()">
-                        <label id="nombreCliente" class="form-label text-muted">Nombre del Cliente</label>
+                        <input type="text" id="codigoCliente" class="form-control" placeholder="F3 para buscar"
+                            oninput="buscarCliente()" />
+                        <label id="nombreCliente" class="mt-1 form-label text-muted">Nombre del Cliente</label>
                     </div>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                 <div class="input-container d-flex justify-content-end">
                     <div class="w-50">
                         <label for="fechaVenta" class="form-label text-muted">Fecha</label>
-                        <input type="date" id="fechaVenta" class="form-control ms-auto">
+                        <input type="date" id="fechaVenta" class="form-control ms-auto" />
                     </div>
                 </div>
             </div>
@@ -35,7 +35,7 @@
             <div class="mt-2 w-100">
                 <label for="codigoProducto" class="form-label">Código de Barras del Producto</label>
                 <input type="text" id="codigoProducto" class="form-control" placeholder="Ingrese código de barras"
-                    onkeypress="agregarProducto(event)">
+                    onkeypress="agregarProducto(event)" />
             </div>
         </div>
         <table class="mt-2 table table-striped">
@@ -52,15 +52,39 @@
                 <!-- Los productos se agregarán aquí -->
             </tbody>
         </table>
-    
+
         <!-- Total y botones -->
         <div class="text-end">
             <span class="label-total">Total: $</span>
             <span id="total" class="label-total">0.00</span>
         </div>
         <div class="text-center">
-            <button class="btn btn-success btn-custom me-2" onclick="cobrar()">Cobrar</button>
-            <button class="btn btn-danger btn-custom" onclick="cancelar()">Cancelar</button>
+            <button class="btn btn-success btn-custom me-2" onclick="cobrar()">
+                Cobrar
+            </button>
+            <button class="btn btn-danger btn-custom" onclick="cancelar()">
+                Cancelar
+            </button>
         </div>
     </div>
-    
+</body>
+
+</html>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Título del Modal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">Contenido del modal.</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cerrar
+                </button>
+                <button type="button" class="btn btn-primary">Guardar cambios</button>
+            </div>
+        </div>
+    </div>
+</div>

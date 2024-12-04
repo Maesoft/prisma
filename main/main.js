@@ -146,3 +146,12 @@ ipcMain.handle('add-stock', async (event, stockData) => {
     return { success: false, message: error };
   }
 })
+ipcMain.handle('get-clients', async ()=>{
+  try {
+    const clientRepository = AppDataSource.getRepository(Client);
+    const clients = await clientRepository.find();
+    return { success: true, clients };
+  } catch (error) {
+    return { success: false, message: error };
+  }
+})
