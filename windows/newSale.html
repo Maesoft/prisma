@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <script defer src="../js/bootstrap.min.js"></script>
     <script defer src="../js/sales.js"></script>
     <title>Nueva Venta</title>
 </head>
@@ -12,19 +13,31 @@
 <body>
     <div class="container mt-3">
         <div class="row">
-            <div class="col-6">
+            <div class="col-4">
                 <div class="input-container">
-                    <div class="w-50">
+                    <div class="w-75">
                         <label for="codigoCliente" class="form-label">Código del Cliente</label>
-                        <input type="text" id="codigoCliente" class="form-control" placeholder="F3 para buscar"
-                            oninput="buscarCliente()" />
+                        <input type="text" id="codigoCliente" class="form-control" placeholder="F3 para buscar" />
                         <label id="nombreCliente" class="mt-1 form-label text-muted">Nombre del Cliente</label>
                     </div>
                 </div>
             </div>
-            <div class="col-6 text-end">
+            <div class="col-4">
+                <div class="input-container">
+                    <div class="w-75">
+                        <label for="codigoCliente" class="form-label">Tipo de Comprobante</label>
+                        <select class="form-select" id="tipoComprobante">
+                            <option value="FA">Factura A</option>
+                            <option value="FB">Factura B</option>
+                            <option value="FC">Factura C</option>
+                            <option value="NDA">Nota de Debito A</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
                 <div class="input-container d-flex justify-content-end">
-                    <div class="w-50">
+                    <div class="w-75">
                         <label for="fechaVenta" class="form-label text-muted">Fecha</label>
                         <input type="date" id="fechaVenta" class="form-control ms-auto" />
                     </div>
@@ -70,21 +83,64 @@
 </body>
 
 </html>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Modal para buscar clientes-->
+<div class="modal fade" id="clientSearchModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Título del Modal</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="clientSearchModalLabel">
+                    Buscar Cliente
+                </h5>
+                <button type="button" class="btn-close bg-secondary w-2" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">Contenido del modal.</div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Cerrar
-                </button>
-                <button type="button" class="btn btn-primary">Guardar cambios</button>
+            <div class="form-group p-4">
+                <input type="text" class="form-control bg-secondary" id="searchInput" oninput="findClients()" />
+            </div>
+
+            <table class="table text-center">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Razon Social</th>
+                        <th>CUIT</th>
+                        <th>Regimen</th>
+                    </tr>
+                </thead>
+                <tbody id="listClient">
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <!-- Modal para buscar productos -->
+    <div class="modal" id="productSearchModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-black text-white">
+                    <h5 class="modal-title" id="productSearchModalLabel">
+                        Buscar Producto
+                    </h5>
+                    <button type="button" class="btn-close bg-secondary w-2" onclick="window.close()"></button>
+                </div>
+                <div class="form-group p-4">
+                    <input type="text" class="form-control bg-secondary" id="searchInput" oninput="findProducts()" />
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered w-100" id="productsTable">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Nombre</th>
+                                    <th>Categoria</th>
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
