@@ -17,7 +17,7 @@
                 <div class="input-container">
                     <div class="w-75">
                         <label for="codigoCliente" class="form-label">Código del Cliente</label>
-                        <input type="text" id="codigoCliente" class="form-control" placeholder="F3 para buscar" />
+                        <input type="text" id="inputCodigoCliente" class="form-control" placeholder="F3 para buscar" />
                         <label id="nombreCliente" class="mt-1 form-label text-muted">Nombre del Cliente</label>
                     </div>
                 </div>
@@ -47,7 +47,8 @@
         <div class="input-container">
             <div class="mt-2 w-100">
                 <label for="codigoProducto" class="form-label">Código de Barras del Producto</label>
-                <input type="text" id="codigoProducto" class="form-control" placeholder="Ingrese código de barras o presione F3 para buscar"
+                <input type="text" id="codigoProducto" class="form-control"
+                    placeholder="Ingrese código de barras o presione F3 para buscar"
                     onkeypress="agregarProducto(event)" />
             </div>
         </div>
@@ -82,9 +83,8 @@
     </div>
 </body>
 
-</html>
 <!-- Modal para buscar clientes-->
-<div class="modal fade" id="clientSearchModal" tabindex="-1">
+<div class="modal fade" id="modalClients" data-bs-backdrop="static" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-black text-white">
@@ -94,7 +94,7 @@
                 <button type="button" class="btn-close bg-secondary w-2" data-bs-dismiss="modal"></button>
             </div>
             <div class="form-group p-4">
-                <input type="text" class="form-control bg-secondary" id="searchModalClient" tabindex="1"/>
+                <input type="text" class="form-control bg-secondary" id="inputModalClients" tabindex="1" />
             </div>
 
             <table class="table text-center">
@@ -113,34 +113,37 @@
 
         </div>
     </div>
-    <!-- Modal para buscar productos -->
-    <div class="modal" id="productSearchModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-black text-white">
-                    <h5 class="modal-title" id="productSearchModalLabel">
-                        Buscar Producto
-                    </h5>
-                    <button type="button" class="btn-close bg-secondary w-2" onclick="window.close()"></button>
-                </div>
-                <div class="form-group p-4">
-                    <input type="text" class="form-control bg-secondary" id="searchInput" oninput="findProducts()" />
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered w-100" id="productsTable">
-                            <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Nombre</th>
-                                    <th>Categoria</th>
-                                    <th>Stock</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
+</div>
+<!-- Modal para buscar productos -->
+<div class="modal fade" id="modalProducts" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="productSearchModalLabel">
+                    Buscar Producto
+                </h5>
+                <button type="button" class="btn-close bg-secondary w-2" onclick="window.close()"></button>
+            </div>
+            <div class="form-group p-4">
+                <input type="text" class="form-control bg-secondary" id="inputModalProducts" oninput="findProducts()" />
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered w-100" id="productsTable">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Categoria</th>
+                                <th>Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listProducts"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+</html>

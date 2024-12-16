@@ -1,8 +1,10 @@
-const searchModalClient = document.getElementById("searchModalClient");
+const inputModalClients = document.getElementById("inputModalClients");
+const inputCodigoCliente = document.getElementById("inputCodigoCliente");
+const labelNombreCliente = document.getElementById("nombreCliente");
+const inputCodigoProducto = document.getElementById("codigoProducto");
+const inputModalProduct = document.getElementById("inputModalProducts")
 const fechaVenta = document.getElementById("fechaVenta");
 const fechaActual = new Date().toISOString().split("T")[0];
-const inputCodigoCliente = document.getElementById("codigoCliente");
-const labelNombreCliente = document.getElementById("nombreCliente");
 const codigoProducto = document.getElementById("codigoProducto");
 
 let clients = [];
@@ -24,7 +26,6 @@ const loadClients = async () => {
     alert(error);
   }
 };
-
 const renderClients = (arrClients) => {
   const listClient = document.getElementById("listClient");
   listClient.innerHTML = "";
@@ -45,24 +46,66 @@ const renderClients = (arrClients) => {
     row.addEventListener("click", () => {
       inputCodigoCliente.value = client.codigo;
       labelNombreCliente.textContent = client.razon_social;
-      const clientSearchModal = bootstrap.Modal.getInstance(
-        document.getElementById("clientSearchModal")
+      const modalClients = bootstrap.Modal.getInstance(
+        document.getElementById("modalClients")
       );
-      clientSearchModal.hide();
+      modalClients.hide();
     });
     listClient.appendChild(row);
   });
 };
 
+const loadProducts = async () => {
+  try {
+    const res = await window.prismaFunctions.getProducts();
+    if (!res.success) {
+      alert(res.message);
+      return;
+    }
+    products = res.products;
+  } catch (error) {
+    alert(error);
+  }
+}
+const renderProducts = (arrProducts) => {
+  const listProducts = document.getElementById("listProducts");
+  listProducts.innerHTML = "";
+  if (arrProducts.length === 0) {
+    listProducts.innerHTML = `
+      <tr>
+        <td colspan="4">No se encontraron clientes.</td>
+      </tr>`;
+    return;
+  }
+  arrProducts.forEach((product) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+        <td>${product.codigo}</td>
+        <td>${product.nombre}</td>
+        <td>${product.categoria.name}</td>
+        <td>${product.stock}</td>`;
+    row.addEventListener("click", () => {
+      //Codigo para agregar productos a la venta
+
+      const modalProducts = bootstrap.Modal.getInstance(
+        document.getElementById("modalProducts")
+      );
+      modalProducts.hide();
+    });
+    listProducts.appendChild(row);
+  });
+}
+
+
 inputCodigoCliente.addEventListener("keyup", async (event) => {
   if (event.key === "F3") {
     const clientSearchModal = new bootstrap.Modal(
-      document.getElementById("clientSearchModal")
+      document.getElementById("modalClients")
     );
     clientSearchModal.show();
     await loadClients();
     renderClients(clients);
-    setTimeout(() => searchModalClient.focus(), 200);
+    setTimeout(() => inputModalClients.focus(), 200);
   }
   if (event.key === "Enter") {
     await loadClients();
@@ -80,7 +123,29 @@ inputCodigoCliente.addEventListener("keyup", async (event) => {
   }
 });
 
-searchModalClient.addEventListener("input", (e) => {
+inputCodigoProducto.addEventListener("keyup", async (event) => {
+  if (event.key === "F3") {
+    const productsModal = new bootstrap.Modal(
+      document.getElementById("modalProducts")
+    );
+    productsModal.show();
+    await loadProducts();
+    renderProducts(products);
+    setTimeout(() => inputModalProduct.focus(), 200);
+  }
+  if (event.key === "Enter") {
+    await loadProducts();
+    const codeToSearch = products.find(
+      (product) => product.codigo == inputCodigoProducto.value
+    );
+    if (!codeToSearch) {
+      inputCodigoProducto.value = "";
+      inputCodigoProducto.focus();
+    }
+  }
+});
+
+inputModalClients.addEventListener("input", (e) => {
   const criterio = e.target.value;
   const filteredClients = clients.filter((client) =>
     client.razon_social.toLowerCase().includes(criterio.toLowerCase())

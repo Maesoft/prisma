@@ -104,6 +104,7 @@ const newProduct = async () => {
       }
       alert(productRes.message);
       document.getElementById("productForm").reset();
+      productImage.src="../assets/sin_imagen.png"
     } else {
       alert("Error al agregar el producto: " + productRes.message);
     }
