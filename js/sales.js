@@ -7,6 +7,7 @@ const fechaVenta = document.getElementById("fechaVenta");
 const fechaActual = new Date().toISOString().split("T")[0];
 const codigoProducto = document.getElementById("codigoProducto");
 
+let total=0
 let clients = [];
 let products = [];
 let productsSales = [];
@@ -119,22 +120,58 @@ const renderProductSales = () => {
           value="${product.cantidad}" 
           min="1" 
           data-index="${index}" 
-          class="w-25"
+          class="cantidad-input h-25 w-50"
         />
       </td>
       <td>
-      <select>
-      <option>${product.precio1.toFixed(2)}</option>
-      <option>${product.precio2.toFixed(2)}</option> 
-      </select>
+        <select class="precio-select" data-index="${index}">
+          <option value="${product.precio1}">${product.precio1.toFixed(2)}</option>
+          <option value="${product.precio2}">${product.precio2.toFixed(2)}</option>
+        </select>
       </td>
-      <td>${(product.precio1 * product.cantidad).toFixed(2)}      
-        <button class="btn" data-index="${index}">✖</button>
-      </td>
+      <td class="total-cell">${(product.precio1 * product.cantidad).toFixed(2)}</td>
+      <td><button class="btn btn-remove" data-index="${index}">✖</button></td>
     `;
 
     tableBody.appendChild(row);
   });
+
+  // Actualizar totales cuando cambie la cantidad o el precio seleccionado
+  const cantidadInputs = document.querySelectorAll(".cantidad-input");
+  const precioSelects = document.querySelectorAll(".precio-select");
+  
+  cantidadInputs.forEach((input) => {
+    input.addEventListener("input", updateTotal);
+  });
+
+  precioSelects.forEach((select) => {
+    select.addEventListener("change", updateTotal);
+  });
+};
+
+const updateTotal = (event) => {
+  const target = event.target; // Elemento que disparó el evento
+  const row = target.closest("tr"); // Obtén la fila más cercana al elemento
+  
+  if (!row) {
+    console.error("No se encontró la fila asociada.");
+    return;
+  }
+
+  const cantidadInput = row.querySelector(".cantidad-input");
+  const precioSelect = row.querySelector(".precio-select");
+  const totalCell = row.querySelector(".total-cell");
+
+  if (!cantidadInput || !precioSelect || !totalCell) {
+    console.error("No se encontraron los elementos necesarios en la fila:", row);
+    return;
+  }
+
+  const cantidad = parseFloat(cantidadInput.value) || 0;
+  const precio = parseFloat(precioSelect.value) || 0;
+
+  totalCell.textContent = (cantidad * precio).toFixed(2);
+
 };
 const addProductToSale = (product) => {
   const existingProduct = productsSales.find(
@@ -212,4 +249,11 @@ inputModalClients.addEventListener("input", (e) => {
     client.razon_social.toLowerCase().includes(criterio.toLowerCase())
   );
   renderClients(filteredClients);
+});
+inputModalProduct.addEventListener("input", (e) => {
+  const criterio = e.target.value;
+  const filteredProducts = products.filter((product) =>
+    product.nombre.toLowerCase().includes(criterio.toLowerCase())
+  );
+  renderProducts(filteredProducts);
 });

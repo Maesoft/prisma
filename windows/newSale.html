@@ -13,34 +13,38 @@
 <body>
     <div class="container mt-3">
         <div class="row">
-            <div class="col-4">
+            <div class="col-3">
+                <div class="input-container text-center">
+                    <label for="codigoCliente" class="form-label">Código del Cliente</label>
+                    <input type="text" id="inputCodigoCliente" class="form-control" placeholder="F3 para buscar" />
+                    <label id="nombreCliente" class="mt-1 form-label text-muted">Nombre del Cliente</label>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="input-container text-center">
+                    <label for="codigoCliente" class="form-label">Tipo de Comprobante</label>
+                    <select class="form-select" id="tipoComprobante">
+                        <option value="FA">Factura A</option>
+                        <option value="FB">Factura B</option>
+                        <option value="FC">Factura C</option>
+                        <option value="NDA">Nota de Debito A</option>
+                        <option value="PRE">Presupuesto</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-3">
                 <div class="input-container">
-                    <div class="w-75">
-                        <label for="codigoCliente" class="form-label">Código del Cliente</label>
-                        <input type="text" id="inputCodigoCliente" class="form-control" placeholder="F3 para buscar" />
-                        <label id="nombreCliente" class="mt-1 form-label text-muted">Nombre del Cliente</label>
+                    <label class="input-container">Numero Comprobante</label>
+                    <div class="d-flex mt-2 gap-3">
+                        <input class="form-control w-50">
+                        <input class="form-control w-75">
                     </div>
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-3">
                 <div class="input-container">
-                    <div class="w-75">
-                        <label for="codigoCliente" class="form-label">Tipo de Comprobante</label>
-                        <select class="form-select" id="tipoComprobante">
-                            <option value="FA">Factura A</option>
-                            <option value="FB">Factura B</option>
-                            <option value="FC">Factura C</option>
-                            <option value="NDA">Nota de Debito A</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="input-container d-flex justify-content-end">
-                    <div class="w-75">
-                        <label for="fechaVenta" class="form-label">Fecha</label>
-                        <input type="date" id="fechaVenta" class="form-control ms-auto" />
-                    </div>
+                    <label for="fechaVenta" class="form-label">Fecha</label>
+                    <input type="date" id="fechaVenta" class="form-control ms-auto" />
                 </div>
             </div>
         </div>
@@ -48,17 +52,19 @@
             <div class="mt-2 w-100">
                 <label for="codigoProducto" class="form-label">Código de Barras del Producto</label>
                 <input type="text" id="codigoProducto" class="form-control"
-                    placeholder="Ingrese código de barras o presione F3 para buscar"/>
+                    placeholder="Ingrese código de barras o presione F3 para buscar" />
             </div>
         </div>
         <table class="mt-2 table table-striped">
             <colgroup>
                 <col style="width: 5%">
+                <col style="width: 20%">
                 <col style="width: 15%">
                 <col style="width: 15%">
                 <col style="width: 15%">
-                <col style="width: 15%">
-              </colgroup>
+                <col style="width: 5%">
+
+            </colgroup>
             <thead class="table-dark">
                 <tr>
                     <th>Código</th>
@@ -66,6 +72,7 @@
                     <th>Cantidad</th>
                     <th>Precio Unitario</th>
                     <th>Subtotal</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody id="tablaProductos">
@@ -79,10 +86,10 @@
             <span id="total" class="label-total">0.00</span>
         </div>
         <div class="text-center">
-            <button class="btn btn-success btn-custom me-2" onclick="cobrar()">
+            <button class="btn btn-success btn-custom me-2">
                 Cobrar
             </button>
-            <button class="btn btn-danger btn-custom" onclick="cancelar()">
+            <button class="btn btn-danger btn-custom">
                 Cancelar
             </button>
         </div>
@@ -131,7 +138,7 @@
                 <button type="button" class="btn-close bg-secondary w-2" onclick="window.close()"></button>
             </div>
             <div class="form-group p-4">
-                <input type="text" class="form-control bg-secondary" id="inputModalProducts" oninput="findProducts()" />
+                <input type="text" class="form-control bg-secondary" id="inputModalProducts"/>
             </div>
             <div class="modal-body">
                 <div class="table-responsive">
