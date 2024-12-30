@@ -7,7 +7,7 @@ const fechaVenta = document.getElementById("fechaVenta");
 const fechaActual = new Date().toISOString().split("T")[0];
 const codigoProducto = document.getElementById("codigoProducto");
 
-let total=0
+let total = 0;
 let clients = [];
 let products = [];
 let productsSales = [];
@@ -27,7 +27,6 @@ const loadClients = async () => {
     alert(error);
   }
 };
-
 const renderClients = (arrClients) => {
   const listClient = document.getElementById("listClient");
   listClient.innerHTML = "";
@@ -56,7 +55,6 @@ const renderClients = (arrClients) => {
     listClient.appendChild(row);
   });
 };
-
 const loadProducts = async () => {
   try {
     const res = await window.prismaFunctions.getProducts();
@@ -69,14 +67,13 @@ const loadProducts = async () => {
     alert(error);
   }
 };
-
 const renderProducts = (arrProducts) => {
   const listProducts = document.getElementById("listProducts");
   listProducts.innerHTML = "";
   if (arrProducts.length === 0) {
     listProducts.innerHTML = `
       <tr>
-        <td colspan="4">No se encontraron clientes.</td>
+        <td colspan="4">No se encontraron productos.</td>
       </tr>`;
     return;
   }
@@ -92,6 +89,7 @@ const renderProducts = (arrProducts) => {
       const modalProducts = bootstrap.Modal.getInstance(
         document.getElementById("modalProducts")
       );
+      calculateTotal();
       modalProducts.hide();
     });
     listProducts.appendChild(row);
@@ -125,11 +123,23 @@ const renderProductSales = () => {
       </td>
       <td>
         <select class="precio-select" data-index="${index}">
-          <option value="${product.precio1}">${product.precio1.toFixed(2)}</option>
-          <option value="${product.precio2}">${product.precio2.toFixed(2)}</option>
+          <option value="${product.precio1}">
+          ${product.precio1.toLocaleString("es-AR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}</option>
+          <option value="${product.precio2}">
+          ${product.precio2.toLocaleString("es-AR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}</option>
         </select>
       </td>
-      <td class="total-cell">${(product.precio1 * product.cantidad).toFixed(2)}</td>
+      <td class="total-cell">
+      ${(product.precio1 * product.cantidad).toLocaleString("es-AR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}</td>
       <td><button class="btn btn-remove" data-index="${index}">✖</button></td>
     `;
 
@@ -139,20 +149,19 @@ const renderProductSales = () => {
   // Actualizar totales cuando cambie la cantidad o el precio seleccionado
   const cantidadInputs = document.querySelectorAll(".cantidad-input");
   const precioSelects = document.querySelectorAll(".precio-select");
-  
+
   cantidadInputs.forEach((input) => {
-    input.addEventListener("input", updateTotal);
+    input.addEventListener("input", updateSubTotal);
   });
 
   precioSelects.forEach((select) => {
-    select.addEventListener("change", updateTotal);
+    select.addEventListener("change", updateSubTotal);
   });
 };
-
-const updateTotal = (event) => {
+const updateSubTotal = (event) => {
   const target = event.target; // Elemento que disparó el evento
   const row = target.closest("tr"); // Obtén la fila más cercana al elemento
-  
+
   if (!row) {
     console.error("No se encontró la fila asociada.");
     return;
@@ -163,15 +172,41 @@ const updateTotal = (event) => {
   const totalCell = row.querySelector(".total-cell");
 
   if (!cantidadInput || !precioSelect || !totalCell) {
-    console.error("No se encontraron los elementos necesarios en la fila:", row);
+    console.error(
+      "No se encontraron los elementos necesarios en la fila:",
+      row
+    );
     return;
   }
 
   const cantidad = parseFloat(cantidadInput.value) || 0;
   const precio = parseFloat(precioSelect.value) || 0;
+  const subtotal = cantidad * precio;
 
-  totalCell.textContent = (cantidad * precio).toFixed(2);
+  totalCell.textContent = subtotal.toLocaleString("es-AR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
+  calculateTotal();
+};
+const calculateTotal = () => {
+  const totalCells = document.querySelectorAll(".total-cell");
+  total = 0;
+
+  totalCells.forEach((cell) => {
+    const subtotal =
+      parseFloat(cell.textContent.replace(/\./g, "").replace(",", ".")) || 0;
+    total += subtotal;
+  });
+
+  const totalDisplay = document.getElementById("total");
+  if (totalDisplay) {
+    totalDisplay.textContent = total.toLocaleString("es-AR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
 };
 const addProductToSale = (product) => {
   const existingProduct = productsSales.find(
@@ -195,6 +230,7 @@ const addProductToSale = (product) => {
   // Renderiza la tabla actualizada
   renderProductSales();
 };
+
 inputCodigoCliente.addEventListener("keyup", async (event) => {
   if (event.key === "F3") {
     const clientSearchModal = new bootstrap.Modal(
@@ -220,7 +256,6 @@ inputCodigoCliente.addEventListener("keyup", async (event) => {
     }
   }
 });
-
 inputCodigoProducto.addEventListener("keyup", async (event) => {
   if (event.key === "F3") {
     const productsModal = new bootstrap.Modal(
@@ -240,9 +275,12 @@ inputCodigoProducto.addEventListener("keyup", async (event) => {
       inputCodigoProducto.value = "";
       inputCodigoProducto.focus();
     }
+    addProductToSale(codeToSearch);
+    inputCodigoProducto.value = "";
+    inputCodigoProducto.focus();
+    calculateTotal();
   }
 });
-
 inputModalClients.addEventListener("input", (e) => {
   const criterio = e.target.value;
   const filteredClients = clients.filter((client) =>
