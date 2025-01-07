@@ -115,7 +115,7 @@ const renderProductSales = () => {
   productsSales.forEach((product, index) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${product.codigo}</td>
+      <td class="codigo">${product.codigo}</td>
       <td>${product.nombre}</td>
       <td>
         <input 
@@ -235,21 +235,68 @@ const addProductToSale = (product) => {
   // Renderiza la tabla actualizada
   renderProductSales();
 };
-const Collect = () => {
-  if (!inputCodigoCliente || !total || !fechaVenta.value) {
-    alert("Verifique si ingreso un cliente, un producto y una fecha valida.");
+const Collect = async () => {
+  if (!inputCodigoCliente.value || total === 0 || !fechaVenta.value) {
+    alert("Verifique si ingresó un cliente, productos y una fecha válida.");
     return;
   }
+
+  const detalles = [];
+  const rows = document.querySelectorAll("#tablaProductos tr");
+
+  rows.forEach((row) => {
+    const codigoProducto = row.querySelector(".codigo")?.textContent?.trim();
+    const cantidadInput = row.querySelector(".cantidad-input");
+    const precioSelect = row.querySelector(".precio-select");
+    const totalCell = row.querySelector(".total-cell");
+
+    if (!codigoProducto || !cantidadInput || !precioSelect || !totalCell) {
+      console.error("Datos incompletos en la fila:", row);
+      return;
+    }
+
+    const cantidad = parseFloat(cantidadInput.value) || 0;
+    const precioUnitario = parseFloat(precioSelect.value) || 0;
+    const subtotal = parseFloat(
+      totalCell.textContent.replace(/\./g, "").replace(",", ".")
+    ) || 0;
+
+    if (cantidad > 0 && precioUnitario > 0) {
+      detalles.push({
+        producto: { id: codigoProducto },
+        cantidad,
+        precio_unitario: precioUnitario,
+        subtotal,
+      });
+    }
+  });
+
+  if (detalles.length === 0) {
+    alert("No se puede procesar la venta. Verifique los productos.");
+    return;
+  }
+
   const saleData = {
     fecha: fechaVenta.value,
     tipo_comprobante: tipoComprobante.value,
-    numero_comprobante: ptoVta.value + "-" + nroComp.value,
-    client: {id:inputCodigoCliente.value},
-    total: total,
-    observacion: observacion.textContent,
+    numero_comprobante: `${ptoVta.value}-${nroComp.value}`,
+    client: { id: inputCodigoCliente.value },
+    total: total, 
+    observacion: observacion.value,
+    details: detalles,
   };
-  alert(JSON.stringify(saleData));
+
+  console.log("Datos de la venta:", saleData);
+
+  try {
+    const resSale = await window.prismaFunctions.addSale(saleData);
+    alert(resSale.message);
+  } catch (error) {
+    alert("Error al registrar la venta. Intente nuevamente.");
+    console.error(error);
+  }
 };
+
 inputCodigoCliente.addEventListener("keyup", async (event) => {
   if (event.key === "F3") {
     const clientSearchModal = new bootstrap.Modal(
