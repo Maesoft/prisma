@@ -7,6 +7,7 @@ const { Stock } = require('../entities/Stock');
 const { Provider } = require('../entities/Provider');
 const { Category } = require('../entities/Category');
 const { Client } = require('../entities/Client');
+const { Sale } = require('../entities/Sale');
 
 //Manejo de la App
 app.on('ready', async () => {
@@ -142,8 +143,17 @@ ipcMain.handle('add-stock', async (event, stockData) => {
     await stockRepository.save(newStock)
     return { success: true, message: 'Stock actualizado correctamente.' }
   } catch (error) {
-    console.error(error);
     return { success: false, message: error };
+  }
+})
+ipcMain.handle('add-sale',async (event, saleData)=>{
+  try {
+    const saleRepository = AppDataSource.getRepository(Sale);
+    const newSale = saleRepository.create(saleData)
+    await saleRepository.save(newSale)
+    return {success:true, message:'Se guardo el comprobante exitosamente'}
+  } catch (error) {
+    return {success: false, message: error}
   }
 })
 ipcMain.handle('get-clients', async ()=>{

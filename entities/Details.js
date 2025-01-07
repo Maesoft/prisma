@@ -9,48 +9,36 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Client = void 0;
+exports.Details = void 0;
 const typeorm_1 = require("typeorm");
 const Sale_1 = require("./Sale");
-let Client = class Client {
+let Details = class Details {
 };
-exports.Client = Client;
+exports.Details = Details;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Client.prototype, "id", void 0);
+], Details.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true, nullable: false }),
+    (0, typeorm_1.ManyToOne)(() => Sale_1.Sale, (sale) => sale.details, { nullable: false }),
+    __metadata("design:type", Sale_1.Sale)
+], Details.prototype, "sale", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Client.prototype, "codigo", void 0);
+], Details.prototype, "producto", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true, nullable: false }),
-    __metadata("design:type", String)
-], Client.prototype, "razon_social", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ unique: true, nullable: false }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
-], Client.prototype, "cuit", void 0);
+], Details.prototype, "cantidad", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Client.prototype, "direccion", void 0);
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 10, scale: 2 }),
+    __metadata("design:type", Number)
+], Details.prototype, "precio_unitario", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Client.prototype, "telefono", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Client.prototype, "email", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Client.prototype, "regimen", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => Sale_1.Sale, (sale) => sale.client),
-    __metadata("design:type", Array)
-], Client.prototype, "sales", void 0);
-exports.Client = Client = __decorate([
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 10, scale: 2 }),
+    __metadata("design:type", Number)
+], Details.prototype, "subtotal", void 0);
+exports.Details = Details = __decorate([
     (0, typeorm_1.Entity)()
-], Client);
+], Details);

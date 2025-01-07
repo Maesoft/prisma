@@ -3,9 +3,14 @@ const inputCodigoCliente = document.getElementById("inputCodigoCliente");
 const labelNombreCliente = document.getElementById("nombreCliente");
 const inputCodigoProducto = document.getElementById("codigoProducto");
 const inputModalProduct = document.getElementById("inputModalProducts");
+const tipoComprobante = document.getElementById("tipoComprobante");
+const ptoVta = document.getElementById("ptoVta");
+const nroComp = document.getElementById("nroComp");
+const observacion = document.getElementById("observacion");
 const fechaVenta = document.getElementById("fechaVenta");
 const fechaActual = new Date().toISOString().split("T")[0];
 const codigoProducto = document.getElementById("codigoProducto");
+const btnCobrar = document.getElementById("btnCobrar");
 
 let total = 0;
 let clients = [];
@@ -230,7 +235,21 @@ const addProductToSale = (product) => {
   // Renderiza la tabla actualizada
   renderProductSales();
 };
-
+const Collect = () => {
+  if (!inputCodigoCliente || !total || !fechaVenta.value) {
+    alert("Verifique si ingreso un cliente, un producto y una fecha valida.");
+    return;
+  }
+  const saleData = {
+    fecha: fechaVenta.value,
+    tipo_comprobante: tipoComprobante.value,
+    numero_comprobante: ptoVta.value + "-" + nroComp.value,
+    client: {id:inputCodigoCliente.value},
+    total: total,
+    observacion: observacion.textContent,
+  };
+  alert(JSON.stringify(saleData));
+};
 inputCodigoCliente.addEventListener("keyup", async (event) => {
   if (event.key === "F3") {
     const clientSearchModal = new bootstrap.Modal(
@@ -295,3 +314,4 @@ inputModalProduct.addEventListener("input", (e) => {
   );
   renderProducts(filteredProducts);
 });
+btnCobrar.addEventListener("click", Collect);
