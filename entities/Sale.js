@@ -21,7 +21,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Sale.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: 'date' }),
     __metadata("design:type", Date)
 ], Sale.prototype, "fecha", void 0);
 __decorate([

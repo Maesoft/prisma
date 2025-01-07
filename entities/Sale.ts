@@ -7,7 +7,7 @@ export class Sale {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'date' })
   fecha: Date;
 
   @Column()

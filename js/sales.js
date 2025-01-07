@@ -4,6 +4,7 @@ const labelNombreCliente = document.getElementById("nombreCliente");
 const inputCodigoProducto = document.getElementById("codigoProducto");
 const inputModalProduct = document.getElementById("inputModalProducts");
 const tipoComprobante = document.getElementById("tipoComprobante");
+const tablaProductos = document.getElementById("tablaProductos")
 const ptoVta = document.getElementById("ptoVta");
 const nroComp = document.getElementById("nroComp");
 const observacion = document.getElementById("observacion");
@@ -11,11 +12,14 @@ const fechaVenta = document.getElementById("fechaVenta");
 const fechaActual = new Date().toISOString().split("T")[0];
 const codigoProducto = document.getElementById("codigoProducto");
 const btnCobrar = document.getElementById("btnCobrar");
+const totalDisplay = document.getElementById("total");
 
 let total = 0;
+let idClient = 0;
 let clients = [];
 let products = [];
 let productsSales = [];
+let saleDetail = [];
 
 fechaVenta.value = fechaActual;
 inputCodigoCliente.focus();
@@ -50,6 +54,7 @@ const renderClients = (arrClients) => {
         <td>${client.cuit}</td>
         <td>${client.regimen}</td>`;
     row.addEventListener("click", () => {
+      idClient = client.id;
       inputCodigoCliente.value = client.codigo;
       labelNombreCliente.textContent = client.razon_social;
       const modalClients = bootstrap.Modal.getInstance(
@@ -101,16 +106,7 @@ const renderProducts = (arrProducts) => {
   });
 };
 const renderProductSales = () => {
-  const tableBody = document.getElementById("tablaProductos");
-  tableBody.innerHTML = "";
-
-  if (productsSales.length === 0) {
-    tableBody.innerHTML = `
-      <tr>
-        <td colspan="5">No hay productos en la venta.</td>
-      </tr>`;
-    return;
-  }
+  tablaProductos.innerHTML = "";
 
   productsSales.forEach((product, index) => {
     const row = document.createElement("tr");
@@ -148,7 +144,7 @@ const renderProductSales = () => {
       <td><button class="btn btn-remove" data-index="${index}">✖</button></td>
     `;
 
-    tableBody.appendChild(row);
+    tablaProductos.appendChild(row);
   });
 
   // Actualizar totales cuando cambie la cantidad o el precio seleccionado
@@ -205,7 +201,6 @@ const calculateTotal = () => {
     total += subtotal;
   });
 
-  const totalDisplay = document.getElementById("total");
   if (totalDisplay) {
     totalDisplay.textContent = total.toLocaleString("es-AR", {
       minimumFractionDigits: 2,
@@ -222,8 +217,10 @@ const addProductToSale = (product) => {
     existingProduct.cantidad += 1;
   } else {
     productsSales.push({
+      id: product.id,
       codigo: product.codigo,
       nombre: product.nombre,
+      stock: product.stock,
       cantidad: 1,
       costo: product.costo,
       precio1: product.precio1,
@@ -241,62 +238,91 @@ const Collect = async () => {
     return;
   }
 
-  const detalles = [];
-  const rows = document.querySelectorAll("#tablaProductos tr");
-
-  rows.forEach((row) => {
-    const codigoProducto = row.querySelector(".codigo")?.textContent?.trim();
-    const cantidadInput = row.querySelector(".cantidad-input");
-    const precioSelect = row.querySelector(".precio-select");
-    const totalCell = row.querySelector(".total-cell");
-
-    if (!codigoProducto || !cantidadInput || !precioSelect || !totalCell) {
-      console.error("Datos incompletos en la fila:", row);
-      return;
-    }
-
-    const cantidad = parseFloat(cantidadInput.value) || 0;
-    const precioUnitario = parseFloat(precioSelect.value) || 0;
-    const subtotal = parseFloat(
-      totalCell.textContent.replace(/\./g, "").replace(",", ".")
-    ) || 0;
-
-    if (cantidad > 0 && precioUnitario > 0) {
-      detalles.push({
-        producto: { id: codigoProducto },
-        cantidad,
-        precio_unitario: precioUnitario,
-        subtotal,
-      });
-    }
-  });
-
-  if (detalles.length === 0) {
-    alert("No se puede procesar la venta. Verifique los productos.");
-    return;
-  }
-
   const saleData = {
     fecha: fechaVenta.value,
     tipo_comprobante: tipoComprobante.value,
     numero_comprobante: `${ptoVta.value}-${nroComp.value}`,
-    client: { id: inputCodigoCliente.value },
-    total: total, 
+    client: idClient,
+    total: total,
     observacion: observacion.value,
-    details: detalles,
   };
 
-  console.log("Datos de la venta:", saleData);
-
   try {
-    const resSale = await window.prismaFunctions.addSale(saleData);
-    alert(resSale.message);
+
+    const saleResponse = await window.prismaFunctions.addSale(saleData);
+    const saleId = saleResponse.saleId;
+
+    if (!saleId) {
+      throw new Error("No se pudo obtener el ID de la venta.");
+    }
+
+   
+
+    for (let i = 0; i < tablaProductos.rows.length; i++) {
+      const row = tablaProductos.rows[i];
+      const precioUnitarioSelect = row.cells[3].querySelector("select");
+      const cantidadInput = row.cells[2].querySelector("input");
+
+      saleDetail.push({
+        producto: row.cells[1].innerText,
+        cantidad: parseInt(cantidadInput.value),
+        precio_unitario: parseFloat(precioUnitarioSelect.value),
+        subtotal: parseFloat(
+          row.cells[4].innerText.replace(/\./g, "").replace(",", ".")
+        ),
+        sale: saleId,
+      });
+    }
+    await window.prismaFunctions.addDetail(saleDetail);
+    updateStock();
+    cleanFields();
+    printSale();
   } catch (error) {
-    alert("Error al registrar la venta. Intente nuevamente.");
-    console.error(error);
+    console.error("Error al registrar la venta y sus detalles:", error);
+    alert("Ocurrió un error al registrar la venta. Intente nuevamente.");
   }
 };
+const cleanFields = () =>{
+  productsSales = [];
+  ptoVta.value = "";
+  nroComp.value = "";
+  inputCodigoCliente.value = "";
+  labelNombreCliente.textContent = "";
+  total = 0;
+  idClient=0;
+  tablaProductos.innerHTML="";
+  totalDisplay.textContent="0.00";
+}
+const printSale = () => {
+  console.log("Printing...");
+  
+}
+const updateStock = async () =>{
+  
+  productsSales.forEach((product)=>{
+    saleDetail.forEach((detail) =>{
+      const productData = {
+          id: product.id,
+          stock: product.stock - detail.cantidad
+      }
+      const stockData = {
+        producto: {id: product.id},
+        detalle: `Venta - ${tipoComprobante.value + ptoVta.value}-${nroComp.value}`,
+        operacion: "Egreso",
+        cantidad: - detail.cantidad,
+        stockResultante: product.stock - detail.cantidad
+      }
 
+      console.log(stockData);
+      console.log(productData);
+      
+    })
+  })
+  
+}
+const getLastInvoice = () => {
+
+}
 inputCodigoCliente.addEventListener("keyup", async (event) => {
   if (event.key === "F3") {
     const clientSearchModal = new bootstrap.Modal(
@@ -317,6 +343,7 @@ inputCodigoCliente.addEventListener("keyup", async (event) => {
       inputCodigoCliente.focus();
       labelNombreCliente.textContent = "Cliente no encotrado.";
     } else {
+      idClient = codeToSearch.id;
       labelNombreCliente.textContent = codeToSearch.razon_social;
       codigoProducto.focus();
     }
@@ -340,6 +367,7 @@ inputCodigoProducto.addEventListener("keyup", async (event) => {
     if (!codeToSearch) {
       inputCodigoProducto.value = "";
       inputCodigoProducto.focus();
+      return
     }
     addProductToSale(codeToSearch);
     inputCodigoProducto.value = "";
