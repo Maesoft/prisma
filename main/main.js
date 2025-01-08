@@ -164,6 +164,15 @@ ipcMain.handle("add-sale", async (event, saleData) => {
     return { success: false, message: error };
   }
 });
+ipcMain.handle("get-sales", async()=>{
+  try {
+    const salesRepository = AppDataSource.getRepository(Sale);
+    const sales = await salesRepository.find();
+    return {success: true, sales}
+  } catch (error) {
+    return {success: false, message:error}
+  }
+})
 ipcMain.handle("add-detail", async (event, detailData) => {
   try {
     const detailRepository = AppDataSource.getRepository(Details);

@@ -72,7 +72,7 @@ const menuTemplate = [
   {
     label: 'Ventas',
     submenu: [
-      {label: 'Ingresar Venta', click: ()=>{windowManager.createWindow("newSale",800,600,true, false)}},
+      {label: 'Ingresar Venta', click: ()=>{windowManager.createWindow("newSale",820,600,true, false)}},
       {label: 'Eliminar Venta', click: ()=>{}},
       {type: 'separator'},
       {label: 'Resumen de Ventas', click:()=>{}},

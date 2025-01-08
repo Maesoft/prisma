@@ -4,7 +4,7 @@ const labelNombreCliente = document.getElementById("nombreCliente");
 const inputCodigoProducto = document.getElementById("codigoProducto");
 const inputModalProduct = document.getElementById("inputModalProducts");
 const tipoComprobante = document.getElementById("tipoComprobante");
-const tablaProductos = document.getElementById("tablaProductos")
+const tablaProductos = document.getElementById("tablaProductos");
 const ptoVta = document.getElementById("ptoVta");
 const nroComp = document.getElementById("nroComp");
 const observacion = document.getElementById("observacion");
@@ -189,6 +189,12 @@ const updateSubTotal = (event) => {
     maximumFractionDigits: 2,
   });
 
+  // Actualizar la cantidad en el array productsSales
+  const index = parseInt(cantidadInput.dataset.index);
+  if (productsSales[index]) {
+    productsSales[index].cantidad = cantidad;
+  }
+
   calculateTotal();
 };
 const calculateTotal = () => {
@@ -228,8 +234,6 @@ const addProductToSale = (product) => {
       total: product.precio,
     });
   }
-
-  // Renderiza la tabla actualizada
   renderProductSales();
 };
 const Collect = async () => {
@@ -248,15 +252,12 @@ const Collect = async () => {
   };
 
   try {
-
     const saleResponse = await window.prismaFunctions.addSale(saleData);
     const saleId = saleResponse.saleId;
 
     if (!saleId) {
       throw new Error("No se pudo obtener el ID de la venta.");
     }
-
-   
 
     for (let i = 0; i < tablaProductos.rows.length; i++) {
       const row = tablaProductos.rows[i];
@@ -282,47 +283,51 @@ const Collect = async () => {
     alert("Ocurrió un error al registrar la venta. Intente nuevamente.");
   }
 };
-const cleanFields = () =>{
+const cleanFields = () => {
   productsSales = [];
+  saleDetail = [];
   ptoVta.value = "";
   nroComp.value = "";
   inputCodigoCliente.value = "";
   labelNombreCliente.textContent = "";
   total = 0;
-  idClient=0;
-  tablaProductos.innerHTML="";
-  totalDisplay.textContent="0.00";
-}
+  idClient = 0;
+  tablaProductos.innerHTML = "";
+  totalDisplay.textContent = "0.00";
+};
 const printSale = () => {
   console.log("Printing...");
-  
-}
-const updateStock = async () =>{
-  
-  productsSales.forEach((product)=>{
-    saleDetail.forEach((detail) =>{
-      const productData = {
-          id: product.id,
-          stock: product.stock - detail.cantidad
-      }
-      const stockData = {
-        producto: {id: product.id},
-        detalle: `Venta - ${tipoComprobante.value + ptoVta.value}-${nroComp.value}`,
-        operacion: "Egreso",
-        cantidad: - detail.cantidad,
-        stockResultante: product.stock - detail.cantidad
-      }
+};
+const updateStock = () => {
+  productsSales.forEach(async (product) => {
+    const productData = {
+      stock: product.stock - product.cantidad,
+    };
+    const stockData = {
+      producto: { id: product.id },
+      detalle: `Venta - ${tipoComprobante.value + ptoVta.value}-${
+        nroComp.value
+      }`,
+      operacion: "Egreso",
+      cantidad: -product.cantidad,
+      stockResultante: product.stock - product.cantidad,
+    };
 
-      console.log(stockData);
-      console.log(productData);
-      
-    })
-  })
-  
-}
-const getLastInvoice = () => {
+    await window.prismaFunctions.editProduct(product.id, productData);
+    await window.prismaFunctions.addStock(stockData);
+  });
+};
+const getLastInvoice = async () => {
+  const resInvoices = await window.prismaFunctions.getSales();
+  const lastInvoice = resInvoices.sales.pop();
 
-}
+  const [ptoVtaPart, nroCompPart] = lastInvoice.numero_comprobante.split("-");
+
+  const formattedPtoVta = ptoVtaPart.padStart(4, "0"); 
+  const formattedNroComp = (parseInt(nroCompPart) + 1).toString().padStart(8, "0");
+  ptoVta.value = formattedPtoVta;
+  nroComp.value = formattedNroComp;
+};
 inputCodigoCliente.addEventListener("keyup", async (event) => {
   if (event.key === "F3") {
     const clientSearchModal = new bootstrap.Modal(
@@ -367,7 +372,7 @@ inputCodigoProducto.addEventListener("keyup", async (event) => {
     if (!codeToSearch) {
       inputCodigoProducto.value = "";
       inputCodigoProducto.focus();
-      return
+      return;
     }
     addProductToSale(codeToSearch);
     inputCodigoProducto.value = "";
@@ -390,3 +395,5 @@ inputModalProduct.addEventListener("input", (e) => {
   renderProducts(filteredProducts);
 });
 btnCobrar.addEventListener("click", Collect);
+
+document.addEventListener("DOMContentLoaded",getLastInvoice);
