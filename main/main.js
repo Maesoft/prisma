@@ -1,4 +1,4 @@
-const { app, ipcMain, Menu } = require("electron");
+const { app, ipcMain, dialog, Menu } = require("electron");
 const { AppDataSource } = require("./data-source");
 const WindowManager = require("./windowManager");
 const { menuTemplate } = require("../js/menu");
@@ -192,3 +192,10 @@ ipcMain.handle("get-clients", async () => {
     return { success: false, message: error };
   }
 });
+ipcMain.handle("show-message", (event,icono,titulo, mensaje)=>{
+  dialog.showMessageBox({
+    type: icono,
+    title: titulo,
+    message: mensaje
+  })
+})

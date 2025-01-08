@@ -28,12 +28,12 @@ const loadClients = async () => {
   try {
     const res = await window.prismaFunctions.getClients();
     if (!res.success) {
-      alert(res.message);
+      window.prismaFunctions.showMSG("error", "Error", res.message);
       return;
     }
     clients = res.clients;
   } catch (error) {
-    alert(error);
+    window.prismaFunctions.showMSG("error", "Error", error);
   }
 };
 const renderClients = (arrClients) => {
@@ -69,12 +69,12 @@ const loadProducts = async () => {
   try {
     const res = await window.prismaFunctions.getProducts();
     if (!res.success) {
-      alert(res.message);
+      window.prismaFunctions.showMSG("error", "Error", res.message);
       return;
     }
     products = res.products;
   } catch (error) {
-    alert(error);
+    window.prismaFunctions.showMSG("error", "Error", error);
   }
 };
 const renderProducts = (arrProducts) => {
@@ -118,6 +118,7 @@ const renderProductSales = () => {
           type="number" 
           value="${product.cantidad}" 
           min="1" 
+          max="${product.stock}"
           data-index="${index}" 
           class="cantidad-input h-25 w-50"
         />
@@ -158,7 +159,33 @@ const renderProductSales = () => {
   precioSelects.forEach((select) => {
     select.addEventListener("change", updateSubTotal);
   });
+  // Escuchar eventos en boton eliminar
+  const btnsDelete = document.querySelectorAll(".btn-remove");
+  btnsDelete.forEach((btn) => {
+    btn.addEventListener("click", deleteItem);
+  });
 };
+const deleteItem = (event) => {
+  const target = event.target;
+  const row = target.closest("tr");
+  const rowIndex = Array.from(tablaProductos.rows).indexOf(row); 
+
+  if (rowIndex === -1) return; 
+
+  const productToRemove = productsSales[rowIndex];
+  if (productToRemove) {
+    productsSales = productsSales.filter((product, index) => index !== rowIndex);
+  }
+
+  const saleDetailIndex = saleDetail.findIndex((detail) => detail.producto === productToRemove.nombre);
+  if (saleDetailIndex !== -1) {
+    saleDetail.splice(saleDetailIndex, 1);
+  }
+
+  row.remove();
+  calculateTotal();
+};
+
 const updateSubTotal = (event) => {
   const target = event.target; // Elemento que disparó el evento
   const row = target.closest("tr"); // Obtén la fila más cercana al elemento
@@ -215,33 +242,53 @@ const calculateTotal = () => {
   }
 };
 const addProductToSale = (product) => {
-  const existingProduct = productsSales.find(
-    (item) => item.codigo === product.codigo
-  );
-
-  if (existingProduct) {
-    existingProduct.cantidad += 1;
+  if (product.stock > 0) {
+    const existingProduct = productsSales.find(
+      (item) => item.codigo === product.codigo
+    );
+    if (existingProduct) {
+      if (product.stock > product.cantidad) existingProduct.cantidad += 1;
+    } else {
+      productsSales.push({
+        id: product.id,
+        codigo: product.codigo,
+        nombre: product.nombre,
+        stock: product.stock,
+        cantidad: 1,
+        costo: product.costo,
+        precio1: product.precio1,
+        precio2: product.precio2,
+        total: product.precio,
+      });
+    }
+    renderProductSales();
   } else {
-    productsSales.push({
-      id: product.id,
-      codigo: product.codigo,
-      nombre: product.nombre,
-      stock: product.stock,
-      cantidad: 1,
-      costo: product.costo,
-      precio1: product.precio1,
-      precio2: product.precio2,
-      total: product.precio,
-    });
+    window.prismaFunctions.showMSG(
+      "info",
+      "Stock Faltante",
+      `El producto ${product.nombre} no tiene stock suficiente.`
+    );
   }
-  renderProductSales();
 };
-const Collect = async () => {
+const collect = async () => {
   if (!inputCodigoCliente.value || total === 0 || !fechaVenta.value) {
-    alert("Verifique si ingresó un cliente, productos y una fecha válida.");
+    window.prismaFunctions.showMSG(
+      "error",
+      "Error",
+      "Verifique si ingresó un cliente, productos y una fecha válida."
+    );
     return;
   }
-
+  for (const product of productsSales) {
+    if (product.stock < product.cantidad) {
+      window.prismaFunctions.showMSG(
+        "info",
+        "Stock Faltante",
+        `El producto ${product.nombre} no tiene suficiente stock.`
+      );
+      return;
+    }
+  }
   const saleData = {
     fecha: fechaVenta.value,
     tipo_comprobante: tipoComprobante.value,
@@ -294,9 +341,11 @@ const cleanFields = () => {
   idClient = 0;
   tablaProductos.innerHTML = "";
   totalDisplay.textContent = "0.00";
+  getLastInvoice();
 };
 const printSale = () => {
-  console.log("Printing...");
+  
+window.print()
 };
 const updateStock = () => {
   productsSales.forEach(async (product) => {
@@ -319,12 +368,20 @@ const updateStock = () => {
 };
 const getLastInvoice = async () => {
   const resInvoices = await window.prismaFunctions.getSales();
+
+  if (!resInvoices.sales || resInvoices.sales.length < 1) {
+    ptoVta.value = "0000";
+    nroComp.value = "00000001";
+    return;
+  }
   const lastInvoice = resInvoices.sales.pop();
 
   const [ptoVtaPart, nroCompPart] = lastInvoice.numero_comprobante.split("-");
 
-  const formattedPtoVta = ptoVtaPart.padStart(4, "0"); 
-  const formattedNroComp = (parseInt(nroCompPart) + 1).toString().padStart(8, "0");
+  const formattedPtoVta = ptoVtaPart.padStart(4, "0");
+  const formattedNroComp = (parseInt(nroCompPart) + 1)
+    .toString()
+    .padStart(8, "0");
   ptoVta.value = formattedPtoVta;
   nroComp.value = formattedNroComp;
 };
@@ -394,6 +451,5 @@ inputModalProduct.addEventListener("input", (e) => {
   );
   renderProducts(filteredProducts);
 });
-btnCobrar.addEventListener("click", Collect);
-
-document.addEventListener("DOMContentLoaded",getLastInvoice);
+btnCobrar.addEventListener("click", collect);
+document.addEventListener("DOMContentLoaded", getLastInvoice);

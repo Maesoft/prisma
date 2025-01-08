@@ -28,7 +28,7 @@ const loadProducts = async () => {
   try {
     const response = await window.prismaFunctions.getProducts();
     if (!response.success) {
-      alert(response.message);
+      window.prismaFunctions.showMSG("error","Prisma", response.message);
       return;
     }
     products = response.products;
@@ -55,7 +55,7 @@ const updateStock = async () => {
   const stockDesc = document.getElementById("detailStock").value;
 
   if (isNaN(stockActual) || isNaN(stockNuevo) || isNaN(idProduct)) {
-    alert("Uno de los campos es de tipo NaN.");
+    window.prismaFunctions.showMSG("error","Prisma", "Uno de los campos es de tipo NaN.");
     return;
   }
 
@@ -75,16 +75,15 @@ const updateStock = async () => {
       stockResultante: stockActual + stockNuevo,
     });
     if (!resProduct.success || !resStock.success) {
-      alert(stockDesc);
+      window.prismaFunctions.showMSG("error","Prisma", stockDesc);
       return;
     }
-    alert("Stock actualizado correctamente.");
+    window.prismaFunctions.showMSG("info","Prisma", "Stock actualizado correctamente.");
     loadProducts();
     document.getElementById("stockForm").reset();
     document.getElementById("productSearchModal").style.display = "block";
   } catch (error) {
-    console.error("Error al actualizar el stock:", error);
-    alert("Hubo un problema al actualizar el stock.");
+    window.prismaFunctions.showMSG("error","Prisma", "Error al actualizar el stock:", error);
   }
 };
 const findProducts = async () => {
