@@ -3,9 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opciones</title>
+    <title>Configuración de Empresa - Prisma</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script defer src="../js/bootstrap.min.js"></script>
+    <script defer src="../js/option.js"></script>
 </head>
 <body>
-    
+
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Configuración de Empresa</h5>
+            </div>
+            <div class="card-body">
+                <form id="empresaForm">
+                    <div class="mb-3">
+                        <label for="nombreEmpresa" class="form-label">Nombre de la Empresa</label>
+                        <input type="text" class="form-control" id="nombreEmpresa" placeholder="Ingrese el nombre de la empresa" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cuitEmpresa" class="form-label">CUIT</label>
+                        <input type="text" class="form-control" id="cuitEmpresa" placeholder="Ingrese el CUIT" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="domicilioEmpresa" class="form-label">Domicilio</label>
+                        <input type="text" class="form-control" id="domicilioEmpresa" placeholder="Ingrese el domicilio" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefonoEmpresa" class="form-label">Telefono</label>
+                        <input type="text" class="form-control" id="telefonoEmpresa" placeholder="Ingrese el telefono" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="logoEmpresa" class="form-label">Logo de la Empresa</label>
+                        <input type="file" class="form-control" id="logoEmpresa" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <label for="regimenFiscal" class="form-label">Régimen Fiscal</label>
+                        <select class="form-select" id="regimenFiscal" required>
+                            <option value="">Seleccione un régimen fiscal</option>
+                            <option value="Responsable Inscripto">Responsable Inscripto</option>
+                            <option value="Monotributista">Monotributista</option>
+                            <option value="Exento">Exento</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="container text-center">
+                        <button type="button" class="btn btn-secondary" onclick="window.close()">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="btnSave">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 </body>
 </html>

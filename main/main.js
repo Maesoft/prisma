@@ -9,6 +9,7 @@ const { Category } = require("../entities/Category");
 const { Client } = require("../entities/Client");
 const { Sale } = require("../entities/Sale");
 const { Details } = require("../entities/Details");
+const { Option } = require("../entities/Options");
 
 //Manejo de la App
 app.on("ready", async () => {
@@ -198,4 +199,14 @@ ipcMain.handle("show-message", (event,icono,titulo, mensaje)=>{
     title: titulo,
     message: mensaje
   })
+})
+ipcMain.handle("save-option", async (event, optionData)=>{
+  try {
+    const optionRepository = AppDataSource.getRepository(Option)
+    const newOption = optionRepository.create(optionData)
+    await optionRepository.save(newOption)
+    return {success:true, message:"Se guardaron los datos correctamente."}
+  } catch (error) {
+    return {success:false, message: error}
+  } 
 })

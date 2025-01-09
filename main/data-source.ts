@@ -6,13 +6,14 @@ import { Stock } from "../entities/Stock";
 import { Client } from "../entities/Client";
 import { Details } from "../entities/Details";
 import { Sale } from "../entities/Sale";
+import { Option } from "../entities/Options";
 
 export const AppDataSource = new DataSource({
     type: "sqlite",
     database: "./db/prisma_contable.sqlite",  
     synchronize: true,  
     logging: true,
-    entities: [Provider, Category, Product, Stock, Client, Details, Sale],  
+    entities: [Provider, Category, Product, Stock, Client, Details, Sale, Option],  
 });
 
 AppDataSource.initialize()

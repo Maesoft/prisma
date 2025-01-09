@@ -185,10 +185,9 @@ const deleteItem = (event) => {
   row.remove();
   calculateTotal();
 };
-
 const updateSubTotal = (event) => {
-  const target = event.target; // Elemento que disparó el evento
-  const row = target.closest("tr"); // Obtén la fila más cercana al elemento
+  const target = event.target; 
+  const row = target.closest("tr"); //closest selecciona el elemento "tr" mas cercano al taget
 
   if (!row) {
     console.error("No se encontró la fila asociada.");
@@ -344,8 +343,22 @@ const cleanFields = () => {
   getLastInvoice();
 };
 const printSale = () => {
-  
-window.print()
+    const contenido = `
+      <html>
+        <head>
+          <title>Imprimir</title>
+        </head>
+        <body>
+          <h1>FACTURA A</h1>
+          <p></p>
+        </body>
+      </html>
+    `;
+    const ventana = window.open("", "", "width=600,height=400");
+    ventana.document.write(contenido);
+    ventana.document.close(); // Necesario para algunos navegadores
+    ventana.print();
+
 };
 const updateStock = () => {
   productsSales.forEach(async (product) => {

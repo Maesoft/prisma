@@ -5,7 +5,7 @@ const menuTemplate = [
     label: 'Archivo',
     submenu: [
       { label: 'Backup', click: () => { /* Función de backup */ } },
-      { label: 'Opciones', click: () => { /* Función de opciones */ } },
+      { label: 'Opciones', click: () => { windowManager.createWindow("option",700,630,false,true) } },
       { type: 'separator' },
       { label: 'Salir', role: 'quit' }
     ]

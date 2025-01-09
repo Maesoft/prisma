@@ -1,19 +1,6 @@
 const productImage = document.getElementById("productImage");
 const productImageInput = document.getElementById("productImageInput");
 
-productImage.addEventListener("click", () => {
-  document.getElementById("productImageInput").click();
-});
-productImageInput.addEventListener("change", (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      document.getElementById("productImage").src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-});
 const loadCategories = async () => {
   const res = await window.prismaFunctions.getCategories();
   if (res.success) {
@@ -29,7 +16,6 @@ const loadCategories = async () => {
     window.prismaFunctions.showMSG("error","Prisma", res.message);
   }
 };
-
 const addCategory = async () => {
   const newCategoryName = document
     .getElementById("newCategoryName")
@@ -53,13 +39,11 @@ const addCategory = async () => {
     window.prismaFunctions.showMSG("error","Prisma", res.message);
   }
 };
-
 const showModal = () => {
   const modal = document.getElementById("categoryModal");
   modal.classList.toggle("show");
   modal.style.display = modal.classList.contains("show") ? "block" : "none";
 };
-
 const newProduct = async () => {
   const productData = {
     codigo: document.getElementById("productCode").value.trim(),
@@ -112,4 +96,17 @@ const newProduct = async () => {
   }
 };
 
+productImage.addEventListener("click", () => {
+  document.getElementById("productImageInput").click();
+});
+productImageInput.addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      document.getElementById("productImage").src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
 window.addEventListener("DOMContentLoaded", loadCategories);
