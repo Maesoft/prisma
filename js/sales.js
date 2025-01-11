@@ -25,7 +25,7 @@ fechaVenta.value = fechaActual;
 inputCodigoCliente.focus();
 
 const formatearFecha = (fechaISO) => {
-  const [anio, mes, dia] = fechaISO.split('-');
+  const [anio, mes, dia] = fechaISO.split("-");
   return `${dia}-${mes}-${anio}`;
 };
 const loadClients = async () => {
@@ -331,7 +331,7 @@ const collect = async () => {
     }
     await window.prismaFunctions.addDetail(saleDetail);
     updateStock();
-    printSale();
+    await printSale();
     cleanFields();
   } catch (error) {
     console.error("Error al registrar la venta y sus detalles:", error);
@@ -343,6 +343,7 @@ const cleanFields = () => {
   saleDetail = [];
   ptoVta.value = "";
   nroComp.value = "";
+  observacion.value="";
   inputCodigoCliente.value = "";
   labelNombreCliente.textContent = "";
   total = 0;
@@ -354,9 +355,8 @@ const cleanFields = () => {
 const printSale = async () => {
   const resDatosEmpresa = await window.prismaFunctions.loadOption();
   const { nombre, cuit, domicilio, telefono, logo } = resDatosEmpresa.options;
-  
-  console.log(idClient);
-  
+  const clientSelect = clients.find((client) => client.id == idClient);
+
   const contenido = `
     <!DOCTYPE html>
     <html lang="en">
@@ -383,19 +383,23 @@ const printSale = async () => {
                 </h1>
             </div>
             <div class="col-md-4 text-center">
-                <p><strong>Fecha:</strong> <span id="fecha-comprobante">${formatearFecha(fechaVenta.value)}</span></p>
+                <p><strong>Fecha:</strong> <span id="fecha-comprobante">${formatearFecha(
+                  fechaVenta.value
+                )}</span></p>
                 <p class="mb-0"><strong>No. Comprobante:</strong></p>
                 <p class="mt-0">${ptoVta.value}-${nroComp.value}</p>
             </div>
         </div>
         <div class="row mt-4 border-bottom">
             <div class="col-6">
-                <p><strong>Razón Social: </strong> Consumidor Final</p>
-                <p><strong>CUIT: </strong>99-9999999999-9</p>
+                <p><strong>Razón Social: </strong>${
+                  clientSelect.razon_social
+                }</p>
+                <p><strong>CUIT: </strong>${clientSelect.cuit}</p>
             </div>
             <div class="col-6">
-                <p><strong>Teléfono: </strong> Consumidor Final</p>
-                <p><strong>Domicilio: </strong>99-9999999999-9</p>
+                <p><strong>Teléfono: </strong> ${clientSelect.telefono}</p>
+                <p><strong>Domicilio: </strong>${clientSelect.direccion}</p>
             </div>
         </div>
         <div class="row mt-4">
@@ -410,38 +414,46 @@ const printSale = async () => {
                         </tr>
                     </thead>
                     <tbody id="detalle-factura">
-                        <tr>
-                            <td id="cantidad-1">2</td>
-                            <td id="descripcion-1">Producto A</td>
-                            <td id="precio-1">$100</td>
-                            <td id="subtotal-1">$200</td>
-                        </tr>
-                        <tr>
-                            <td id="cantidad-2">1</td>
-                            <td id="descripcion-2">Producto B</td>
-                            <td id="precio-2">$50</td>
-                            <td id="subtotal-2">$50</td>
-                        </tr>
+                        
                     </tbody>
                 </table>
             </div>
         </div>
         <div class="row mt-4">
             <div class="col-12 text-end">
-                <p class="fs-5"><strong>Total:</strong> <span id="total-factura">$250</span></p>
+                <p class="fs-5"><strong>Total:</strong> <span>${total}</span></p>
             </div>
         </div>
+        <p>${observacion.value}</p>
       </div>
     </body>
     </html>
   `;
+
   const ventana = window.open("", "", "width=800,height=1100");
   ventana.document.write(contenido);
-  ventana.document.close(); // Necesario para algunos navegadores
-  ventana.print();
-  ventana.onafterprint = () => ventana.close(); // Cierra la ventana después de imprimir
-};
+  ventana.document.close();
 
+  const tabla = ventana.document.getElementById("detalle-factura");
+  saleDetail.forEach((product) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+        <td>${product.cantidad}</td>
+        <td>${product.producto}</td>
+        <td>${product.precio_unitario.toLocaleString("es-AR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}</td>
+        <td>${product.subtotal.toLocaleString("es-AR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}</td>`;
+    tabla.appendChild(row);
+  });
+
+  ventana.print();
+  ventana.onafterprint = () => ventana.close();
+};
 const updateStock = () => {
   productsSales.forEach(async (product) => {
     const productData = {
