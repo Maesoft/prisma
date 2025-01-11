@@ -24,6 +24,10 @@ let saleDetail = [];
 fechaVenta.value = fechaActual;
 inputCodigoCliente.focus();
 
+const formatearFecha = (fechaISO) => {
+  const [anio, mes, dia] = fechaISO.split('-');
+  return `${dia}-${mes}-${anio}`;
+};
 const loadClients = async () => {
   try {
     const res = await window.prismaFunctions.getClients();
@@ -168,16 +172,20 @@ const renderProductSales = () => {
 const deleteItem = (event) => {
   const target = event.target;
   const row = target.closest("tr");
-  const rowIndex = Array.from(tablaProductos.rows).indexOf(row); 
+  const rowIndex = Array.from(tablaProductos.rows).indexOf(row);
 
-  if (rowIndex === -1) return; 
+  if (rowIndex === -1) return;
 
   const productToRemove = productsSales[rowIndex];
   if (productToRemove) {
-    productsSales = productsSales.filter((product, index) => index !== rowIndex);
+    productsSales = productsSales.filter(
+      (product, index) => index !== rowIndex
+    );
   }
 
-  const saleDetailIndex = saleDetail.findIndex((detail) => detail.producto === productToRemove.nombre);
+  const saleDetailIndex = saleDetail.findIndex(
+    (detail) => detail.producto === productToRemove.nombre
+  );
   if (saleDetailIndex !== -1) {
     saleDetail.splice(saleDetailIndex, 1);
   }
@@ -186,7 +194,7 @@ const deleteItem = (event) => {
   calculateTotal();
 };
 const updateSubTotal = (event) => {
-  const target = event.target; 
+  const target = event.target;
   const row = target.closest("tr"); //closest selecciona el elemento "tr" mas cercano al taget
 
   if (!row) {
@@ -246,7 +254,8 @@ const addProductToSale = (product) => {
       (item) => item.codigo === product.codigo
     );
     if (existingProduct) {
-      if (product.stock > product.cantidad) existingProduct.cantidad += 1;
+      if (existingProduct.stock > existingProduct.cantidad)
+        existingProduct.cantidad += 1;
     } else {
       productsSales.push({
         id: product.id,
@@ -322,8 +331,8 @@ const collect = async () => {
     }
     await window.prismaFunctions.addDetail(saleDetail);
     updateStock();
-    cleanFields();
     printSale();
+    cleanFields();
   } catch (error) {
     console.error("Error al registrar la venta y sus detalles:", error);
     alert("Ocurrió un error al registrar la venta. Intente nuevamente.");
@@ -342,24 +351,97 @@ const cleanFields = () => {
   totalDisplay.textContent = "0.00";
   getLastInvoice();
 };
-const printSale = () => {
-    const contenido = `
-      <html>
-        <head>
-          <title>Imprimir</title>
-        </head>
-        <body>
-          <h1>FACTURA A</h1>
-          <p></p>
-        </body>
-      </html>
-    `;
-    const ventana = window.open("", "", "width=600,height=400");
-    ventana.document.write(contenido);
-    ventana.document.close(); // Necesario para algunos navegadores
-    ventana.print();
-
+const printSale = async () => {
+  const resDatosEmpresa = await window.prismaFunctions.loadOption();
+  const { nombre, cuit, domicilio, telefono, logo } = resDatosEmpresa.options;
+  
+  console.log(idClient);
+  
+  const contenido = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Factura</title>
+        <link rel="stylesheet" href="../css/bootstrap.min.css" />
+        <script defer src="../js/bootstrap.min.js"></script>
+    </head>
+    <body>
+      <div class="container my-4">
+        <img src="${logo}" alt="Logo de la empresa" class="img-fluid ml-5" id="logo-empresa" style="width:50px">
+        <div class="row border-bottom pb-3">
+            <div class="col-md-4">
+              <h3 class="mb-0 mt-0">${nombre}</h3>
+              <p class="mb-0 mt-0">${cuit}</p>
+              <p class="mb-0 mt-0">${domicilio}</p>
+              <p class="mb-0 mt-0">${telefono}</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <h1 class="display-6" id="tipo-comprobante">
+                ${tipoComprobante.options[tipoComprobante.selectedIndex].text}
+                </h1>
+            </div>
+            <div class="col-md-4 text-center">
+                <p><strong>Fecha:</strong> <span id="fecha-comprobante">${formatearFecha(fechaVenta.value)}</span></p>
+                <p class="mb-0"><strong>No. Comprobante:</strong></p>
+                <p class="mt-0">${ptoVta.value}-${nroComp.value}</p>
+            </div>
+        </div>
+        <div class="row mt-4 border-bottom">
+            <div class="col-6">
+                <p><strong>Razón Social: </strong> Consumidor Final</p>
+                <p><strong>CUIT: </strong>99-9999999999-9</p>
+            </div>
+            <div class="col-6">
+                <p><strong>Teléfono: </strong> Consumidor Final</p>
+                <p><strong>Domicilio: </strong>99-9999999999-9</p>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Cantidad</th>
+                            <th>Descripción</th>
+                            <th>Precio Unitario</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detalle-factura">
+                        <tr>
+                            <td id="cantidad-1">2</td>
+                            <td id="descripcion-1">Producto A</td>
+                            <td id="precio-1">$100</td>
+                            <td id="subtotal-1">$200</td>
+                        </tr>
+                        <tr>
+                            <td id="cantidad-2">1</td>
+                            <td id="descripcion-2">Producto B</td>
+                            <td id="precio-2">$50</td>
+                            <td id="subtotal-2">$50</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12 text-end">
+                <p class="fs-5"><strong>Total:</strong> <span id="total-factura">$250</span></p>
+            </div>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+  const ventana = window.open("", "", "width=800,height=1100");
+  ventana.document.write(contenido);
+  ventana.document.close(); // Necesario para algunos navegadores
+  ventana.print();
+  ventana.onafterprint = () => ventana.close(); // Cierra la ventana después de imprimir
 };
+
 const updateStock = () => {
   productsSales.forEach(async (product) => {
     const productData = {

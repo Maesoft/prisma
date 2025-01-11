@@ -43,7 +43,7 @@ ipcMain.handle("add-provider", async (event, providerData) => {
   } catch (error) {
     return {
       success: false,
-      message: error,
+      message: error.message,
     };
   }
 });
@@ -59,7 +59,7 @@ ipcMain.handle("add-client", async (event, clientData) => {
   } catch (error) {
     return {
       success: false,
-      message: error,
+      message: error.message,
     };
   }
 });
@@ -90,7 +90,7 @@ ipcMain.handle("add-category", async (event, categoryData) => {
   } catch (error) {
     return {
       success: false,
-      message: error,
+      message: error.message,
     };
   }
 });
@@ -106,7 +106,7 @@ ipcMain.handle("add-product", async (event, productData) => {
     };
   } catch (error) {
     console.error(error);
-    return { success: false, message: error };
+    return { success: false, message: error.message };
   }
 });
 ipcMain.handle("edit-product", async (event, id, productData) => {
@@ -133,7 +133,7 @@ ipcMain.handle("edit-product", async (event, id, productData) => {
     };
   } catch (error) {
     console.error(error);
-    return { success: false, message: error };
+    return { success: false, message: error.message };
   }
 });
 ipcMain.handle("get-products", async () => {
@@ -142,7 +142,7 @@ ipcMain.handle("get-products", async () => {
     const products = await productRepository.find({ relations: ["categoria"] });
     return { success: true, products };
   } catch (error) {
-    return { success: false, message: error };
+    return { success: false, message: error.message };
   }
 });
 ipcMain.handle("add-stock", async (event, stockData) => {
@@ -152,7 +152,7 @@ ipcMain.handle("add-stock", async (event, stockData) => {
     await stockRepository.save(newStock);
     return { success: true, message: "Stock actualizado correctamente." };
   } catch (error) {
-    return { success: false, message: error };
+    return { success: false, message: error.message };
   }
 });
 ipcMain.handle("add-sale", async (event, saleData) => {
@@ -162,7 +162,7 @@ ipcMain.handle("add-sale", async (event, saleData) => {
     await saleRepository.save(newSale);
     return { success: true, message: "Se guardo el comprobante exitosamente", saleId: newSale.id };
   } catch (error) {
-    return { success: false, message: error };
+    return { success: false, message: error.message };
   }
 });
 ipcMain.handle("get-sales", async()=>{
@@ -171,7 +171,7 @@ ipcMain.handle("get-sales", async()=>{
     const sales = await salesRepository.find();
     return {success: true, sales}
   } catch (error) {
-    return {success: false, message:error}
+    return {success: false, message:error.message}
   }
 })
 ipcMain.handle("add-detail", async (event, detailData) => {
@@ -181,7 +181,7 @@ ipcMain.handle("add-detail", async (event, detailData) => {
     await detailRepository.save(newDetail);
     return { success: true, message: "Detalle cargado exitosamente." };
   } catch (error) {
-    return { success: false, message: error };
+    return { success: false, message: error.message };
   }
 });
 ipcMain.handle("get-clients", async () => {
@@ -190,7 +190,7 @@ ipcMain.handle("get-clients", async () => {
     const clients = await clientRepository.find();
     return { success: true, clients };
   } catch (error) {
-    return { success: false, message: error };
+    return { success: false, message: error.message };
   }
 });
 ipcMain.handle("show-message", (event,icono,titulo, mensaje)=>{
@@ -200,13 +200,40 @@ ipcMain.handle("show-message", (event,icono,titulo, mensaje)=>{
     message: mensaje
   })
 })
-ipcMain.handle("save-option", async (event, optionData)=>{
+ipcMain.handle("save-option", async (event, optionData) => {
   try {
-    const optionRepository = AppDataSource.getRepository(Option)
-    const newOption = optionRepository.create(optionData)
-    await optionRepository.save(newOption)
-    return {success:true, message:"Se guardaron los datos correctamente."}
+    const optionRepository = AppDataSource.getRepository(Option);
+
+    // Buscar si ya existe un registro
+    let existingOption = await optionRepository.findOneBy({});
+
+    if (existingOption) {
+      // Actualizar el registro existente
+      await optionRepository.update(existingOption.id, optionData);
+      return { success: true, message: "Se actualizaron los datos correctamente." };
+    } else {
+      // Crear un nuevo registro
+      const newOption = optionRepository.create(optionData);
+      await optionRepository.save(newOption);
+      return { success: true, message: "Se guardaron los datos correctamente." };
+    }
   } catch (error) {
-    return {success:false, message: error}
-  } 
-})
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("load-option", async () => {
+  try {
+    const optionRepository = AppDataSource.getRepository(Option);
+
+    // Buscar el único registro (si existe)
+    const options = await optionRepository.findOneBy({});
+
+    if (!options) {
+      return { success: false, message: "No hay datos disponibles." };
+    }
+
+    return { success: true, options };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});

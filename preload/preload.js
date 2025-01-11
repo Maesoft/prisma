@@ -18,4 +18,5 @@ contextBridge.exposeInMainWorld("prismaFunctions", {
   addDetail: (detailData) => ipcRenderer.invoke("add-detail", detailData),
   showMSG: (icon, title, message) => ipcRenderer.invoke("show-message", icon, title, message),
   saveOption: (optionData) => ipcRenderer.invoke("save-option", optionData),
+  loadOption: () => ipcRenderer.invoke("load-option"),
 });

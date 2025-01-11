@@ -5,18 +5,48 @@
   "main": "main/main.js",
   "scripts": {
     "start": "npm run build && electron .",
-    "build": "tsc"
+    "build": "tsc",
+    "dist": "electron-builder"
   },
   "author": "Matias Ariel Eguia",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^22.7.4",
     "electron": "^31.3.1",
+    "electron-builder": "^25.1.8",
     "typescript": "^5.6.2"
   },
   "dependencies": {
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
     "typeorm": "^0.3.20"
+  },
+  "build": {
+    "appId": "com.prisma.software",
+    "productName": "Prisma", 
+    "directories": {
+      "output": "dist",
+      "buildResources": "resources"
+    },
+    "files": [
+      "assets/**/*",
+      "css/**/*",
+      "entities/**/*",
+      "js/**/*",
+      "main/**/*",
+      "preload/**/*",
+      "node_modules/**/*",
+      "windows/**/*",
+      "package.json",
+      "ormconfig.json"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }
