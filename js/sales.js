@@ -18,7 +18,7 @@ let total = 0;
 let idClient = 0;
 let clients = [];
 let products = [];
-let productsSales = [];
+let productsSales = []; 
 let saleDetail = [];
 
 fechaVenta.value = fechaActual;
@@ -405,6 +405,12 @@ const printSale = async () => {
         <div class="row mt-4">
             <div class="col-12">
                 <table class="table table-bordered">
+                    <colgroup>
+                        <col style="width: 5%">
+                        <col style="width: 55%">
+                        <col style="width: 20%">
+                        <col style="width: 20%">
+                    </colgroup>
                     <thead class="table-light">
                         <tr>
                             <th>Cantidad</th>
@@ -421,7 +427,10 @@ const printSale = async () => {
         </div>
         <div class="row mt-4">
             <div class="col-12 text-end">
-                <p class="fs-5"><strong>Total:</strong> <span>${total}</span></p>
+                <p class="fs-5"><strong>Total:</strong> <span>$ ${total.toLocaleString("es-AR", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}</span></p>
             </div>
         </div>
         <p>${observacion.value}</p>
