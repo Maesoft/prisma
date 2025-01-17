@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld("prismaFunctions", {
   getProducts: () => ipcRenderer.invoke("get-products"),
   editProduct: (id, productData) =>
     ipcRenderer.invoke("edit-product", id, productData),
+  deleteProduct: (id) => ipcRenderer.invoke("delete-product",id),
   addCategory: (categoryData) =>
     ipcRenderer.invoke("add-category", categoryData),
   getCategories: () => ipcRenderer.invoke("get-categories"),
@@ -16,7 +17,7 @@ contextBridge.exposeInMainWorld("prismaFunctions", {
   addStock: (stockData) => ipcRenderer.invoke("add-stock", stockData),
   addSale: (saleData) => ipcRenderer.invoke("add-sale", saleData),
   addDetail: (detailData) => ipcRenderer.invoke("add-detail", detailData),
-  showMSG: (icon, title, message) => ipcRenderer.invoke("show-message", icon, title, message),
+  showMSG: (icon, title, message, buttons, defaultId) => ipcRenderer.invoke("show-message", icon, title, message, buttons, defaultId),
   saveOption: (optionData) => ipcRenderer.invoke("save-option", optionData),
   loadOption: () => ipcRenderer.invoke("load-option"),
 });

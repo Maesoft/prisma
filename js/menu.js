@@ -35,8 +35,8 @@ const menuTemplate = [
   {
     label: 'Productos',
     submenu: [
-      { label: 'Nuevo Producto', click: () => { windowManager.createWindow("newProduct",800,600,true, false) } },
-      { label: 'Eliminar Producto', click: () => { /* Función para eliminar producto */ } },
+      { label: 'Nuevo Producto', click: () => { windowManager.createWindow("newProduct",800,600,true, false)}},
+      { label: 'Eliminar Producto', click: () => { windowManager.createWindow("deleteProduct",600,400,false,true)}},
       { label: 'Modificar Producto', click: () => { /* Función para modificar producto */ } },
       { label: 'Ver Productos', click: () => { /* Función para lista de precios */ } },
       { type: 'separator' },

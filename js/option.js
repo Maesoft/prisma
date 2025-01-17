@@ -12,7 +12,7 @@ const saveData = async () => {
 
   const res = await window.prismaFunctions.saveOption(optionData);
   window.prismaFunctions.showMSG("info", "Prisma", res.message);
-  window.close()
+  window.close();
 };
 const loadData = async () => {
   try {
@@ -21,7 +21,9 @@ const loadData = async () => {
       window.prismaFunctions.showMSG(
         "info",
         "Prisma",
-        "Debe cargar los datos de su empresa para que estos aparezcan en el encabezado de los comprobantes."
+        "Debe cargar los datos de su empresa para que estos aparezcan en el encabezado de los comprobantes.",
+        ["Aceptar"],
+        0
       );
       return;
     }

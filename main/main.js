@@ -136,6 +136,15 @@ ipcMain.handle("edit-product", async (event, id, productData) => {
     return { success: false, message: error.message };
   }
 });
+ipcMain.handle("delete-product", async (event, id)=>{
+  try {
+      const productRepository = AppDataSource.getRepository(Product)
+      await productRepository.delete(id)
+      return {success:true, message:"Producto eliminado exitosamente"}
+  } catch (error) {
+      return {success:false, message: error.message}
+  }
+})
 ipcMain.handle("get-products", async () => {
   try {
     const productRepository = AppDataSource.getRepository(Product);
@@ -193,12 +202,15 @@ ipcMain.handle("get-clients", async () => {
     return { success: false, message: error.message };
   }
 });
-ipcMain.handle("show-message", (event,icono,titulo, mensaje)=>{
-  dialog.showMessageBox({
+ipcMain.handle("show-message",async (event,icono,titulo, mensaje, botones, defaultID)=>{
+ const res = await dialog.showMessageBox({
     type: icono,
     title: titulo,
-    message: mensaje
+    message: mensaje,
+    buttons: botones,
+    defaultId: defaultID,
   })
+  return res.response
 })
 ipcMain.handle("save-option", async (event, optionData) => {
   try {

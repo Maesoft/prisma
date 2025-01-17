@@ -13,7 +13,7 @@ const loadCategories = async () => {
       categorySelect.appendChild(option);
     });
   } else {
-    window.prismaFunctions.showMSG("error","Prisma", res.message);
+    window.prismaFunctions.showMSG("error","Prisma", res.message,["Aceptar"], 0);
   }
 };
 const addCategory = async () => {
@@ -81,7 +81,7 @@ const newProduct = async () => {
             return;
           }
         } catch (error) {
-          window.prismaFunctions.showMSG("error","Prisma", "Error al agregar stock:", error);
+          window.prismaFunctions.showMSG("error","Prisma", "Error al agregar stock:" + error);
           return;
         }
       }
@@ -92,7 +92,7 @@ const newProduct = async () => {
       window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el producto: " + productRes.message);
     }
   } catch (error) {
-    window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el producto:", error);
+    window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el producto:"+ error);
   }
 };
 
