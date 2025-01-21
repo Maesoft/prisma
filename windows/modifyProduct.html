@@ -6,17 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css">
-    <script defer src="../js/products.js"></script>
+    <script defer src="../js/modifyProduct.js"></script>
     <script defer src="../js/bootstrap.min.js"></script>
-    <title>Nuevo Producto</title>
+    <title>Modificar Producto</title>
 </head>
 
 <body>
     <div class="container mt-5">
-        <h1>Alta de Nuevo Producto</h1>
+        <h1>Modificar Producto</h1>
         <form id="productForm">
             <div class="row">
                 <div class="col-md-6">
+                    <input type="hidden" id="itemId">
                     <div class="form-group">
                         <label for="productCode">Código</label>
                         <input type="text" class="form-control" id="productCode"
