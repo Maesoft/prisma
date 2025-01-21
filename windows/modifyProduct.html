@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <script defer src="../js/products.js"></script>
+    <script defer src="../js/bootstrap.min.js"></script>
+    <title>Nuevo Producto</title>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1>Alta de Nuevo Producto</h1>
+        <form id="productForm">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="productCode">Código</label>
+                        <input type="text" class="form-control" id="productCode"
+                            placeholder="Escriba o escanee código de barras." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productName">Nombre</label>
+                        <input type="text" class="form-control" id="productName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productDescription" class="form-label mt-2">Descripción</label>
+                        <textarea class="form-control" id="productDescription" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategory">Categoría</label>
+                        <div class="row">
+                            <div class="col-9">
+                                <select class="form-select" id="productCategory"></select>
+                            </div>
+                            <div class="col-3">
+                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#categoryModal">➕</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-check-label" for="productControlStock">Stock Inicial</label>
+                        <input type="number" class="form-control" id="initialStock" value="0" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group text-center mt-2">
+                        <img class="img-thumbnail rounded w-75 mt-4" id="productImage" src="../assets/sin_imagen.png"
+                            alt="Imagen del producto">
+                            <input type="file" id="productImageInput" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="row mt-4">
+                        <div class="form-group mt-1 col-4">
+                            <label for="productCost">Costo</label>
+                            <input type="number" class="form-control" id="productCost" placeholder="$ 0,00" required>
+                        </div>
+                        <div class="form-group mt-1 col-4">
+                            <label for="productPrice1">Precio Venta 1</label>
+                            <input type="number" class="form-control" id="productPrice1" placeholder="$ 0,00" required>
+                        </div>
+                        <div class="form-group mt-1 col-4">
+                            <label for="productPrice2">Precio Venta 2</label>
+                            <input type="number" class="form-control" id="productPrice2" placeholder="$ 0,00">
+                        </div>
+                    </div>
+                    <div class="form-group mt-5 text-center">
+                        <button type="button" class="btn btn-secondary" onclick="window.close()">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="newProduct()">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>   
+
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="categoryModalLabel">Agregar Nueva Categoría</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="newCategoryName" placeholder="Nombre de la categoría">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="addCategory()">Agregar Categoría</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal show" id="productSearchModal" tabindex="-1" aria-labelledby="productSearchModalLabel"
+    aria-hidden="false" style="display: block">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="productSearchModalLabel">
+                    Buscar Producto
+                </h5>
+                <button type="button" class="btn-close bg-secondary w-2" onclick="window.close()"></button>
+            </div>
+            <div class="form-group p-4">
+                <input type="text" class="form-control bg-secondary" id="searchInput" oninput="findProducts()" />
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered w-100" id="productsTable" style="cursor: default;">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Categoria</th>
+                                <th>Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody style="cursor: pointer;"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>
