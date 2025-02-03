@@ -119,6 +119,7 @@ ipcMain.handle("edit-product", async (event, id, productData) => {
     editProduct.nombre = productData.nombre;
     editProduct.descripcion = productData.descripcion;
     editProduct.imagen = productData.imagen;
+    editProduct.categoria = productData.categoria
     editProduct.stock = productData.stock;
     editProduct.costo = productData.costo;
     editProduct.precio1 = productData.precio1;
