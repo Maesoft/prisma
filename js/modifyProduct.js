@@ -84,11 +84,11 @@ const clearFields = () => {
   inputId.value = "";
   inputCode.value = "";
   inputName.value = "";
-  selectCategory.value ="";
-  inputStock.value =0;
-  inputImage.src ="../assets/sin_imagen.png";
+  selectCategory.value = "";
+  inputStock.value = 0;
+  inputImage.src = "../assets/sin_imagen.png";
   inputDesc.innerText = "";
-  inputCost.value = ""
+  inputCost.value = "";
   inputPrice1.value = "";
   inputPrice2.value = "";
   document.getElementById("productSearchModal").style.display = "block";
@@ -98,14 +98,18 @@ const addCategory = async () => {
     .getElementById("newCategoryName")
     .value.trim();
   if (!newCategoryName) {
-    window.prismaFunctions.showMSG("info","Prisma", "Por favor, ingrese un nombre para la categoría.");
+    window.prismaFunctions.showMSG(
+      "info",
+      "Prisma",
+      "Por favor, ingrese un nombre para la categoría."
+    );
     return;
   }
   const res = await window.prismaFunctions.addCategory({
     name: newCategoryName,
   });
   if (res.success) {
-    window.prismaFunctions.showMSG("info","Prisma", res.message);
+    window.prismaFunctions.showMSG("info", "Prisma", res.message);
     document.getElementById("productCategory").innerHTML = "";
     document.getElementById("newCategoryName").value = "";
     const modalElement = document.getElementById("categoryModal");
@@ -113,7 +117,7 @@ const addCategory = async () => {
     modalInstance.hide();
     await loadCategories();
   } else {
-    window.prismaFunctions.showMSG("error","Prisma", res.message);
+    window.prismaFunctions.showMSG("error", "Prisma", res.message);
   }
 };
 const findProducts = async () => {
@@ -124,6 +128,14 @@ const findProducts = async () => {
   renderProducts(filteredProducts);
 };
 const saveProduct = async () => {
+  if (!inputCode.value.trim() || !inputName.value.trim()) {
+    window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      "El producto debe tener un codigo y un nombre"
+    );
+    return;
+  }
   try {
     const productData = {
       codigo: inputCode.value,
@@ -134,25 +146,34 @@ const saveProduct = async () => {
       costo: inputCost.value,
       precio1: inputPrice1.value,
       precio2: inputPrice2.value,
-    };    
-    const res=await window.prismaFunctions.editProduct(inputId.value, productData);
-    if(res.success){
-      window.prismaFunctions.showMSG("info", "Prisma", "Producto modificado correctamente.");
-      loadProducts()
-      clearFields()
-    }else{
+    };
+    const res = await window.prismaFunctions.editProduct(
+      inputId.value,
+      productData
+    );
+    if (res.success) {
+      window.prismaFunctions.showMSG(
+        "info",
+        "Prisma",
+        "Producto modificado correctamente."
+      );
+      loadProducts();
+      clearFields();
+    } else {
       window.prismaFunctions.showMSG("error", "Prisma", res.message);
     }
-    
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
-  
 };
 loadProducts();
 loadCategories();
 
-document.querySelector('[data-bs-target="#categoryModal"]').addEventListener("click", function () {
-  const categoryModal = new bootstrap.Modal(document.getElementById("categoryModal"));
-  categoryModal.show();
-});
+document
+  .querySelector('[data-bs-target="#categoryModal"]')
+  .addEventListener("click", function () {
+    const categoryModal = new bootstrap.Modal(
+      document.getElementById("categoryModal")
+    );
+    categoryModal.show();
+  });
