@@ -334,8 +334,7 @@ const collect = async () => {
     await printSale();
     cleanFields();
   } catch (error) {
-    console.error("Error al registrar la venta y sus detalles:", error);
-    alert("Ocurrió un error al registrar la venta. Intente nuevamente.");
+    window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
 };
 const cleanFields = () => {

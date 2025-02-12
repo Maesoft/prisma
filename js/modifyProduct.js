@@ -9,6 +9,7 @@ const inputDesc = document.getElementById("productDescription");
 const inputCost = document.getElementById("productCost");
 const inputPrice1 = document.getElementById("productPrice1");
 const inputPrice2 = document.getElementById("productPrice2");
+
 let products = [];
 
 const renderProducts = (productList) => {
