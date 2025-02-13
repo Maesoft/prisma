@@ -95,7 +95,38 @@ const newProduct = async () => {
     window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el producto:"+ error);
   }
 };
+function addPrice() {
+  const title = document.getElementById("priceTitle").value.trim();
+  const value = document.getElementById("priceValue").value.trim();
 
+  if (title && value) {
+      const option = document.createElement("option");
+      option.textContent = `${title} : ${value}`;
+      option.value = value;
+      document.getElementById("productPrices").appendChild(option);
+
+      // Cerrar modal y limpiar inputs
+      document.getElementById("priceTitle").value = "";
+      document.getElementById("priceValue").value = "";
+      new bootstrap.Modal(document.getElementById("priceModal")).hide();
+  }
+}
+function addTax() {
+  const title = document.getElementById("taxTitle").value.trim();
+  const value = document.getElementById("taxValue").value.trim();
+
+  if (title && value) {
+      const option = document.createElement("option");
+      option.textContent = `${title} : ${value}`;
+      option.value = value;
+      document.getElementById("productTaxes").appendChild(option);
+
+      // Cerrar modal y limpiar inputs
+      document.getElementById("taxTitle").value = "";
+      document.getElementById("taxValue").value = "";
+      new bootstrap.Modal(document.getElementById("taxModal")).hide();
+  }
+}
 productImage.addEventListener("click", () => {
   document.getElementById("productImageInput").click();
 });

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css">
     <script defer src="../js/products.js"></script>
-    <script defer src="../js/bootstrap.min.js"></script>
+    <script defer src="../js/bootstrap.bundle.min.js"></script>
     <title>Nuevo Producto</title>
 </head>
 
@@ -28,8 +28,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="productDescription" class="form-label mt-2">Descripción</label>
-                        <textarea class="form-control" id="productDescription" rows="3" required></textarea>
+                        <label for="productDescription" class="form-label mb-0">Descripción</label>
+                        <textarea class="form-control mt-0" id="productDescription" rows="2"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="productCategory">Categoría</label>
@@ -38,7 +38,8 @@
                                 <select class="form-select" id="productCategory"></select>
                             </div>
                             <div class="col-3">
-                                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#categoryModal">➕</button>
+                                <button type="button" class="btn" data-bs-toggle="modal"
+                                    data-bs-target="#categoryModal">➕</button>
                             </div>
                         </div>
                     </div>
@@ -51,32 +52,34 @@
                     <div class="form-group text-center mt-2">
                         <img class="img-thumbnail rounded w-75 mt-4" id="productImage" src="../assets/sin_imagen.png"
                             alt="Imagen del producto">
-                            <input type="file" id="productImageInput" accept="image/*" style="display: none;">
+                        <input type="file" id="productImageInput" accept="image/*" style="display: none;">
                     </div>
-                    <div class="row mt-4">
-                        <div class="form-group mt-1 col-4">
-                            <label for="productCost">Costo</label>
-                            <input type="number" class="form-control" id="productCost" placeholder="$ 0,00" required>
+                    <div class="row mt-1">
+                        <div class="text-center mt-1 col-6">
+                            <label for="productPrices">Precios</label>
+                            <select class="form-select w-100 overflow-auto" size="3" id="productPrices"></select>
+                            <button type="button" class="btn btn-secondary fuente-pequeña mt-1" data-bs-toggle="modal"
+                                data-bs-target="#priceModal">➕ Precio</button>
                         </div>
-                        <div class="form-group mt-1 col-4">
-                            <label for="productPrice1">Precio Venta 1</label>
-                            <input type="number" class="form-control" id="productPrice1" placeholder="$ 0,00" required>
-                        </div>
-                        <div class="form-group mt-1 col-4">
-                            <label for="productPrice2">Precio Venta 2</label>
-                            <input type="number" class="form-control" id="productPrice2" placeholder="$ 0,00">
+                        <div class="text-center mt-1 col-6">
+                            <label for="productTaxes">Impuestos</label>
+                            <select class="form-select w-100 overflow-auto" size="3" id="productTaxes"></select>
+                            <button type="button" class="btn btn-secondary fuente-pequeña mt-1" data-bs-toggle="modal"
+                                data-bs-target="#taxModal">➕ Impuesto</button>
                         </div>
                     </div>
-                    <div class="form-group mt-5 text-center">
-                        <button type="button" class="btn btn-secondary" onclick="window.close()">Cancelar</button>
-                        <button type="button" class="btn btn-primary" onclick="newProduct()">Guardar</button>
-                    </div>
+
+                </div>
+                <div class="form-group mt-5 text-center">
+                    <button type="button" class="btn btn-secondary" onclick="window.close()">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="newProduct()">Guardar</button>
                 </div>
             </div>
         </form>
     </div>
-</body>   
+</body>
 
+<!-- Modal para agregar nueva Categoria -->
 <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -90,6 +93,46 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" onclick="addCategory()">Agregar Categoría</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar nuevo Precio -->
+<div class="modal fade" id="priceModal" tabindex="-1" aria-labelledby="priceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="priceModalLabel">Agregar Nuevo Precio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-2" id="priceTitle" placeholder="Título del precio">
+                <input type="number" class="form-control" id="priceValue" placeholder="Valor del precio">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="addPrice()">Agregar Precio</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar nuevo Impuesto -->
+<div class="modal fade" id="taxModal" tabindex="-1" aria-labelledby="taxModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taxModalLabel">Agregar Nuevo Impuesto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-2" id="taxTitle" placeholder="Título del impuesto">
+                <input type="number" class="form-control" id="taxValue" placeholder="Valor del impuesto">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="addTax()">Agregar Impuesto</button>
             </div>
         </div>
     </div>

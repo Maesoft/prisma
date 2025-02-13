@@ -1,7 +1,11 @@
 .sin-scroll{
-    overflow: hidden;
+    overflow: auto;
 }
 
 #productImage:hover{
     cursor: pointer;
+}
+
+.fuente-pequeña{
+    font-size:x-small;
 }
