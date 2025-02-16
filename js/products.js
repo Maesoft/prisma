@@ -1,5 +1,6 @@
 const productImage = document.getElementById("productImage");
 const productImageInput = document.getElementById("productImageInput");
+const selectPrices = document.getElementById("productPrices")
 
 const loadCategories = async () => {
   const res = await window.prismaFunctions.getCategories();
@@ -45,6 +46,7 @@ const showModal = () => {
   modal.style.display = modal.classList.contains("show") ? "block" : "none";
 };
 const newProduct = async () => {
+  let objPrices={}
   const productData = {
     codigo: document.getElementById("productCode").value.trim(),
     nombre: document.getElementById("productName").value.trim(),
@@ -52,48 +54,49 @@ const newProduct = async () => {
     categoria: document.getElementById("productCategory").value,
     imagen: document.getElementById("productImage").src,
     stock: parseInt(document.getElementById("initialStock").value, 10) || 0,
-    costo: parseFloat(document.getElementById("productCost").value) || 0,
-    precio1: parseFloat(document.getElementById("productPrice1").value) || 0,
-    precio2: parseFloat(document.getElementById("productPrice2").value) || 0,
   };
 
-  if (productData.codigo === "" || productData.nombre === "") {
-     window.prismaFunctions.showMSG("info","Prisma", "El producto debe tener asignado un código y un nombre.");
-    return;
-  }
+  Array.from(selectPrices.options).forEach((price,index)=>{
+    objPrices[index] = price.innerHTML;
+  })
+  console.log(objPrices)
+  // if (productData.codigo === "" || productData.nombre === "") {
+  //    window.prismaFunctions.showMSG("info","Prisma", "El producto debe tener asignado un código y un nombre.");
+  //   return;
+  // }
 
-  try {
-    const productRes = await window.prismaFunctions.addProduct(productData);
-    if (productRes.success) {
-      if (productData.stock > 0) {
-        const stockData = {
-          producto: { id: productRes.productId },
-          detalle: "Stock inicial al dar de alta el producto.",
-          operacion: "Ingreso",
-          cantidad: productData.stock,
-          stockResultante: productData.stock,
-        };
+  // try {
+  //   const productRes = await window.prismaFunctions.addProduct(productData);
+  //   if (productRes.success) {
+  //     if (productData.stock > 0) {
+  //       const stockData = {
+  //         producto: { id: productRes.productId },
+  //         detalle: "Stock inicial al dar de alta el producto.",
+  //         operacion: "Ingreso",
+  //         cantidad: productData.stock,
+  //         stockResultante: productData.stock,
+  //       };
 
-        try {
-          const stockRes = await window.prismaFunctions.addStock(stockData);
-          if (!stockRes.success) {
-            window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el stock: " + stockRes.message);
-            return;
-          }
-        } catch (error) {
-          window.prismaFunctions.showMSG("error","Prisma", "Error al agregar stock:" + error);
-          return;
-        }
-      }
-      window.prismaFunctions.showMSG("info","Prisma", productRes.message);
-      document.getElementById("productForm").reset();
-      productImage.src="../assets/sin_imagen.png"
-    } else {
-      window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el producto: " + productRes.message);
-    }
-  } catch (error) {
-    window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el producto:"+ error);
-  }
+  //       try {
+  //         const stockRes = await window.prismaFunctions.addStock(stockData);
+  //         if (!stockRes.success) {
+  //           window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el stock: " + stockRes.message);
+  //           return;
+  //         }
+  //       } catch (error) {
+  //         window.prismaFunctions.showMSG("error","Prisma", "Error al agregar stock:" + error);
+  //         return;
+  //       }
+  //     }
+  //     window.prismaFunctions.showMSG("info","Prisma", productRes.message);
+  //     document.getElementById("productForm").reset();
+  //     productImage.src="../assets/sin_imagen.png"
+  //   } else {
+  //     window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el producto: " + productRes.message);
+  //   }
+  // } catch (error) {
+  //   window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el producto:"+ error);
+  // }
 };
 function addPrice() {
   const title = document.getElementById("priceTitle").value.trim();

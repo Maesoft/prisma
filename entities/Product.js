@@ -13,6 +13,8 @@ exports.Product = void 0;
 const typeorm_1 = require("typeorm");
 const Category_1 = require("./Category");
 const Stock_1 = require("./Stock");
+const Price_1 = require("./Price");
+const Tax_1 = require("./Tax");
 let Product = class Product {
 };
 exports.Product = Product;
@@ -45,17 +47,13 @@ __decorate([
     __metadata("design:type", Number)
 ], Product.prototype, "stock", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: 0 }),
-    __metadata("design:type", Number)
-], Product.prototype, "costo", void 0);
+    (0, typeorm_1.OneToMany)(() => Price_1.Price, (price) => price.producto),
+    __metadata("design:type", Array)
+], Product.prototype, "precios", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: 0 }),
-    __metadata("design:type", Number)
-], Product.prototype, "precio1", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ default: 0 }),
-    __metadata("design:type", Number)
-], Product.prototype, "precio2", void 0);
+    (0, typeorm_1.OneToMany)(() => Tax_1.Tax, (tax) => tax.producto),
+    __metadata("design:type", Array)
+], Product.prototype, "impuestos", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Stock_1.Stock, (stock) => stock.producto),
     __metadata("design:type", Array)
