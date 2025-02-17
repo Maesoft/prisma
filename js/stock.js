@@ -23,7 +23,6 @@ const renderProducts = (productList) => {
     productsTableBody.appendChild(row);
   });
 };
-
 const loadProducts = async () => {
   try {
     const response = await window.prismaFunctions.getProducts();
@@ -47,7 +46,6 @@ const loadProductIntoForm = (product) => {
   document.getElementById("itemDescription").innerText = product.descripcion;
   document.getElementById("productSearchModal").style.display = "none";
 };
-
 const updateStock = async () => {
   const stockActual = Number(document.getElementById("currentStock").value);
   const stockNuevo = Number(document.getElementById("newStock").value);
