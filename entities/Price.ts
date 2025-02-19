@@ -12,6 +12,6 @@ export class Price{
     @Column()
     precio:number
     
-    @ManyToOne(()=>Product,(product)=>product.precios)
+    @ManyToOne(()=>Product,(product)=>product.precios,{onDelete: "CASCADE"})
     producto:Product
 }

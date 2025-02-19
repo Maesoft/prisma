@@ -28,7 +28,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Price.prototype, "precio", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Product_1.Product, (product) => product.precios),
+    (0, typeorm_1.ManyToOne)(() => Product_1.Product, (product) => product.precios, { onDelete: "CASCADE" }),
     __metadata("design:type", Product_1.Product)
 ], Price.prototype, "producto", void 0);
 exports.Price = Price = __decorate([

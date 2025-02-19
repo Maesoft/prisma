@@ -10,6 +10,7 @@ const { Client } = require("../entities/Client");
 const { Sale } = require("../entities/Sale");
 const { Details } = require("../entities/Details");
 const { Option } = require("../entities/Options");
+const { Price } = require("../entities/Price");
 
 //Manejo de la App
 app.on("ready", async () => {
@@ -119,7 +120,7 @@ ipcMain.handle("edit-product", async (event, id, productData) => {
     editProduct.nombre = productData.nombre;
     editProduct.descripcion = productData.descripcion;
     editProduct.imagen = productData.imagen;
-    editProduct.categoria = productData.categoria
+    editProduct.categoria = productData.categoria;
     editProduct.stock = productData.stock;
     editProduct.costo = productData.costo;
     editProduct.precio1 = productData.precio1;
@@ -137,15 +138,15 @@ ipcMain.handle("edit-product", async (event, id, productData) => {
     return { success: false, message: error.message };
   }
 });
-ipcMain.handle("delete-product", async (event, id)=>{
+ipcMain.handle("delete-product", async (event, id) => {
   try {
-      const productRepository = AppDataSource.getRepository(Product)
-      await productRepository.delete(id)
-      return {success:true, message:"Producto eliminado exitosamente"}
+    const productRepository = AppDataSource.getRepository(Product);
+    await productRepository.delete(id);
+    return { success: true, message: "Producto eliminado exitosamente" };
   } catch (error) {
-      return {success:false, message: error.message}
+    return { success: false, message: error.message };
   }
-})
+});
 ipcMain.handle("get-products", async () => {
   try {
     const productRepository = AppDataSource.getRepository(Product);
@@ -170,20 +171,34 @@ ipcMain.handle("add-sale", async (event, saleData) => {
     const saleRepository = AppDataSource.getRepository(Sale);
     const newSale = saleRepository.create(saleData);
     await saleRepository.save(newSale);
-    return { success: true, message: "Se guardo el comprobante exitosamente", saleId: newSale.id };
+    return {
+      success: true,
+      message: "Se guardo el comprobante exitosamente",
+      saleId: newSale.id,
+    };
   } catch (error) {
     return { success: false, message: error.message };
   }
 });
-ipcMain.handle("get-sales", async()=>{
+ipcMain.handle("add-price", async (event, priceData) => {
+  try {
+    const priceRepository = AppDataSource.getRepository(Price);
+    const newPrice = priceRepository.create(priceData);
+    await priceRepository.save(newPrice);
+    return { success: true };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("get-sales", async () => {
   try {
     const salesRepository = AppDataSource.getRepository(Sale);
     const sales = await salesRepository.find();
-    return {success: true, sales}
+    return { success: true, sales };
   } catch (error) {
-    return {success: false, message:error.message}
+    return { success: false, message: error.message };
   }
-})
+});
 ipcMain.handle("add-detail", async (event, detailData) => {
   try {
     const detailRepository = AppDataSource.getRepository(Details);
@@ -203,16 +218,19 @@ ipcMain.handle("get-clients", async () => {
     return { success: false, message: error.message };
   }
 });
-ipcMain.handle("show-message",async (event,icono,titulo, mensaje, botones, defaultID)=>{
- const res = await dialog.showMessageBox({
-    type: icono,
-    title: titulo,
-    message: mensaje,
-    buttons: botones,
-    defaultId: defaultID,
-  })
-  return res.response
-})
+ipcMain.handle(
+  "show-message",
+  async (event, icono, titulo, mensaje, botones, defaultID) => {
+    const res = await dialog.showMessageBox({
+      type: icono,
+      title: titulo,
+      message: mensaje,
+      buttons: botones,
+      defaultId: defaultID,
+    });
+    return res.response;
+  }
+);
 ipcMain.handle("save-option", async (event, optionData) => {
   try {
     const optionRepository = AppDataSource.getRepository(Option);
@@ -223,12 +241,18 @@ ipcMain.handle("save-option", async (event, optionData) => {
     if (existingOption) {
       // Actualizar el registro existente
       await optionRepository.update(existingOption.id, optionData);
-      return { success: true, message: "Se actualizaron los datos correctamente." };
+      return {
+        success: true,
+        message: "Se actualizaron los datos correctamente.",
+      };
     } else {
       // Crear un nuevo registro
       const newOption = optionRepository.create(optionData);
       await optionRepository.save(newOption);
-      return { success: true, message: "Se guardaron los datos correctamente." };
+      return {
+        success: true,
+        message: "Se guardaron los datos correctamente.",
+      };
     }
   } catch (error) {
     return { success: false, message: error.message };
