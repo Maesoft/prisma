@@ -162,6 +162,7 @@ const renderProductSales = () => {
 
   precioSelects.forEach((select) => {
     select.addEventListener("change", updateSubTotal);
+    select.addEventListener("contextmenu", replaceSelect);
   });
   // Escuchar eventos en boton eliminar
   const btnsDelete = document.querySelectorAll(".btn-remove");
@@ -169,6 +170,38 @@ const renderProductSales = () => {
     btn.addEventListener("click", deleteItem);
   });
 };
+const replaceSelect= (event) =>{
+  const select = event.currentTarget
+  const input = document.createElement("input");
+  input.type = "number";
+  input.step = "0.01";
+  input.className = "precio-input";
+  input.value = select.value;
+
+  // Reemplazar el select por el input
+  select.parentNode.replaceChild(input, select);
+  input.focus();
+  input.select();
+  input.addEventListener("keyup",(e)=>{
+  if(e.key=="Enter"){
+    const newSelect = document.createElement("select");
+    newSelect.className = "precio-select";
+    const option = document.createElement("option");
+    option.value = input.value;
+    option.textContent = parseFloat(input.value).toLocaleString("es-AR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    newSelect.appendChild(option);
+
+    // Reasignar los eventos necesarios
+    newSelect.addEventListener("change", updateSubTotal);
+    newSelect.addEventListener("contextmenu", replaceSelect)
+    input.parentNode.replaceChild(newSelect, input);
+    updateSubTotal({ target: newSelect });
+  };
+  })
+}
 const deleteItem = (event) => {
   const target = event.target;
   const row = target.closest("tr");
@@ -306,14 +339,7 @@ const collect = async () => {
     observacion: observacion.value,
   };
 
-  try {
-    const saleResponse = await window.prismaFunctions.addSale(saleData);
-    const saleId = saleResponse.saleId;
-
-    if (!saleId) {
-      throw new Error("No se pudo obtener el ID de la venta.");
-    }
-
+  if (tipoComprobante.selectedOptions[0].innerText == "Presupuesto") {
     for (let i = 0; i < tablaProductos.rows.length; i++) {
       const row = tablaProductos.rows[i];
       const precioUnitarioSelect = row.cells[3].querySelector("select");
@@ -325,16 +351,42 @@ const collect = async () => {
         precio_unitario: parseFloat(precioUnitarioSelect.value),
         subtotal: parseFloat(
           row.cells[4].innerText.replace(/\./g, "").replace(",", ".")
-        ),
-        sale: saleId,
+        )
       });
     }
-    await window.prismaFunctions.addDetail(saleDetail);
-    updateStock();
     await printSale();
     cleanFields();
-  } catch (error) {
-    window.prismaFunctions.showMSG("error", "Prisma", error.message);
+  } else {
+    try {
+      const saleResponse = await window.prismaFunctions.addSale(saleData);
+      const saleId = saleResponse.saleId;
+
+      if (!saleId) {
+        throw new Error("No se pudo obtener el ID de la venta.");
+      }
+
+      for (let i = 0; i < tablaProductos.rows.length; i++) {
+        const row = tablaProductos.rows[i];
+        const precioUnitarioSelect = row.cells[3].querySelector("select");
+        const cantidadInput = row.cells[2].querySelector("input");
+
+        saleDetail.push({
+          producto: row.cells[1].innerText,
+          cantidad: parseInt(cantidadInput.value),
+          precio_unitario: parseFloat(precioUnitarioSelect.value),
+          subtotal: parseFloat(
+            row.cells[4].innerText.replace(/\./g, "").replace(",", ".")
+          ),
+          sale: saleId,
+        });
+      }
+      await window.prismaFunctions.addDetail(saleDetail);
+      updateStock();
+      await printSale();
+      cleanFields();
+    } catch (error) {
+      window.prismaFunctions.showMSG("error", "Prisma", error.message);
+    }
   }
 };
 const cleanFields = () => {
@@ -480,7 +532,8 @@ const printSale = async () => {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket de Venta</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <script defer src="../js/bootstrap.min.js"></script>
     <style>
         body { font-size: 0.9rem; }
         .container { max-width: 300px; padding: 5px; }
@@ -534,7 +587,7 @@ const printSale = async () => {
 </body>
 </html>
 `;
-    const ventana = windowManager.createWindow()
+    const ventana =window.open("", "", "width=200,height=500");
     ventana.document.write(contenido_ticket);
     ventana.document.close();
 
