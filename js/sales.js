@@ -140,12 +140,28 @@ const renderProductSales = () => {
 
     tablaProductos.appendChild(row);
     const selectPrecio = row.querySelector(".precio-select");
-    product.precios.forEach((price)=>{
-      const option = document.createElement("option")
-      option.value=price.precio
-      option.textContent= `${price.titulo} - $ ${price.precio} `
-      selectPrecio.appendChild(option)
-    })
+    product.precios.sort((a, b) => {
+      const strA = String(a.titulo); // Convertimos en string
+      const strB = String(b.titulo);
+    
+      const isANumber = /^\d/.test(strA);
+      const isBNumber = /^\d/.test(strB);
+    
+      if (isANumber && !isBNumber) return 1;  // Números van después de letras
+      if (!isANumber && isBNumber) return -1; // Letras van primero
+    
+      return strA.localeCompare(strB, "es", { numeric: true });
+    });
+    
+    product.precios.forEach((price) => {
+      const option = document.createElement("option");
+      option.value = price.precio;
+      option.textContent = `${price.titulo} - $ ${price.precio}`;
+      selectPrecio.appendChild(option);
+    });
+    
+    updateSubTotal({ target: selectPrecio });
+    
   });
 
   // Actualizar totales cuando cambie la cantidad o el precio seleccionado
@@ -292,9 +308,7 @@ const addProductToSale = (product) => {
         nombre: product.nombre,
         stock: product.stock,
         cantidad: 1,
-        costo: product.costo,
-        precio1: product.precio1,
-        precio2: product.precio2,
+        precios: product.precios,
         total: product.precio,
       });
     }
