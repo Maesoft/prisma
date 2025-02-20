@@ -129,27 +129,23 @@ const renderProductSales = () => {
       </td>
       <td>
         <select class="precio-select" data-index="${index}">
-          <option value="${product.precio1}">
-          ${product.precio1.toLocaleString("es-AR", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}</option>
-          <option value="${product.precio2}">
-          ${product.precio2.toLocaleString("es-AR", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}</option>
+          
         </select>
       </td>
       <td class="total-cell">
-      ${(product.precio1 * product.cantidad).toLocaleString("es-AR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}</td>
+      
+      </td>
       <td><button class="btn btn-remove" data-index="${index}">✖</button></td>
     `;
 
     tablaProductos.appendChild(row);
+    const selectPrecio = row.querySelector(".precio-select");
+    product.precios.forEach((price)=>{
+      const option = document.createElement("option")
+      option.value=price.precio
+      option.textContent= `${price.titulo} - $ ${price.precio} `
+      selectPrecio.appendChild(option)
+    })
   });
 
   // Actualizar totales cuando cambie la cantidad o el precio seleccionado
