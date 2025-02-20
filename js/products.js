@@ -1,5 +1,6 @@
 const productImage = document.getElementById("productImage");
 const productImageInput = document.getElementById("productImageInput");
+const selectPrices = document.getElementById("productPrices");
 
 const loadCategories = async () => {
   const res = await window.prismaFunctions.getCategories();
@@ -13,7 +14,13 @@ const loadCategories = async () => {
       categorySelect.appendChild(option);
     });
   } else {
-    window.prismaFunctions.showMSG("error","Prisma", res.message,["Aceptar"], 0);
+    window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      res.message,
+      ["Aceptar"],
+      0
+    );
   }
 };
 const addCategory = async () => {
@@ -21,14 +28,18 @@ const addCategory = async () => {
     .getElementById("newCategoryName")
     .value.trim();
   if (!newCategoryName) {
-    window.prismaFunctions.showMSG("info","Prisma", "Por favor, ingrese un nombre para la categoría.");
+    window.prismaFunctions.showMSG(
+      "info",
+      "Prisma",
+      "Por favor, ingrese un nombre para la categoría."
+    );
     return;
   }
   const res = await window.prismaFunctions.addCategory({
     name: newCategoryName,
   });
   if (res.success) {
-    window.prismaFunctions.showMSG("info","Prisma", res.message);
+    window.prismaFunctions.showMSG("info", "Prisma", res.message);
     document.getElementById("productCategory").innerHTML = "";
     document.getElementById("newCategoryName").value = "";
     const modalElement = document.getElementById("categoryModal");
@@ -36,7 +47,7 @@ const addCategory = async () => {
     modalInstance.hide();
     await loadCategories();
   } else {
-    window.prismaFunctions.showMSG("error","Prisma", res.message);
+    window.prismaFunctions.showMSG("error", "Prisma", res.message);
   }
 };
 const showModal = () => {
@@ -52,19 +63,37 @@ const newProduct = async () => {
     categoria: document.getElementById("productCategory").value,
     imagen: document.getElementById("productImage").src,
     stock: parseInt(document.getElementById("initialStock").value, 10) || 0,
-    costo: parseFloat(document.getElementById("productCost").value) || 0,
-    precio1: parseFloat(document.getElementById("productPrice1").value) || 0,
-    precio2: parseFloat(document.getElementById("productPrice2").value) || 0,
   };
 
   if (productData.codigo === "" || productData.nombre === "") {
-     window.prismaFunctions.showMSG("info","Prisma", "El producto debe tener asignado un código y un nombre.");
+    window.prismaFunctions.showMSG(
+      "info",
+      "Prisma",
+      "El producto debe tener asignado un código y un nombre."
+    );
     return;
   }
 
   try {
     const productRes = await window.prismaFunctions.addProduct(productData);
     if (productRes.success) {
+      Array.from(selectPrices.options).forEach(async (price, index) => {
+        const priceData = {
+          titulo: price.innerText.split(":")[0].trim(),
+          precio: parseFloat(price.innerText.split(":")[1].trim()),
+          producto: { id: productRes.productId },
+        };
+        try {
+          await window.prismaFunctions.addPrice(priceData);
+        } catch (error) {
+          window.prismaFunctions.showMSG(
+            "error",
+            "Prisma",
+            "Error al agregar precio:" + error
+          );
+        }
+      });
+
       if (productData.stock > 0) {
         const stockData = {
           producto: { id: productRes.productId },
@@ -77,22 +106,39 @@ const newProduct = async () => {
         try {
           const stockRes = await window.prismaFunctions.addStock(stockData);
           if (!stockRes.success) {
-            window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el stock: " + stockRes.message);
+            window.prismaFunctions.showMSG(
+              "error",
+              "Prisma",
+              "Error al agregar el stock: " + stockRes.message
+            );
             return;
           }
         } catch (error) {
-          window.prismaFunctions.showMSG("error","Prisma", "Error al agregar stock:" + error);
+          window.prismaFunctions.showMSG(
+            "error",
+            "Prisma",
+            "Error al agregar stock:" + error
+          );
           return;
         }
       }
-      window.prismaFunctions.showMSG("info","Prisma", productRes.message);
+
+      window.prismaFunctions.showMSG("info", "Prisma", productRes.message);
       document.getElementById("productForm").reset();
-      productImage.src="../assets/sin_imagen.png"
+      productImage.src = "../assets/sin_imagen.png";
     } else {
-      window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el producto: " + productRes.message);
+      window.prismaFunctions.showMSG(
+        "error",
+        "Prisma",
+        "Error al agregar el producto: " + productRes.message
+      );
     }
   } catch (error) {
-    window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el producto:"+ error);
+    window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      "Error al agregar el producto:" + error
+    );
   }
 };
 function addPrice() {
@@ -100,15 +146,15 @@ function addPrice() {
   const value = document.getElementById("priceValue").value.trim();
 
   if (title && value) {
-      const option = document.createElement("option");
-      option.textContent = `${title} : ${value}`;
-      option.value = value;
-      document.getElementById("productPrices").appendChild(option);
+    const option = document.createElement("option");
+    option.textContent = `${title} : ${value}`;
+    option.value = value;
+    document.getElementById("productPrices").appendChild(option);
 
-      // Cerrar modal y limpiar inputs
-      document.getElementById("priceTitle").value = "";
-      document.getElementById("priceValue").value = "";
-      new bootstrap.Modal(document.getElementById("priceModal")).hide();
+    // Cerrar modal y limpiar inputs
+    document.getElementById("priceTitle").value = "";
+    document.getElementById("priceValue").value = "";
+    new bootstrap.Modal(document.getElementById("priceModal")).hide();
   }
 }
 function addTax() {
@@ -116,15 +162,15 @@ function addTax() {
   const value = document.getElementById("taxValue").value.trim();
 
   if (title && value) {
-      const option = document.createElement("option");
-      option.textContent = `${title} : ${value}`;
-      option.value = value;
-      document.getElementById("productTaxes").appendChild(option);
+    const option = document.createElement("option");
+    option.textContent = `${title} : ${value}`;
+    option.value = value;
+    document.getElementById("productTaxes").appendChild(option);
 
-      // Cerrar modal y limpiar inputs
-      document.getElementById("taxTitle").value = "";
-      document.getElementById("taxValue").value = "";
-      new bootstrap.Modal(document.getElementById("taxModal")).hide();
+    // Cerrar modal y limpiar inputs
+    document.getElementById("taxTitle").value = "";
+    document.getElementById("taxValue").value = "";
+    new bootstrap.Modal(document.getElementById("taxModal")).hide();
   }
 }
 productImage.addEventListener("click", () => {

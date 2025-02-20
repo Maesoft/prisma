@@ -18,7 +18,7 @@ let total = 0;
 let idClient = 0;
 let clients = [];
 let products = [];
-let productsSales = []; 
+let productsSales = [];
 let saleDetail = [];
 
 fechaVenta.value = fechaActual;
@@ -158,6 +158,7 @@ const renderProductSales = () => {
 
   precioSelects.forEach((select) => {
     select.addEventListener("change", updateSubTotal);
+    select.addEventListener("contextmenu", replaceSelect);
   });
   // Escuchar eventos en boton eliminar
   const btnsDelete = document.querySelectorAll(".btn-remove");
@@ -165,6 +166,38 @@ const renderProductSales = () => {
     btn.addEventListener("click", deleteItem);
   });
 };
+const replaceSelect= (event) =>{
+  const select = event.currentTarget
+  const input = document.createElement("input");
+  input.type = "number";
+  input.step = "0.01";
+  input.className = "precio-input";
+  input.value = select.value;
+
+  // Reemplazar el select por el input
+  select.parentNode.replaceChild(input, select);
+  input.focus();
+  input.select();
+  input.addEventListener("keyup",(e)=>{
+  if(e.key=="Enter"){
+    const newSelect = document.createElement("select");
+    newSelect.className = "precio-select";
+    const option = document.createElement("option");
+    option.value = input.value;
+    option.textContent = parseFloat(input.value).toLocaleString("es-AR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    newSelect.appendChild(option);
+
+    // Reasignar los eventos necesarios
+    newSelect.addEventListener("change", updateSubTotal);
+    newSelect.addEventListener("contextmenu", replaceSelect)
+    input.parentNode.replaceChild(newSelect, input);
+    updateSubTotal({ target: newSelect });
+  };
+  })
+}
 const deleteItem = (event) => {
   const target = event.target;
   const row = target.closest("tr");
@@ -302,14 +335,7 @@ const collect = async () => {
     observacion: observacion.value,
   };
 
-  try {
-    const saleResponse = await window.prismaFunctions.addSale(saleData);
-    const saleId = saleResponse.saleId;
-
-    if (!saleId) {
-      throw new Error("No se pudo obtener el ID de la venta.");
-    }
-
+  if (tipoComprobante.selectedOptions[0].innerText == "Presupuesto") {
     for (let i = 0; i < tablaProductos.rows.length; i++) {
       const row = tablaProductos.rows[i];
       const precioUnitarioSelect = row.cells[3].querySelector("select");
@@ -321,16 +347,42 @@ const collect = async () => {
         precio_unitario: parseFloat(precioUnitarioSelect.value),
         subtotal: parseFloat(
           row.cells[4].innerText.replace(/\./g, "").replace(",", ".")
-        ),
-        sale: saleId,
+        )
       });
     }
-    await window.prismaFunctions.addDetail(saleDetail);
-    updateStock();
     await printSale();
     cleanFields();
-  } catch (error) {
-    window.prismaFunctions.showMSG("error", "Prisma", error.message);
+  } else {
+    try {
+      const saleResponse = await window.prismaFunctions.addSale(saleData);
+      const saleId = saleResponse.saleId;
+
+      if (!saleId) {
+        throw new Error("No se pudo obtener el ID de la venta.");
+      }
+
+      for (let i = 0; i < tablaProductos.rows.length; i++) {
+        const row = tablaProductos.rows[i];
+        const precioUnitarioSelect = row.cells[3].querySelector("select");
+        const cantidadInput = row.cells[2].querySelector("input");
+
+        saleDetail.push({
+          producto: row.cells[1].innerText,
+          cantidad: parseInt(cantidadInput.value),
+          precio_unitario: parseFloat(precioUnitarioSelect.value),
+          subtotal: parseFloat(
+            row.cells[4].innerText.replace(/\./g, "").replace(",", ".")
+          ),
+          sale: saleId,
+        });
+      }
+      await window.prismaFunctions.addDetail(saleDetail);
+      updateStock();
+      await printSale();
+      cleanFields();
+    } catch (error) {
+      window.prismaFunctions.showMSG("error", "Prisma", error.message);
+    }
   }
 };
 const cleanFields = () => {
@@ -338,7 +390,7 @@ const cleanFields = () => {
   saleDetail = [];
   ptoVta.value = "";
   nroComp.value = "";
-  observacion.value="";
+  observacion.value = "";
   inputCodigoCliente.value = "";
   labelNombreCliente.textContent = "";
   total = 0;
@@ -352,111 +404,211 @@ const printSale = async () => {
   const { nombre, cuit, domicilio, telefono, logo } = resDatosEmpresa.options;
   const clientSelect = clients.find((client) => client.id == idClient);
 
-  const contenido = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Factura</title>
-        <link rel="stylesheet" href="../css/bootstrap.min.css" />
-        <script defer src="../js/bootstrap.min.js"></script>
-    </head>
-    <body>
-      <div class="container my-4">
-        <img src="${logo}" alt="Logo de la empresa" class="img-fluid ml-5" id="logo-empresa" style="width:50px">
-        <div class="row border-bottom pb-3">
-            <div class="col-md-4">
-              <h3 class="mb-0 mt-0">${nombre}</h3>
-              <p class="mb-0 mt-0">${cuit}</p>
-              <p class="mb-0 mt-0">${domicilio}</p>
-              <p class="mb-0 mt-0">${telefono}</p>
+  const imprimir_a4 = () => {
+    const contenido_a4 = `
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Factura</title>
+              <link rel="stylesheet" href="../css/bootstrap.min.css" />
+              <script defer src="../js/bootstrap.min.js"></script>
+          </head>
+          <body>
+            <div class="container my-4">
+              <img src="${logo}" alt="Logo de la empresa" class="img-fluid ml-5" id="logo-empresa" style="width:50px">
+              <div class="row border-bottom pb-3">
+                  <div class="col-md-4">
+                    <h3 class="mb-0 mt-0">${nombre}</h3>
+                    <p class="mb-0 mt-0">${cuit}</p>
+                    <p class="mb-0 mt-0">${domicilio}</p>
+                    <p class="mb-0 mt-0">${telefono}</p>
+                  </div>
+                  <div class="col-md-4 text-center">
+                      <h1 class="display-6" id="tipo-comprobante">
+                      ${
+                        tipoComprobante.options[tipoComprobante.selectedIndex]
+                          .text
+                      }
+                      </h1>
+                  </div>
+                  <div class="col-md-4 text-center">
+                      <p><strong>Fecha:</strong> <span id="fecha-comprobante">${formatearFecha(
+                        fechaVenta.value
+                      )}</span></p>
+                      <p class="mb-0"><strong>No. Comprobante:</strong></p>
+                      <p class="mt-0">${ptoVta.value}-${nroComp.value}</p>
+                  </div>
+              </div>
+              <div class="row mt-4 border-bottom">
+                  <div class="col-6">
+                      <p><strong>Razón Social: </strong>${
+                        clientSelect.razon_social
+                      }</p>
+                      <p><strong>CUIT: </strong>${clientSelect.cuit}</p>
+                  </div>
+                  <div class="col-6">
+                      <p><strong>Teléfono: </strong> ${
+                        clientSelect.telefono
+                      }</p>
+                      <p><strong>Domicilio: </strong>${
+                        clientSelect.direccion
+                      }</p>
+                  </div>
+              </div>
+              <div class="row mt-4">
+                  <div class="col-12">
+                      <table class="table table-bordered">
+                          <colgroup>
+                              <col style="width: 5%">
+                              <col style="width: 55%">
+                              <col style="width: 20%">
+                              <col style="width: 20%">
+                          </colgroup>
+                          <thead class="table-light">
+                              <tr>
+                                  <th>Cantidad</th>
+                                  <th>Descripción</th>
+                                  <th>Precio Unitario</th>
+                                  <th>Subtotal</th>
+                              </tr>
+                          </thead>
+                          <tbody id="detalle-factura">
+                              
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+              <div class="row mt-4">
+                  <div class="col-12 text-end">
+                      <p class="fs-5"><strong>Total:</strong> <span>$ ${total.toLocaleString(
+                        "es-AR",
+                        {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }
+                      )}</span></p>
+                  </div>
+              </div>
+              <p>${observacion.value}</p>
             </div>
-            <div class="col-md-4 text-center">
-                <h1 class="display-6" id="tipo-comprobante">
-                ${tipoComprobante.options[tipoComprobante.selectedIndex].text}
-                </h1>
-            </div>
-            <div class="col-md-4 text-center">
-                <p><strong>Fecha:</strong> <span id="fecha-comprobante">${formatearFecha(
-                  fechaVenta.value
-                )}</span></p>
-                <p class="mb-0"><strong>No. Comprobante:</strong></p>
-                <p class="mt-0">${ptoVta.value}-${nroComp.value}</p>
-            </div>
-        </div>
-        <div class="row mt-4 border-bottom">
-            <div class="col-6">
-                <p><strong>Razón Social: </strong>${
-                  clientSelect.razon_social
-                }</p>
-                <p><strong>CUIT: </strong>${clientSelect.cuit}</p>
-            </div>
-            <div class="col-6">
-                <p><strong>Teléfono: </strong> ${clientSelect.telefono}</p>
-                <p><strong>Domicilio: </strong>${clientSelect.direccion}</p>
-            </div>
-        </div>
-        <div class="row mt-4">
-            <div class="col-12">
-                <table class="table table-bordered">
-                    <colgroup>
-                        <col style="width: 5%">
-                        <col style="width: 55%">
-                        <col style="width: 20%">
-                        <col style="width: 20%">
-                    </colgroup>
-                    <thead class="table-light">
-                        <tr>
-                            <th>Cantidad</th>
-                            <th>Descripción</th>
-                            <th>Precio Unitario</th>
-                            <th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody id="detalle-factura">
-                        
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="row mt-4">
-            <div class="col-12 text-end">
-                <p class="fs-5"><strong>Total:</strong> <span>$ ${total.toLocaleString("es-AR", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}</span></p>
-            </div>
-        </div>
-        <p>${observacion.value}</p>
-      </div>
-    </body>
-    </html>
-  `;
+          </body>
+          </html>
+        `;
+    const ventana = window.open("", "", "width=800,height=1100");
+    ventana.document.write(contenido_a4);
+    ventana.document.close();
 
-  const ventana = window.open("", "", "width=800,height=1100");
-  ventana.document.write(contenido);
-  ventana.document.close();
+    const tabla = ventana.document.getElementById("detalle-factura");
+    saleDetail.forEach((product) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+              <td>${product.cantidad}</td>
+              <td>${product.producto}</td>
+              <td>${product.precio_unitario.toLocaleString("es-AR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}</td>
+              <td>${product.subtotal.toLocaleString("es-AR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}</td>`;
+      tabla.appendChild(row);
+    });
 
-  const tabla = ventana.document.getElementById("detalle-factura");
-  saleDetail.forEach((product) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-        <td>${product.cantidad}</td>
-        <td>${product.producto}</td>
-        <td>${product.precio_unitario.toLocaleString("es-AR", {
+    ventana.print();
+    ventana.onafterprint = () => ventana.close();
+  };
+  const imprimir_ticket = () => {
+    const contenido_ticket = `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket de Venta</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <script defer src="../js/bootstrap.min.js"></script>
+    <style>
+        body { font-size: 0.9rem; }
+        .container { max-width: 300px; padding: 5px; }
+        .border { padding: 5px; }
+        p, h3 { margin: 2px 0; }
+        hr { margin: 5px 0; }
+        table { margin-bottom: 5px; }
+        th,td  { font-size: 0.6rem; }
+    </style>
+</head>
+<body class="container text-center">
+    <div class="border">
+        <img src="${logo}" alt="Logo" width="40" class="mb-1">
+        <h3 class="fw-bold">${nombre}</h3>
+        <p>CUIT: ${cuit}</p>
+        <p>${domicilio}</p>
+        <p>Tel: ${telefono}</p>
+        <hr>
+        <p class="fw-bold">${
+          tipoComprobante.options[tipoComprobante.selectedIndex].text
+        }</p>
+        <p>Fecha: ${formatearFecha(fechaVenta.value)}</p>
+        <p>No. Comp: </p>
+        <p>${ptoVta.value}-${nroComp.value}</p>
+        <hr>
+        <p><strong>Cliente:</strong></p>
+        <p>${clientSelect.razon_social}</p>
+        <p><strong>CUIT:</strong> ${clientSelect.cuit}</p>
+        <hr>
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 20%;">Cant</th>
+                    <th scope="col" style="width: 50%;">Desc</th>
+                    <th scope="col" style="width: 30%;">$</th>
+                </tr>
+            </thead>
+            <tbody id="detalle-factura">
+                <!-- Aquí van los productos -->
+            </tbody>
+        </table>
+        <hr>
+        <p class="fs-6 fw-bold">Total: $ ${total.toLocaleString("es-AR", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
-        })}</td>
-        <td>${product.subtotal.toLocaleString("es-AR", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}</td>`;
-    tabla.appendChild(row);
-  });
+        })}</p>
+        <hr>
+        <p class="mb-1">${observacion.value}</p>
+        <p class="fw-bold">¡Gracias por su compra!</p>
+    </div>
+</body>
+</html>
+`;
+    const ventana =window.open("", "", "width=200,height=500");
+    ventana.document.write(contenido_ticket);
+    ventana.document.close();
 
-  ventana.print();
-  ventana.onafterprint = () => ventana.close();
+    const tabla = ventana.document.getElementById("detalle-factura");
+    saleDetail.forEach((product) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+              <td>${product.cantidad}</td>
+              <td>${product.producto}</td>
+              <td>${product.subtotal.toLocaleString("es-AR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}</td>`;
+      tabla.appendChild(row);
+    });
+
+    ventana.print();
+    ventana.onafterprint = () => ventana.close();
+  };
+
+  if (tipoComprobante.selectedOptions[0].innerText.includes("Ticket")) {
+    imprimir_ticket();
+  } else {
+    imprimir_a4();
+  }
 };
 const updateStock = () => {
   productsSales.forEach(async (product) => {
@@ -486,7 +638,7 @@ const getLastInvoice = async () => {
     return;
   }
   const lastInvoice = resInvoices.sales.pop();
-
+  tipoComprobante.value = lastInvoice.tipo_comprobante;
   const [ptoVtaPart, nroCompPart] = lastInvoice.numero_comprobante.split("-");
 
   const formattedPtoVta = ptoVtaPart.padStart(4, "0");
