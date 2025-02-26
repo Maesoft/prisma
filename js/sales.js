@@ -174,7 +174,7 @@ const replaceSelect= (event) =>{
   const select = event.currentTarget
   const input = document.createElement("input");
   input.type = "number";
-  input.step = "0.01";
+  input.step = "1";
   input.className = "precio-input";
   input.value = select.value;
 
