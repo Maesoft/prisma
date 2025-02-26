@@ -8,7 +8,7 @@ const newProvider = async () => {
     email: document.getElementById("email").value,
     regimen: document.getElementById("regimen").value,
   };
-  if (!providerData.codigo || !providerData.razon_social) {
+  if (!providerData.codigo.trim() || !providerData.razon_social.trim()){
     window.prismaFunctions.showMSG(
       "info",
       "Prisma",

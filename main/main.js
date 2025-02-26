@@ -48,6 +48,41 @@ ipcMain.handle("add-provider", async (event, providerData) => {
     };
   }
 });
+ipcMain.handle("get-providers", async () => {
+  try {
+    const providerRepository = AppDataSource.getRepository(Provider);
+    const providers = await providerRepository.find();
+    return { success: true, providers };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("edit-provider", async (event, id, providerData) => {
+  try {
+    const providerRepository = AppDataSource.getRepository(Provider);
+
+    const editProvider = await providerRepository.findOneBy({ id });
+
+    editProvider.codigo=providerData.codigo
+    editProvider.razon_social=providerData.razon_social
+    editProvider.cuit=providerData.cuit
+    editProvider.direccion=providerData.direccion
+    editProvider.telefono=providerData.telefono
+    editProvider.email=providerData.email
+    editProvider.regimen=providerData.regimen
+
+    await providerRepository.save(editProvider);
+
+    return {
+      success: true,
+      message: "Proveedor editado exitosamente",
+      productId: editProvider.id,
+    };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: error.message };
+  }
+});
 ipcMain.handle("add-client", async (event, clientData) => {
   try {
     const clientRepository = AppDataSource.getRepository(Client);
@@ -171,21 +206,7 @@ ipcMain.handle("add-sale", async (event, saleData) => {
     const saleRepository = AppDataSource.getRepository(Sale);
     const newSale = saleRepository.create(saleData);
     await saleRepository.save(newSale);
-    return {
-      success: true,
-      message: "Se guardo el comprobante exitosamente",
-      saleId: newSale.id,
-    };
-  } catch (error) {
-    return { success: false, message: error.message };
-  }
-});
-ipcMain.handle("add-price", async (event, priceData) => {
-  try {
-    const priceRepository = AppDataSource.getRepository(Price);
-    const newPrice = priceRepository.create(priceData);
-    await priceRepository.save(newPrice);
-    return { success: true };
+    return { success: true, message: "Se guardo el comprobante exitosamente", saleId: newSale.id };
   } catch (error) {
     return { success: false, message: error.message };
   }
