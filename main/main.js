@@ -83,6 +83,15 @@ ipcMain.handle("edit-provider", async (event, id, providerData) => {
     return { success: false, message: error.message };
   }
 });
+ipcMain.handle("delete-provider", async (event, id) => {
+  try {
+    const providerRepository = AppDataSource.getRepository(Provider);
+    await providerRepository.delete(id);
+    return { success: true, message: "Proveedor eliminado exitosamente" };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
 ipcMain.handle("add-client", async (event, clientData) => {
   try {
     const clientRepository = AppDataSource.getRepository(Client);
