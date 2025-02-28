@@ -9,71 +9,94 @@
 </head>
 
 <body>
-    <div class="container mt-5">
+    <div class="container mt-2">
         <h1>Ingresar Compra</h1>
-        <form id="purchaseForm">
-            <div class="row">
-                <div class="col-3">
-                    <label for="selectInvoice">Tipo de Comprobante</label>
-                    <select class="form-control" name="selectInvoice" id="selectInvoice">
-                        <option value="FA">Factura "A"</option>
-                        <option value="FB">Factura "B"</option>
-                        <option value="FC">Factura "C"</option>
-                        <option value="NCA">Nota de Credito "A"</option>
-                        <option value="NCB">Nota de Credito "B"</option>
-                        <option value="NCC">Nota de Credito "C"</option>
+        <div class="row ">
+            <div class="col-3">
+                <div class="input-container text-center ">
+                    <label for="codigoCliente" class="form-label">Código del Proveedor</label>
+                    <input type="text" id="inputCodigoCliente" class="form-control" placeholder="F3 para buscar" />
+                    <label id="nombreCliente" class="mt-1 form-label text-muted">Ingrese proveedor</label>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="input-container text-center">
+                    <label for="codigoCliente" class="form-label">Tipo de Comprobante</label>
+                    <select class="form-select" id="tipoComprobante">
+                        <option value="T">Ticket</option>
+                        <option value="TA">Ticket A</option>
+                        <option value="TB">Ticket B</option>
+                        <option value="TC">Ticket C</option>
+                        <option value="F">Factura</option>
+                        <option value="FA">Factura A</option>
+                        <option value="FB">Factura B</option>
+                        <option value="FC">Factura C</option>
+                        <option value="NDA">Nota de Debito A</option>
+                        <option value="NDB">Nota de Debito B</option>
+                        <option value="NDC">Nota de Debito C</option>
+                        <option value="VEN">Venta</option>
+                        <option value="PRE">Presupuesto</option>
                     </select>
                 </div>
-                <div class="col-3">
-                    <label for="invoiceNumber">Numero Comprobante</label>
-                    <input type="number" class="form-control" id="invoiceNumber" placeholder="0000-00000000"
-                        maxlength="13" required>
-                </div>
-                <div class="col-3">
-                    <label for="invoiceDate">Fecha Comprobante</label>
-                    <input type="date" class="form-control" id="invoiceDate" required>
-                </div>
-                <div class="col-3">
-                    <label for="accoutingDate">Fecha Contable</label>
-                    <input type="date" class="form-control" id="accoutingDate" required>
+            </div>
+            <div class="col-3">
+                <div class="input-container">
+                    <label class="input-container">Numero Comprobante</label>
+                    <div class="d-flex mt-2 gap-3">
+                        <input id="ptoVta" class="form-control w-50">
+                        <input id="nroComp" class="form-control w-75">
+                    </div>
                 </div>
             </div>
+            <div class="col-3">
+                <div class="input-container">
+                    <label for="fechaVenta" class="form-label">Fecha</label>
+                    <input type="date" id="fechaVenta" class="form-control ms-auto" />
+                </div>
+            </div>
+        </div>
 
-            <div class="row">
-                <div class="col-3">
-                    <label for="idProvider">Codigo Proveedor</label>
-                    <input type="text" class="form-control" id="idProvider" required>
-                </div>
-                <div class="col-9">
-                    <br>
-                    <h2 class="text-primary">Hola!</h2>
-                </div>
-            </div>
-            <table class="table table-bordered">
-                <thead>
-                  <tr>
+        <table class="mt-2 table table-striped" style="cursor: default;">
+            <colgroup>
+                <col style="width: 5%">
+                <col style="width: 20%">
+                <col style="width: 15%">
+                <col style="width: 15%">
+                <col style="width: 15%">
+                <col style="width: 5%">
+
+            </colgroup>
+            <thead class="table-dark">
+                <tr>
                     <th>Código</th>
-                    <th>Artículo</th>
+                    <th>Producto</th>
                     <th>Cantidad</th>
-                    <th>Precio</th>
+                    <th>Precio Unitario</th>
                     <th>Subtotal</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><input type="text" class="form-control codigo" oninput="actualizarFila(this.parentElement.parentElement)"></td>
-                    <td><input type="text" class="form-control nombre" disabled></td>
-                    <td><input type="number" class="form-control cantidad" oninput="actualizarSubtotal(this.parentElement.parentElement)"></td>
-                    <td><input type="text" class="form-control precio" disabled></td>
-                    <td><input type="text" class="form-control subtotal" disabled></td>
-                  </tr>
-                </tbody>
-            </table>
-            <div class="d-flex justify-content-between">
-                <button type="submit" class="mt-5 btn btn-secondary">Cancelar</button>
-                <button type="submit" class="mt-5 btn btn-primary">Guardar</button>
-            </div>
-        </form>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tablaProductos" style="cursor: pointer;">
+                <!-- Los productos se agregarán aquí -->
+            </tbody>
+        </table>
+
+        <div class="text-end">
+            <span class="label-total">Total: $</span>
+            <span id="total" class="label-total">0.00</span>
+        </div>
+        <div class="form-group mt-3 p-2 bg-dark text-white rounded">
+            <p class="form-label">Observacion</p>
+            <textarea class="form-control bg-secondary" id="observacion"></textarea>
+        </div>
+        <div class="text-center mt-3 mb-3">
+            <button class="btn btn-danger btn-custom" onclick="window.close()">
+                Cancelar
+            </button>
+            <button id="btnCobrar" class="btn btn-success btn-custom me-2">
+                Cobrar
+            </button>
+        </div>
     </div>
 </body>
 
