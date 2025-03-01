@@ -370,7 +370,7 @@ const collect = async () => {
     try {
       const saleResponse = await window.prismaFunctions.addSale(saleData);
       const saleId = saleResponse.saleId;
-
+      
       if (!saleId) {
         throw new Error("No se pudo obtener el ID de la venta.");
       }
@@ -390,6 +390,7 @@ const collect = async () => {
           sale: saleId,
         });
       }
+      
       await window.prismaFunctions.addDetail(saleDetail);
       updateStock();
       await printSale();

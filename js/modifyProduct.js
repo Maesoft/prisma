@@ -6,11 +6,10 @@ const selectCategory = document.getElementById("productCategory");
 const inputStock = document.getElementById("initialStock");
 const inputImage = document.getElementById("productImage");
 const inputDesc = document.getElementById("productDescription");
-const inputCost = document.getElementById("productCost");
-const inputPrice1 = document.getElementById("productPrice1");
-const inputPrice2 = document.getElementById("productPrice2");
+const selectPrices = document.getElementById("productPrices");
 
 let products = [];
+let idProduct=0;
 
 const renderProducts = (productList) => {
   productsTableBody.innerHTML = "";
@@ -69,16 +68,19 @@ const loadCategories = async () => {
   }
 };
 const loadProductIntoForm = (product) => {
-  inputId.value = product.id;
+  idProduct = product.id;
   inputCode.value = product.codigo;
   inputName.value = product.nombre;
   selectCategory.value = product.categoria.id;
   inputStock.value = product.stock;
   inputImage.src = product.imagen;
   inputDesc.innerText = product.descripcion;
-  inputCost.value = product.costo;
-  inputPrice1.value = product.precio1;
-  inputPrice2.value = product.precio2;
+  product.precios.forEach((price) => {
+    const option = document.createElement("option");
+    option.value = price.precio;
+    option.textContent = `${price.titulo} - $ ${price.precio}`;
+    selectPrices.appendChild(option);
+  });
   document.getElementById("productSearchModal").style.display = "none";
 };
 const clearFields = () => {
@@ -89,9 +91,9 @@ const clearFields = () => {
   inputStock.value = 0;
   inputImage.src = "../assets/sin_imagen.png";
   inputDesc.innerText = "";
-  inputCost.value = "";
-  inputPrice1.value = "";
-  inputPrice2.value = "";
+  // inputCost.value = "";
+  // inputPrice1.value = "";
+  // inputPrice2.value = "";
   document.getElementById("productSearchModal").style.display = "block";
 };
 const addCategory = async () => {
@@ -144,12 +146,10 @@ const saveProduct = async () => {
       descripcion: inputDesc.value,
       categoria: selectCategory.value,
       imagen: inputImage.src,
-      costo: inputCost.value,
-      precio1: inputPrice1.value,
-      precio2: inputPrice2.value,
+      
     };
     const res = await window.prismaFunctions.editProduct(
-      inputId.value,
+      idProduct,
       productData
     );
     if (res.success) {
@@ -167,6 +167,38 @@ const saveProduct = async () => {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
 };
+function addPrice() {
+  const title = document.getElementById("priceTitle").value.trim();
+  const value = document.getElementById("priceValue").value.trim();
+
+  if (title && value) {
+    const option = document.createElement("option");
+    option.textContent = `${title} : ${value}`;
+    option.value = value;
+    document.getElementById("productPrices").appendChild(option);
+
+    // Cerrar modal y limpiar inputs
+    document.getElementById("priceTitle").value = "";
+    document.getElementById("priceValue").value = "";
+    new bootstrap.Modal(document.getElementById("priceModal")).hide();
+  }
+}
+function addTax() {
+  const title = document.getElementById("taxTitle").value.trim();
+  const value = document.getElementById("taxValue").value.trim();
+
+  if (title && value) {
+    const option = document.createElement("option");
+    option.textContent = `${title} : ${value}`;
+    option.value = value;
+    document.getElementById("productTaxes").appendChild(option);
+
+    // Cerrar modal y limpiar inputs
+    document.getElementById("taxTitle").value = "";
+    document.getElementById("taxValue").value = "";
+    new bootstrap.Modal(document.getElementById("taxModal")).hide();
+  }
+}
 loadProducts();
 loadCategories();
 

@@ -200,6 +200,16 @@ ipcMain.handle("get-products", async () => {
     return { success: false, message: error.message };
   }
 });
+ipcMain.handle("add-price", async (event, priceData) => {
+  try {
+    const priceRepository = AppDataSource.getRepository(Price);
+    const newPrice = priceRepository.create(priceData);
+    await priceRepository.save(newPrice);
+    return { success: true };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
 ipcMain.handle("add-stock", async (event, stockData) => {
   try {
     const stockRepository = AppDataSource.getRepository(Stock);
