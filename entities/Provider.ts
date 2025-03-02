@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Purchase } from './Purchase';
 
 @Entity()
 export class Provider {
@@ -25,4 +26,7 @@ export class Provider {
 
     @Column()
     regimen: 'Monotributista' | 'Responsable Inscripto';
+    
+    @OneToMany(() => Purchase, (purchase) => purchase.provider)
+        purchase: Purchase[];
 }
