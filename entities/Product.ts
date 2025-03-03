@@ -23,6 +23,9 @@ export class Product {
     @Column()
     imagen: string
 
+    @Column()
+    controla_stock:boolean
+
     @Column({default: 0})
     stock: number
 
@@ -34,6 +37,9 @@ export class Product {
 
     @Column({default: 0})
     precio2: number
+
+    @Column()
+    iva:number
 
     @OneToMany(() => Stock, (stock) => stock.producto)
     stockMovements: Stock[]; 

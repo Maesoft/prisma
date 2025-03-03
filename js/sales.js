@@ -131,21 +131,21 @@ const renderProductSales = () => {
         <select class="precio-select" data-index="${index}">
           <option value="${product.precio1}">
           ${product.precio1.toLocaleString("es-AR", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}</option>
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}</option>
           <option value="${product.precio2}">
           ${product.precio2.toLocaleString("es-AR", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}</option>
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}</option>
         </select>
       </td>
       <td class="total-cell">
       ${(product.precio1 * product.cantidad).toLocaleString("es-AR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}</td>
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}</td>
       <td><button class="btn btn-remove" data-index="${index}">✖</button></td>
     `;
 
@@ -170,7 +170,7 @@ const renderProductSales = () => {
     btn.addEventListener("click", deleteItem);
   });
 };
-const replaceSelect= (event) =>{
+const replaceSelect = (event) => {
   const select = event.currentTarget
   const input = document.createElement("input");
   input.type = "number";
@@ -182,24 +182,24 @@ const replaceSelect= (event) =>{
   select.parentNode.replaceChild(input, select);
   input.focus();
   input.select();
-  input.addEventListener("keyup",(e)=>{
-  if(e.key=="Enter"){
-    const newSelect = document.createElement("select");
-    newSelect.className = "precio-select";
-    const option = document.createElement("option");
-    option.value = input.value;
-    option.textContent = parseFloat(input.value).toLocaleString("es-AR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-    newSelect.appendChild(option);
+  input.addEventListener("keyup", (e) => {
+    if (e.key == "Enter") {
+      const newSelect = document.createElement("select");
+      newSelect.className = "precio-select";
+      const option = document.createElement("option");
+      option.value = input.value;
+      option.textContent = parseFloat(input.value).toLocaleString("es-AR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      newSelect.appendChild(option);
 
-    // Reasignar los eventos necesarios
-    newSelect.addEventListener("change", updateSubTotal);
-    newSelect.addEventListener("contextmenu", replaceSelect)
-    input.parentNode.replaceChild(newSelect, input);
-    updateSubTotal({ target: newSelect });
-  };
+      // Reasignar los eventos necesarios
+      newSelect.addEventListener("change", updateSubTotal);
+      newSelect.addEventListener("contextmenu", replaceSelect)
+      input.parentNode.replaceChild(newSelect, input);
+      updateSubTotal({ target: newSelect });
+    };
   })
 }
 const deleteItem = (event) => {
@@ -282,35 +282,70 @@ const calculateTotal = () => {
   }
 };
 const addProductToSale = (product) => {
-  if (product.stock > 0) {
-    const existingProduct = productsSales.find(
-      (item) => item.codigo === product.codigo
-    );
+  const existingProduct = productsSales.find(
+    (item) => item.codigo === product.codigo
+  );
+
+  if (product.controla_stock) {
+    if (product.stock > 0) {
+      if (existingProduct) {
+        if (existingProduct.cantidad < existingProduct.stock) {
+          existingProduct.cantidad += 1;
+          existingProduct.total = existingProduct.cantidad * existingProduct.precio1;
+        } else {
+          window.prismaFunctions.showMSG(
+            "warning",
+            "Stock Insuficiente",
+            `No puedes agregar más de ${product.stock} unidades de ${product.nombre}.`
+          );
+          return;
+        }
+      } else {
+        productsSales.push({
+          id: product.id,
+          codigo: product.codigo,
+          nombre: product.nombre,
+          controla_stock: product.controla_stock,
+          stock: product.stock,
+          cantidad: 1,
+          costo: product.costo,
+          precio1: product.precio1,
+          precio2: product.precio2,
+          total: product.precio1,
+        });
+      }
+    } else {
+      window.prismaFunctions.showMSG(
+        "info",
+        "Stock Faltante",
+        `El producto ${product.nombre} no tiene stock suficiente.`
+      );
+      return;
+    }
+  } else {
+    // Si el producto no controla stock, se agrega sin restricciones
     if (existingProduct) {
-      if (existingProduct.stock > existingProduct.cantidad)
-        existingProduct.cantidad += 1;
+      existingProduct.cantidad += 1;
+      existingProduct.total = existingProduct.cantidad * existingProduct.precio1;
     } else {
       productsSales.push({
         id: product.id,
         codigo: product.codigo,
         nombre: product.nombre,
-        stock: product.stock,
+        controla_stock: product.controla_stock,
+        stock: null, // No se maneja stock
         cantidad: 1,
         costo: product.costo,
         precio1: product.precio1,
         precio2: product.precio2,
-        total: product.precio,
+        total: product.precio1,
       });
     }
-    renderProductSales();
-  } else {
-    window.prismaFunctions.showMSG(
-      "info",
-      "Stock Faltante",
-      `El producto ${product.nombre} no tiene stock suficiente.`
-    );
   }
+
+  renderProductSales();
 };
+
 const collect = async () => {
   if (!inputCodigoCliente.value || total === 0 || !fechaVenta.value) {
     window.prismaFunctions.showMSG(
@@ -321,7 +356,7 @@ const collect = async () => {
     return;
   }
   for (const product of productsSales) {
-    if (product.stock < product.cantidad) {
+    if (product.controla_stock && product.stock < product.cantidad) {
       window.prismaFunctions.showMSG(
         "info",
         "Stock Faltante",
@@ -380,7 +415,7 @@ const collect = async () => {
           sale: saleId,
         });
       }
-      await window.prismaFunctions.addDetail(saleDetail);
+      await window.prismaFunctions.addDetailSale(saleDetail);
       updateStock();
       await printSale();
       cleanFields();
@@ -431,34 +466,30 @@ const printSale = async () => {
                   </div>
                   <div class="col-md-4 text-center">
                       <h1 class="display-6" id="tipo-comprobante">
-                      ${
-                        tipoComprobante.options[tipoComprobante.selectedIndex]
-                          .text
-                      }
+                      ${tipoComprobante.options[tipoComprobante.selectedIndex]
+        .text
+      }
                       </h1>
                   </div>
                   <div class="col-md-4 text-center">
                       <p><strong>Fecha:</strong> <span id="fecha-comprobante">${formatearFecha(
-                        fechaVenta.value
-                      )}</span></p>
+        fechaVenta.value
+      )}</span></p>
                       <p class="mb-0"><strong>No. Comprobante:</strong></p>
                       <p class="mt-0">${ptoVta.value}-${nroComp.value}</p>
                   </div>
               </div>
               <div class="row mt-4 border-bottom">
                   <div class="col-6">
-                      <p><strong>Razón Social: </strong>${
-                        clientSelect.razon_social
-                      }</p>
+                      <p><strong>Razón Social: </strong>${clientSelect.razon_social
+      }</p>
                       <p><strong>CUIT: </strong>${clientSelect.cuit}</p>
                   </div>
                   <div class="col-6">
-                      <p><strong>Teléfono: </strong> ${
-                        clientSelect.telefono
-                      }</p>
-                      <p><strong>Domicilio: </strong>${
-                        clientSelect.direccion
-                      }</p>
+                      <p><strong>Teléfono: </strong> ${clientSelect.telefono
+      }</p>
+                      <p><strong>Domicilio: </strong>${clientSelect.direccion
+      }</p>
                   </div>
               </div>
               <div class="row mt-4">
@@ -487,12 +518,12 @@ const printSale = async () => {
               <div class="row mt-4">
                   <div class="col-12 text-end">
                       <p class="fs-5"><strong>Total:</strong> <span>$ ${total.toLocaleString(
-                        "es-AR",
-                        {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        }
-                      )}</span></p>
+        "es-AR",
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }
+      )}</span></p>
                   </div>
               </div>
               <p>${observacion.value}</p>
@@ -511,13 +542,13 @@ const printSale = async () => {
               <td>${product.cantidad}</td>
               <td>${product.producto}</td>
               <td>${product.precio_unitario.toLocaleString("es-AR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}</td>
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}</td>
               <td>${product.subtotal.toLocaleString("es-AR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}</td>`;
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}</td>`;
       tabla.appendChild(row);
     });
 
@@ -552,9 +583,8 @@ const printSale = async () => {
         <p>${domicilio}</p>
         <p>Tel: ${telefono}</p>
         <hr>
-        <p class="fw-bold">${
-          tipoComprobante.options[tipoComprobante.selectedIndex].text
-        }</p>
+        <p class="fw-bold">${tipoComprobante.options[tipoComprobante.selectedIndex].text
+      }</p>
         <p>Fecha: ${formatearFecha(fechaVenta.value)}</p>
         <p>No. Comp: </p>
         <p>${ptoVta.value}-${nroComp.value}</p>
@@ -577,9 +607,9 @@ const printSale = async () => {
         </table>
         <hr>
         <p class="fs-6 fw-bold">Total: $ ${total.toLocaleString("es-AR", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}</p>
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}</p>
         <hr>
         <p class="mb-1">${observacion.value}</p>
         <p class="fw-bold">¡Gracias por su compra!</p>
@@ -587,7 +617,7 @@ const printSale = async () => {
 </body>
 </html>
 `;
-    const ventana =window.open("", "", "width=200,height=500");
+    const ventana = window.open("", "", "width=200,height=500");
     ventana.document.write(contenido_ticket);
     ventana.document.close();
 
@@ -598,9 +628,9 @@ const printSale = async () => {
               <td>${product.cantidad}</td>
               <td>${product.producto}</td>
               <td>${product.subtotal.toLocaleString("es-AR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}</td>`;
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}</td>`;
       tabla.appendChild(row);
     });
 
@@ -616,14 +646,16 @@ const printSale = async () => {
 };
 const updateStock = () => {
   productsSales.forEach(async (product) => {
+    console.log(product);
+    
+    if(product.controla_stock){
     const productData = {
       stock: product.stock - product.cantidad,
     };
     const stockData = {
       producto: { id: product.id },
-      detalle: `Venta - ${tipoComprobante.value + ptoVta.value}-${
-        nroComp.value
-      }`,
+      detalle: `Venta - ${tipoComprobante.value + ptoVta.value}-${nroComp.value
+        }`,
       operacion: "Egreso",
       cantidad: -product.cantidad,
       stockResultante: product.stock - product.cantidad,
@@ -631,7 +663,7 @@ const updateStock = () => {
 
     await window.prismaFunctions.editProduct(product.id, productData);
     await window.prismaFunctions.addStock(stockData);
-  });
+  }});
 };
 const getLastInvoice = async () => {
   const resInvoices = await window.prismaFunctions.getSales();

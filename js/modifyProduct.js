@@ -1,5 +1,4 @@
 const productsTableBody = document.querySelector("#productsTable tbody");
-const inputId = document.getElementById("itemId");
 const inputCode = document.getElementById("productCode");
 const inputName = document.getElementById("productName");
 const selectCategory = document.getElementById("productCategory");
@@ -9,8 +8,11 @@ const inputDesc = document.getElementById("productDescription");
 const inputCost = document.getElementById("productCost");
 const inputPrice1 = document.getElementById("productPrice1");
 const inputPrice2 = document.getElementById("productPrice2");
+const productControlStock = document.getElementById("productControlStock");
+const productTax = document.getElementById("productTax");
 
 let products = [];
+let inputId = 0;
 
 const renderProducts = (productList) => {
   productsTableBody.innerHTML = "";
@@ -69,7 +71,7 @@ const loadCategories = async () => {
   }
 };
 const loadProductIntoForm = (product) => {
-  inputId.value = product.id;
+  inputId = product.id;
   inputCode.value = product.codigo;
   inputName.value = product.nombre;
   selectCategory.value = product.categoria.id;
@@ -79,6 +81,9 @@ const loadProductIntoForm = (product) => {
   inputCost.value = product.costo;
   inputPrice1.value = product.precio1;
   inputPrice2.value = product.precio2;
+  productControlStock.checked= product.controla_stock;
+  productTax.value=product.iva;
+
   document.getElementById("productSearchModal").style.display = "none";
 };
 const clearFields = () => {

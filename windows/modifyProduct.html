@@ -8,16 +8,15 @@
     <link rel="stylesheet" href="../css/styles.css">
     <script defer src="../js/modifyProduct.js"></script>
     <script defer src="../js/bootstrap.min.js"></script>
-    <title>Modificar Producto</title>
+    <title>Prisma</title>
 </head>
 
 <body>
-    <div class="container mt-5">
+    <div class="container mt-3">
         <h1>Modificar Producto</h1>
         <form id="productForm">
             <div class="row">
                 <div class="col-md-6">
-                    <input type="hidden" id="itemId">
                     <div class="form-group">
                         <label for="productCode">Código</label>
                         <input type="text" class="form-control" id="productCode"
@@ -27,10 +26,9 @@
                         <label for="productName">Nombre</label>
                         <input type="text" class="form-control" id="productName" required>
                     </div>
-
                     <div class="form-group">
-                        <label for="productDescription" class="form-label mt-2">Descripción</label>
-                        <textarea class="form-control" id="productDescription" rows="3" required></textarea>
+                        <label for="productDescription" class="form-label mb-0">Descripción</label>
+                        <textarea class="form-control " id="productDescription" rows="2"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="productCategory">Categoría</label>
@@ -39,40 +37,56 @@
                                 <select class="form-select" id="productCategory"></select>
                             </div>
                             <div class="col-3">
-                                <button type="button" class="btn"  data-bs-target="#categoryModal">➕</button>
+                                <button type="button" class="btn" data-bs-toggle="modal"
+                                    data-bs-target="#categoryModal">➕</button>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-check-label" for="productControlStock">Stock Actual</label>
-                        <input type="number" class="form-control" id="initialStock" value="0" disabled>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="initialStock">Stock Actual</label>
+                            <input type="number" class="form-control" id="initialStock" min="0" value="0" disabled>
+                        </div>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input bg-dark" type="checkbox" id="productControlStock" disabled>
+                            <label class="form-check-label" for="productControlStock">Controla Stock</label>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group text-center mt-2">
-                        <img class="img-thumbnail rounded w-75 mt-4" id="productImage" src="../assets/sin_imagen.png"
+                        <img class="img-thumbnail rounded w-75 mt-2" id="productImage" src="../assets/sin_imagen.png"
                             alt="Imagen del producto">
-                            <input type="file" id="productImageInput" accept="image/*" style="display: none;">
+                        <input type="file" id="productImageInput" accept="image/*" style="display: none;">
                     </div>
-                    <div class="row mt-4">
+                    <div class="row">
                         <div class="form-group mt-1 col-4">
                             <label for="productCost">Costo</label>
                             <input type="number" class="form-control" id="productCost" placeholder="$ 0,00" required>
                         </div>
                         <div class="form-group mt-1 col-4">
-                            <label for="productPrice1">Precio Venta 1</label>
+                            <label for="productPrice1">Precio 1</label>
                             <input type="number" class="form-control" id="productPrice1" placeholder="$ 0,00" required>
                         </div>
                         <div class="form-group mt-1 col-4">
-                            <label for="productPrice2">Precio Venta 2</label>
+                            <label for="productPrice2">Precio 2</label>
                             <input type="number" class="form-control" id="productPrice2" placeholder="$ 0,00">
                         </div>
                     </div>
-                    <div class="form-group mt-5 text-center">
-                        <button type="button" class="btn btn-secondary" onclick="window.close()">Cancelar</button>
-                        <button type="button" class="btn btn-primary" onclick="saveProduct()">Guardar</button>
+                    <div class="form-group mt-1">
+                        <label for="productTax">IVA</label>
+                        <select class="form-select" id="productTax">
+                            <option value="0">Sin IVA</option>
+                            <option value="IVA_21">IVA 21%</option>
+                            <option value="IVA_10.5">IVA 10.5%</option>
+                            <option value="IVA 27">IVA 27%</option>
+                        </select>
                     </div>
                 </div>
+            </div>
+            <div class="form-group mt-4 text-center">
+                <button type="button" class="btn btn-dark" onclick="window.close()">Cancelar</button>
+                <button type="button" class="btn btn-secondary" onclick="newProduct()">Guardar</button>
             </div>
         </form>
     </div>

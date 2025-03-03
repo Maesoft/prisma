@@ -8,8 +8,8 @@ const { Provider } = require("../entities/Provider");
 const { Category } = require("../entities/Category");
 const { Client } = require("../entities/Client");
 const { Sale } = require("../entities/Sale");
-const { Details } = require("../entities/Details");
 const { Option } = require("../entities/Options");
+const { DetailsSale } = require("../entities/DetailsSale");
 
 //Manejo de la App
 app.on("ready", async () => {
@@ -232,9 +232,9 @@ ipcMain.handle("get-sales", async () => {
     return { success: false, message: error.message };
   }
 });
-ipcMain.handle("add-detail", async (event, detailData) => {
+ipcMain.handle("add-detail-sale", async (event, detailData) => {
   try {
-    const detailRepository = AppDataSource.getRepository(Details);
+    const detailRepository = AppDataSource.getRepository(DetailsSale);
     const newDetail = detailRepository.create(detailData);
     await detailRepository.save(newDetail);
     return { success: true, message: "Detalle cargado exitosamente." };

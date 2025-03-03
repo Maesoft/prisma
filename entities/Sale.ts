@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Client } from "./Client";
-import { Details } from "./Details";
+import { DetailsSale } from "./DetailsSale";
 
 @Entity()
 export class Sale {
@@ -25,6 +25,6 @@ export class Sale {
   @Column()
   observacion: string;
 
-  @OneToMany(() => Details, (details) => details.sale, { cascade: true })
-  details: Details[];
+  @OneToMany(() => DetailsSale, (details) => details.sale, { cascade: true })
+  details: DetailsSale[];
 }

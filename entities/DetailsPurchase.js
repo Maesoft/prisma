@@ -9,36 +9,36 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Details = void 0;
+exports.DetailsPurchase = void 0;
 const typeorm_1 = require("typeorm");
-const Sale_1 = require("./Sale");
-let Details = class Details {
+const Purchase_1 = require("./Purchase");
+let DetailsPurchase = class DetailsPurchase {
 };
-exports.Details = Details;
+exports.DetailsPurchase = DetailsPurchase;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Details.prototype, "id", void 0);
+], DetailsPurchase.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Sale_1.Sale, (sale) => sale.details, { nullable: false }),
-    __metadata("design:type", Sale_1.Sale)
-], Details.prototype, "sale", void 0);
+    (0, typeorm_1.ManyToOne)(() => Purchase_1.Purchase, (purchase) => purchase.details, { nullable: false }),
+    __metadata("design:type", Purchase_1.Purchase)
+], DetailsPurchase.prototype, "purchase", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Details.prototype, "producto", void 0);
+], DetailsPurchase.prototype, "producto", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
-], Details.prototype, "cantidad", void 0);
+], DetailsPurchase.prototype, "cantidad", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'decimal', precision: 10, scale: 2 }),
     __metadata("design:type", Number)
-], Details.prototype, "precio_unitario", void 0);
+], DetailsPurchase.prototype, "precio_unitario", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'decimal', precision: 10, scale: 2 }),
     __metadata("design:type", Number)
-], Details.prototype, "subtotal", void 0);
-exports.Details = Details = __decorate([
+], DetailsPurchase.prototype, "subtotal", void 0);
+exports.DetailsPurchase = DetailsPurchase = __decorate([
     (0, typeorm_1.Entity)()
-], Details);
+], DetailsPurchase);

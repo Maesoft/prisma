@@ -41,6 +41,10 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "imagen", void 0);
 __decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Boolean)
+], Product.prototype, "controla_stock", void 0);
+__decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)
 ], Product.prototype, "stock", void 0);
@@ -56,6 +60,10 @@ __decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)
 ], Product.prototype, "precio2", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], Product.prototype, "iva", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Stock_1.Stock, (stock) => stock.producto),
     __metadata("design:type", Array)

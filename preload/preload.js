@@ -20,7 +20,7 @@ contextBridge.exposeInMainWorld("prismaFunctions", {
   getSales: () => ipcRenderer.invoke("get-sales"),
   addStock: (stockData) => ipcRenderer.invoke("add-stock", stockData),
   addSale: (saleData) => ipcRenderer.invoke("add-sale", saleData),
-  addDetail: (detailData) => ipcRenderer.invoke("add-detail", detailData),
+  addDetailSale: (detailData) => ipcRenderer.invoke("add-detail-sale", detailData),
   showMSG: (icon, title, message, buttons, defaultId) => ipcRenderer.invoke("show-message", icon, title, message, buttons, defaultId),
   saveOption: (optionData) => ipcRenderer.invoke("save-option", optionData),
   loadOption: () => ipcRenderer.invoke("load-option"),

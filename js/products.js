@@ -1,5 +1,7 @@
 const productImage = document.getElementById("productImage");
 const productImageInput = document.getElementById("productImageInput");
+const productControlStock = document.getElementById("productControlStock");
+const initialStock = document.getElementById("initialStock");
 
 const loadCategories = async () => {
   const res = await window.prismaFunctions.getCategories();
@@ -51,10 +53,12 @@ const newProduct = async () => {
     descripcion: document.getElementById("productDescription").value.trim(),
     categoria: document.getElementById("productCategory").value,
     imagen: document.getElementById("productImage").src,
+    controla_stock: productControlStock.checked,
     stock: parseInt(document.getElementById("initialStock").value, 10) || 0,
     costo: parseFloat(document.getElementById("productCost").value) || 0,
     precio1: parseFloat(document.getElementById("productPrice1").value) || 0,
     precio2: parseFloat(document.getElementById("productPrice2").value) || 0,
+    iva: document.getElementById("productTax").value,
   };
 
   if (productData.codigo === "" || productData.nombre === "") {
@@ -95,7 +99,6 @@ const newProduct = async () => {
     window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el producto:"+ error);
   }
 };
-
 productImage.addEventListener("click", () => {
   document.getElementById("productImageInput").click();
 });
@@ -109,4 +112,13 @@ productImageInput.addEventListener("change", (event) => {
     reader.readAsDataURL(file);
   }
 });
+productControlStock.addEventListener("change", ()=>{
+  if(!productControlStock.checked){
+    initialStock.disabled=true;
+    initialStock.value=0;
+  }else{
+    initialStock.disabled=false;
+  }
+
+})
 window.addEventListener("DOMContentLoaded", loadCategories);
