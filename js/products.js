@@ -62,7 +62,7 @@ const newProduct = async () => {
   };
 
   if (productData.codigo === "" || productData.nombre === "") {
-     window.prismaFunctions.showMSG("info","Prisma", "El producto debe tener asignado un código y un nombre.");
+     window.prismaFunctions.showMSG("info","Prisma", "El articulo debe tener asignado un código y un nombre.");
     return;
   }
 
@@ -93,10 +93,10 @@ const newProduct = async () => {
       document.getElementById("productForm").reset();
       productImage.src="../assets/sin_imagen.png"
     } else {
-      window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el producto: " + productRes.message);
+      window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el articulo: " + productRes.message);
     }
   } catch (error) {
-    window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el producto:"+ error);
+    window.prismaFunctions.showMSG("error","Prisma", "Error al agregar el articulo:"+ error);
   }
 };
 productImage.addEventListener("click", () => {

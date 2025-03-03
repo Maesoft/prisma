@@ -33,12 +33,12 @@ const menuTemplate = [
     ]
   },
   {
-    label: 'Productos',
+    label: 'Articulos',
     submenu: [
-      { label: 'Nuevo Producto', click: () => { windowManager.createWindow("newProduct",800,600,true, false)}},
-      { label: 'Eliminar Producto', click: () => { windowManager.createWindow("deleteProduct",600,400,false,true)}},
-      { label: 'Modificar Producto', click: () => {windowManager.createWindow("modifyProduct",800,600,true, false)}},
-      { label: 'Ver Productos', click: () => { /* Función para lista de precios */ } },
+      { label: 'Nuevo Articulo', click: () => { windowManager.createWindow("newProduct",800,600,true, false)}},
+      { label: 'Eliminar Articulo', click: () => { windowManager.createWindow("deleteProduct",600,400,false,true)}},
+      { label: 'Modificar Articulo', click: () => {windowManager.createWindow("modifyProduct",800,600,true, false)}},
+      { label: 'Ver Articulos', click: () => { /* Función para lista de precios */ } },
       { type: 'separator' },
       { label: 'Lista de Precios', click: () => { /* Función para lista de precios */ } }
     ]

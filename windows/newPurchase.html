@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script defer src="../js/bootstrap.min.js"></script>
+    <script defer src="../js/purchase.js"></script>
     <title>Nueva Compra</title>
 </head>
 
@@ -14,14 +16,14 @@
         <div class="row ">
             <div class="col-3">
                 <div class="input-container text-center ">
-                    <label for="codigoCliente" class="form-label">Código del Proveedor</label>
-                    <input type="text" id="inputCodigoCliente" class="form-control" placeholder="F3 para buscar" />
-                    <label id="nombreCliente" class="mt-1 form-label text-muted">Ingrese proveedor</label>
+                    <label for="codigoProveedor" class="form-label">Código del Proveedor</label>
+                    <input type="text" id="inputCodigoProveedor" class="form-control" placeholder="F3 para buscar" />
+                    <label id="nombreProveedor" class="mt-1 form-label text-muted">Ingrese Proveedor</label>
                 </div>
             </div>
             <div class="col-3">
                 <div class="input-container text-center">
-                    <label for="codigoCliente" class="form-label">Tipo de Comprobante</label>
+                    <label for="codigoProveedor" class="form-label">Tipo de Comprobante</label>
                     <select class="form-select" id="tipoComprobante">
                         <option value="T">Ticket</option>
                         <option value="TA">Ticket A</option>
@@ -50,12 +52,18 @@
             </div>
             <div class="col-3">
                 <div class="input-container">
-                    <label for="fechaVenta" class="form-label">Fecha</label>
-                    <input type="date" id="fechaVenta" class="form-control ms-auto" />
+                    <label for="fechaCompra" class="form-label">Fecha</label>
+                    <input type="date" id="fechaCompra" class="form-control ms-auto" />
                 </div>
             </div>
         </div>
-
+        <div class="input-container">
+            <div class="mt-2 w-100">
+                <label for="codigoProducto" class="form-label">Código de Barras del Producto</label>
+                <input type="text" id="codigoProducto" class="form-control"
+                    placeholder="Ingrese código de barras o presione F3 para buscar" />
+            </div>
+        </div>
         <table class="mt-2 table table-striped" style="cursor: default;">
             <colgroup>
                 <col style="width: 5%">
@@ -99,5 +107,68 @@
         </div>
     </div>
 </body>
+
+<!-- Modal para buscar proveedores-->
+<div class="modal fade" id="modalProviders" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="providerSearchModalLabel">
+                    Buscar Proveedor
+                </h5>
+                <button type="button" class="btn-close bg-secondary w-2" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="form-group p-4">
+                <input type="text" class="form-control bg-secondary" id="inputModalProviders" tabindex="1" />
+            </div>
+
+            <table class="table text-center" style="cursor: default;">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Razon Social</th>
+                        <th>CUIT</th>
+                        <th>Regimen</th>
+                    </tr>
+                </thead>
+                <tbody id="listProviders" style="cursor: pointer;">
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<!-- Modal para buscar productos -->
+<div class="modal fade" id="modalProducts" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="productSearchModalLabel">
+                    Buscar Producto
+                </h5>
+                <button type="button" class="btn-close bg-secondary w-2" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="form-group p-4">
+                <input type="text" class="form-control bg-secondary" id="inputModalProducts"/>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered w-100" id="productsTable">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Categoria</th>
+                                <th>Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listProducts"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </html>

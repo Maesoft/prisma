@@ -18,7 +18,7 @@ const loadProducts = async () => {
     products = response.products;
     renderProducts(products);
   } catch (error) {
-    console.error("Error al obtener los productos:", error);
+    console.error("Error al obtener los articulos:", error);
   }
 };
 const renderProducts = (productList) => {
@@ -26,7 +26,7 @@ const renderProducts = (productList) => {
   if (productList.length === 0) {
     productsTableBody.innerHTML = `
         <tr>
-          <td colspan="4">No se encontraron productos.</td>
+          <td colspan="4">No se encontraron articulos.</td>
         </tr>`;
     return;
   }
@@ -42,7 +42,7 @@ const renderProducts = (productList) => {
       const resMSG = await window.prismaFunctions.showMSG(
         "question",
         "Prisma",
-        `¿Esta seguro que desea eliminar el producto ${product.nombre}? Tambien se eliminaran todos los movimientos de Stock.`,
+        `¿Esta seguro que desea eliminar el articulo ${product.nombre}? Tambien se eliminaran todos los movimientos de Stock.`,
         ["Si", "No"],
         0
       );

@@ -10,6 +10,8 @@ const { Client } = require("../entities/Client");
 const { Sale } = require("../entities/Sale");
 const { Option } = require("../entities/Options");
 const { DetailsSale } = require("../entities/DetailsSale");
+const { DetailsPurchase } = require("../entities/DetailsPurchase");
+const { Purchase } = require("../entities/Purchase");
 
 //Manejo de la App
 app.on("ready", async () => {
@@ -223,6 +225,20 @@ ipcMain.handle("add-sale", async (event, saleData) => {
     return { success: false, message: error.message };
   }
 });
+ipcMain.handle("add-purchase", async (event, purchaseData) => {
+  try {
+    const purchaseRepository = AppDataSource.getRepository(Purchase);
+    const newPurchase = purchaseRepository.create(purchaseData);
+    await purchaseRepository.save(newPurchase);
+    return {
+      success: true,
+      message: "Se guardo el comprobante exitosamente",
+      purchaseId: newPurchase.id,
+    };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
 ipcMain.handle("get-sales", async () => {
   try {
     const salesRepository = AppDataSource.getRepository(Sale);
@@ -235,6 +251,16 @@ ipcMain.handle("get-sales", async () => {
 ipcMain.handle("add-detail-sale", async (event, detailData) => {
   try {
     const detailRepository = AppDataSource.getRepository(DetailsSale);
+    const newDetail = detailRepository.create(detailData);
+    await detailRepository.save(newDetail);
+    return { success: true, message: "Detalle cargado exitosamente." };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("add-detail-purchase", async (event, detailData) => {
+  try {
+    const detailRepository = AppDataSource.getRepository(DetailsPurchase);
     const newDetail = detailRepository.create(detailData);
     await detailRepository.save(newDetail);
     return { success: true, message: "Detalle cargado exitosamente." };
