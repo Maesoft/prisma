@@ -29,7 +29,7 @@ __decorate([
 ], Provider.prototype, "razon_social", void 0);
 __decorate([
     (0, typeorm_1.Column)({ unique: true, nullable: false }),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], Provider.prototype, "cuit", void 0);
 __decorate([
     (0, typeorm_1.Column)(),

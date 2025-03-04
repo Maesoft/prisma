@@ -2,7 +2,7 @@ const newClient = async () => {
   const clientData = {
     codigo: document.getElementById("companyCode").value.trim(),
     razon_social: document.getElementById("companyName").value.trim(),
-    cuit: document.getElementById("cuit").value.trim(),
+    cuit: document.getElementById("cuit").value.trim() || "",
     direccion: document.getElementById("address").value,
     telefono: document.getElementById("phone").value,
     email: document.getElementById("email").value,
@@ -16,7 +16,6 @@ const newClient = async () => {
     );
   } else {
     const res = await window.prismaFunctions.addClient(clientData);
-
     if (res.success) {
       window.prismaFunctions.showMSG("info", "Prisma", res.message);
       window.close();

@@ -18,7 +18,7 @@ const loadClients = async () => {
     clients = response.clients;
     renderClients(clients);
   } catch (error) {
-    console.error("Error al obtener los proveedores:", error);
+    console.error("Error al obtener los clientes:", error);
   }
 };
 const renderClients = (clientsList) => {
@@ -26,7 +26,7 @@ const renderClients = (clientsList) => {
   if (clientsList.length === 0) {
     clientsTableBody.innerHTML = `
         <tr>
-          <td colspan="4">No se encontraron proveedores.</td>
+          <td colspan="4">No se encontraron clientes.</td>
         </tr>`;
     return;
   }
@@ -42,7 +42,7 @@ const renderClients = (clientsList) => {
       const resMSG = await window.prismaFunctions.showMSG(
         "question",
         "Prisma",
-        `¿Esta seguro que desea eliminar el proveedor ${client.razon_social}? Tambien se eliminaran todos sus movimientos.`,
+        `¿Esta seguro que desea eliminar el cliente ${client.razon_social}? Tambien se eliminaran todos sus movimientos.`,
         ["Si", "No"],
         0
       );

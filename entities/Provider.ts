@@ -13,7 +13,7 @@ export class Provider {
     razon_social: string;
 
     @Column({unique:true, nullable:false})
-    cuit: number;
+    cuit: string;
 
     @Column()
     direccion: string;

@@ -10,6 +10,8 @@ contextBridge.exposeInMainWorld("prismaFunctions", {
   deleteClient: (id) => ipcRenderer.invoke("delete-client",id),
   addClient: (clientData) => ipcRenderer.invoke("add-client", clientData),
   getClients: () => ipcRenderer.invoke("get-clients"),
+  editClient: (id, clientData) =>
+    ipcRenderer.invoke("edit-client", id, clientData),
   addProduct: (productData) => ipcRenderer.invoke("add-product", productData),
   getProducts: () => ipcRenderer.invoke("get-products"),
   editProduct: (id, productData) =>

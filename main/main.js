@@ -118,6 +118,41 @@ ipcMain.handle("delete-client", async (event, id) => {
     return { success: false, message: error.message };
   }
 });
+ipcMain.handle("get-clients", async () => {
+  try {
+    const clientRepository = AppDataSource.getRepository(Client);
+    const clients = await clientRepository.find();
+    return { success: true, clients };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("edit-client", async (event, id, clientData) => {
+  try {
+    const clientRepository = AppDataSource.getRepository(Client);
+
+    const editClient = await clientRepository.findOneBy({ id });
+
+    editClient.codigo=clientData.codigo
+    editClient.razon_social=clientData.razon_social
+    editClient.cuit=clientData.cuit
+    editClient.direccion=clientData.direccion
+    editClient.telefono=clientData.telefono
+    editClient.email=clientData.email
+    editClient.regimen=clientData.regimen
+
+    await clientRepository.save(editClient);
+
+    return {
+      success: true,
+      message: "Proveedor editado exitosamente",
+      productId: editClient.id,
+    };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: error.message };
+  }
+});
 ipcMain.handle("get-categories", async () => {
   try {
     const categoriesRepository = AppDataSource.getRepository(Category);
@@ -273,15 +308,6 @@ ipcMain.handle("add-detail-purchase", async (event, detailData) => {
     const newDetail = detailRepository.create(detailData);
     await detailRepository.save(newDetail);
     return { success: true, message: "Detalle cargado exitosamente." };
-  } catch (error) {
-    return { success: false, message: error.message };
-  }
-});
-ipcMain.handle("get-clients", async () => {
-  try {
-    const clientRepository = AppDataSource.getRepository(Client);
-    const clients = await clientRepository.find();
-    return { success: true, clients };
   } catch (error) {
     return { success: false, message: error.message };
   }

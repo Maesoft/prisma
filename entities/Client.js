@@ -28,19 +28,19 @@ __decorate([
     __metadata("design:type", String)
 ], Client.prototype, "razon_social", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true, nullable: false }),
-    __metadata("design:type", Number)
+    (0, typeorm_1.Column)({ unique: true, nullable: true }),
+    __metadata("design:type", String)
 ], Client.prototype, "cuit", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Client.prototype, "direccion", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Client.prototype, "telefono", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
 ], Client.prototype, "email", void 0);
 __decorate([

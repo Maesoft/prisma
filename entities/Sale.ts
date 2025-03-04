@@ -16,7 +16,7 @@ export class Sale {
   @Column()
   numero_comprobante: string;
 
-  @ManyToOne(() => Client, (client) => client.sales, { cascade: true })
+  @ManyToOne(() => Client, (client) => client.sales, { onDelete: "CASCADE" })
   client: Client;
 
   @Column({ type: 'decimal', precision: 15, scale: 2 })
@@ -25,6 +25,6 @@ export class Sale {
   @Column()
   observacion: string;
 
-  @OneToMany(() => DetailsSale, (details) => details.sale, { cascade: true })
+  @OneToMany(() => DetailsSale, (details) => details.sale)
   details: DetailsSale[];
 }

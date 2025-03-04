@@ -345,7 +345,6 @@ const addProductToSale = (product) => {
 
   renderProductSales();
 };
-
 const collect = async () => {
   if (!inputCodigoCliente.value || total === 0 || !fechaVenta.value) {
     window.prismaFunctions.showMSG(
@@ -440,7 +439,10 @@ const cleanFields = () => {
 };
 const printSale = async () => {
   const resDatosEmpresa = await window.prismaFunctions.loadOption();
-  const { nombre, cuit, domicilio, telefono, logo } = resDatosEmpresa.options;
+  if(resDatosEmpresa.success){
+    const { nombre, cuit, domicilio, telefono, logo } = resDatosEmpresa.options;
+  
+  
   const clientSelect = clients.find((client) => client.id == idClient);
 
   const imprimir_a4 = () => {
@@ -643,6 +645,9 @@ const printSale = async () => {
   } else {
     imprimir_a4();
   }
+}else{
+  await window.prismaFunctions.showMSG("error", "Prisma",`Debe cargar los datos de su empresa para poder imprimir comprobantes. Ir a Archivo->Opciones y cargar los datos solicitados.`)
+}
 };
 const updateStock = () => {
   productsSales.forEach(async (product) => {
