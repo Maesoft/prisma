@@ -16,12 +16,12 @@ export class Sale {
   @Column()
   numero_comprobante: string;
 
-  @ManyToOne(() => Client, (client) => client.sales)
+  @ManyToOne(() => Client, (client) => client.sales, { cascade: true })
   client: Client;
 
   @Column({ type: 'decimal', precision: 15, scale: 2 })
   total: number;
-  
+
   @Column()
   observacion: string;
 

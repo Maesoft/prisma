@@ -109,6 +109,15 @@ ipcMain.handle("add-client", async (event, clientData) => {
     };
   }
 });
+ipcMain.handle("delete-client", async (event, id) => {
+  try {
+    const clientRepository = AppDataSource.getRepository(Client);
+    await clientRepository.delete(id);
+    return { success: true, message: "Cliente eliminado exitosamente" };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
 ipcMain.handle("get-categories", async () => {
   try {
     const categoriesRepository = AppDataSource.getRepository(Category);

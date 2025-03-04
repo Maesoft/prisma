@@ -25,7 +25,7 @@ const menuTemplate = [
     label: 'Clientes',
     submenu: [
       { label: 'Nuevo Cliente', click: () => { windowManager.createWindow("newClient",800,600,true, false) } },
-      { label: 'Eliminar Cliente', click: () => { /* Función para eliminar cliente */ } },
+      { label: 'Eliminar Cliente', click: () => { windowManager.createWindow("deleteClient",600,400,false,true)} },
       { label: 'Modificar Cliente', click: () => { /* Función para modificar cliente */ } },
       { type: 'separator' },
       { label: 'Resumen de cuenta', click: () => { /* Función para resumen de cuenta de clientes */ } },

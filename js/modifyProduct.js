@@ -19,7 +19,7 @@ const renderProducts = (productList) => {
   if (productList.length === 0) {
     productsTableBody.innerHTML = `
       <tr>
-        <td colspan="4">No se encontraron productos.</td>
+        <td colspan="4">No se encontraron articulos.</td>
       </tr>`;
     return;
   }

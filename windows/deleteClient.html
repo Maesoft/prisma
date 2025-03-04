@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <script defer src="../js/bootstrap.min.js"></script>
+    <script defer src="../js/deleteClient.js"></script>
+    <title>Eliminar Proveedor</title>
+</head>
+
+            <div class="d-flex bg-black text-white justify-content-between align-items-center p-2">
+                <h5 class="modal-title" id="clientearchModalLabel">
+                    Eliminar Proveedor
+                </h5>
+                <button type="button" class="btn-close bg-secondary w-2" onclick="window.close()"></button>
+            </div>
+            <div class="form-group p-4">
+                <input type="text" class="form-control bg-secondary" id="searchInput"/>
+            </div>
+            
+                <div class="table-responsiv p-4">
+                    <table class="table table-bordered w-100" style="cursor: default;" id="clientTable">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Razon Social</th>
+                                <th>CUIT</th>
+                                <th>Regimen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listClients" style="cursor:pointer;">
+
+                        </tbody>
+                    </table>
+                </div>
+
