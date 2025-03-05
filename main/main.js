@@ -286,7 +286,7 @@ ipcMain.handle("add-purchase", async (event, purchaseData) => {
 ipcMain.handle("get-sales", async () => {
   try {
     const salesRepository = AppDataSource.getRepository(Sale);
-    const sales = await salesRepository.find();
+    const sales = await salesRepository.find({ relations: ["client", "details"] });
     return { success: true, sales };
   } catch (error) {
     return { success: false, message: error.message };
