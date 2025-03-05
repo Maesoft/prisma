@@ -33,7 +33,7 @@ __decorate([
     __metadata("design:type", String)
 ], Purchase.prototype, "numero_comprobante", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Provider_1.Provider, (provider) => provider.purchase),
+    (0, typeorm_1.ManyToOne)(() => Provider_1.Provider, (provider) => provider.purchase, { onDelete: "CASCADE" }),
     __metadata("design:type", Provider_1.Provider)
 ], Purchase.prototype, "provider", void 0);
 __decorate([
@@ -45,7 +45,7 @@ __decorate([
     __metadata("design:type", String)
 ], Purchase.prototype, "observacion", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => DetailsPurchase_1.DetailsPurchase, (details) => details.purchase, { cascade: true }),
+    (0, typeorm_1.OneToMany)(() => DetailsPurchase_1.DetailsPurchase, (details) => details.purchase),
     __metadata("design:type", Array)
 ], Purchase.prototype, "details", void 0);
 exports.Purchase = Purchase = __decorate([

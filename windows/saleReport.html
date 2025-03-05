@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Informe de Ventas</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script defer src="../js/bootstrap.min.js"></script>
+</head>
+
+<body>
+        
+        <form class="p-4 border rounded">
+            <h2 class="text-center">Generar Informe de Ventas</h2>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label">Fecha Inicio</label>
+                    <input type="date" class="form-control">
+                </div>
+                <div class="col-6">
+                    <label class="form-label">Fecha Fin</label>
+                    <input type="date" class="form-control">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Cliente</label>
+                <input type="text" class="form-control" id="inputClient" placeholder="Si no selecciona ningun cliente se incluiran todos en el informe.">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Artículo</label>
+                <select class="form-select">
+                    <option value="">Seleccionar Artículo</option>
+                    <option>Producto A</option>
+                    <option>Producto B</option>
+                    <option>Producto C</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">IVA</label>
+                <select class="form-select">
+                    <option value="">Seleccionar IVA</option>
+                    <option>Exento</option>
+                    <option>10%</option>
+                    <option>21%</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mb-1" onclick="window.close()">Generar Informe</button>
+            <button type="submit" class="btn btn-dark w-100" onclick="window.close()">Cancelar</button>
+        </form>
+</body>
+
+</html>

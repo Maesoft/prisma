@@ -20,7 +20,7 @@ __decorate([
     __metadata("design:type", Number)
 ], DetailsPurchase.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Purchase_1.Purchase, (purchase) => purchase.details, { nullable: false }),
+    (0, typeorm_1.ManyToOne)(() => Purchase_1.Purchase, (purchase) => purchase.details, { nullable: false, onDelete: "CASCADE" }),
     __metadata("design:type", Purchase_1.Purchase)
 ], DetailsPurchase.prototype, "purchase", void 0);
 __decorate([
