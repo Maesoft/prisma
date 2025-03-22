@@ -131,21 +131,21 @@ const renderProductSales = () => {
         <select class="precio-select" data-index="${index}">
           <option value="${product.precio1}">
           ${product.precio1.toLocaleString("es-AR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}</option>
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}</option>
           <option value="${product.precio2}">
           ${product.precio2.toLocaleString("es-AR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}</option>
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}</option>
         </select>
       </td>
       <td class="total-cell">
       ${(product.precio1 * product.cantidad).toLocaleString("es-AR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}</td>
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}</td>
       <td><button class="btn btn-remove" data-index="${index}">✖</button></td>
     `;
 
@@ -171,7 +171,7 @@ const renderProductSales = () => {
   });
 };
 const replaceSelect = (event) => {
-  const select = event.currentTarget
+  const select = event.currentTarget;
   const input = document.createElement("input");
   input.type = "number";
   input.step = "1";
@@ -196,12 +196,12 @@ const replaceSelect = (event) => {
 
       // Reasignar los eventos necesarios
       newSelect.addEventListener("change", updateSubTotal);
-      newSelect.addEventListener("contextmenu", replaceSelect)
+      newSelect.addEventListener("contextmenu", replaceSelect);
       input.parentNode.replaceChild(newSelect, input);
       updateSubTotal({ target: newSelect });
-    };
-  })
-}
+    }
+  });
+};
 const deleteItem = (event) => {
   const target = event.target;
   const row = target.closest("tr");
@@ -291,7 +291,8 @@ const addProductToSale = (product) => {
       if (existingProduct) {
         if (existingProduct.cantidad < existingProduct.stock) {
           existingProduct.cantidad += 1;
-          existingProduct.total = existingProduct.cantidad * existingProduct.precio1;
+          existingProduct.total =
+            existingProduct.cantidad * existingProduct.precio1;
         } else {
           window.prismaFunctions.showMSG(
             "warning",
@@ -326,7 +327,8 @@ const addProductToSale = (product) => {
     // Si el producto no controla stock, se agrega sin restricciones
     if (existingProduct) {
       existingProduct.cantidad += 1;
-      existingProduct.total = existingProduct.cantidad * existingProduct.precio1;
+      existingProduct.total =
+        existingProduct.cantidad * existingProduct.precio1;
     } else {
       productsSales.push({
         id: product.id,
@@ -385,7 +387,7 @@ const collect = async () => {
         precio_unitario: parseFloat(precioUnitarioSelect.value),
         subtotal: parseFloat(
           row.cells[4].innerText.replace(/\./g, "").replace(",", ".")
-        )
+        ),
       });
     }
     await printSale();
@@ -439,14 +441,13 @@ const cleanFields = () => {
 };
 const printSale = async () => {
   const resDatosEmpresa = await window.prismaFunctions.loadOption();
-  if(resDatosEmpresa.success){
+  if (resDatosEmpresa.success) {
     const { nombre, cuit, domicilio, telefono, logo } = resDatosEmpresa.options;
-  
-  
-  const clientSelect = clients.find((client) => client.id == idClient);
 
-  const imprimir_a4 = () => {
-    const contenido_a4 = `
+    const clientSelect = clients.find((client) => client.id == idClient);
+
+    const imprimir_a4 = () => {
+      const contenido_a4 = `
           <!DOCTYPE html>
           <html lang="en">
           <head>
@@ -468,30 +469,34 @@ const printSale = async () => {
                   </div>
                   <div class="col-md-4 text-center">
                       <h1 class="display-6" id="tipo-comprobante">
-                      ${tipoComprobante.options[tipoComprobante.selectedIndex]
-        .text
-      }
+                      ${
+                        tipoComprobante.options[tipoComprobante.selectedIndex]
+                          .text
+                      }
                       </h1>
                   </div>
                   <div class="col-md-4 text-center">
                       <p><strong>Fecha:</strong> <span id="fecha-comprobante">${formatearFecha(
-        fechaVenta.value
-      )}</span></p>
+                        fechaVenta.value
+                      )}</span></p>
                       <p class="mb-0"><strong>No. Comprobante:</strong></p>
                       <p class="mt-0">${ptoVta.value}-${nroComp.value}</p>
                   </div>
               </div>
               <div class="row mt-4 border-bottom">
                   <div class="col-6">
-                      <p><strong>Razón Social: </strong>${clientSelect.razon_social
-      }</p>
+                      <p><strong>Razón Social: </strong>${
+                        clientSelect.razon_social
+                      }</p>
                       <p><strong>CUIT: </strong>${clientSelect.cuit}</p>
                   </div>
                   <div class="col-6">
-                      <p><strong>Teléfono: </strong> ${clientSelect.telefono
-      }</p>
-                      <p><strong>Domicilio: </strong>${clientSelect.direccion
-      }</p>
+                      <p><strong>Teléfono: </strong> ${
+                        clientSelect.telefono
+                      }</p>
+                      <p><strong>Domicilio: </strong>${
+                        clientSelect.direccion
+                      }</p>
                   </div>
               </div>
               <div class="row mt-4">
@@ -520,12 +525,12 @@ const printSale = async () => {
               <div class="row mt-4">
                   <div class="col-12 text-end">
                       <p class="fs-5"><strong>Total:</strong> <span>$ ${total.toLocaleString(
-        "es-AR",
-        {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }
-      )}</span></p>
+                        "es-AR",
+                        {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }
+                      )}</span></p>
                   </div>
               </div>
               <p>${observacion.value}</p>
@@ -533,32 +538,32 @@ const printSale = async () => {
           </body>
           </html>
         `;
-    const ventana = window.open("", "", "width=800,height=1100");
-    ventana.document.write(contenido_a4);
-    ventana.document.close();
+      const ventana = window.open("", "", "width=800,height=1100");
+      ventana.document.write(contenido_a4);
+      ventana.document.close();
 
-    const tabla = ventana.document.getElementById("detalle-factura");
-    saleDetail.forEach((product) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
+      const tabla = ventana.document.getElementById("detalle-factura");
+      saleDetail.forEach((product) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
               <td>${product.cantidad}</td>
               <td>${product.producto}</td>
               <td>${product.precio_unitario.toLocaleString("es-AR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}</td>
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}</td>
               <td>${product.subtotal.toLocaleString("es-AR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}</td>`;
-      tabla.appendChild(row);
-    });
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}</td>`;
+        tabla.appendChild(row);
+      });
 
-    ventana.print();
-    ventana.onafterprint = () => ventana.close();
-  };
-  const imprimir_ticket = () => {
-    const contenido_ticket = `
+      ventana.print();
+      ventana.onafterprint = () => ventana.close();
+    };
+    const imprimir_ticket = () => {
+      const contenido_ticket = `
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -585,8 +590,9 @@ const printSale = async () => {
         <p>${domicilio}</p>
         <p>Tel: ${telefono}</p>
         <hr>
-        <p class="fw-bold">${tipoComprobante.options[tipoComprobante.selectedIndex].text
-      }</p>
+        <p class="fw-bold">${
+          tipoComprobante.options[tipoComprobante.selectedIndex].text
+        }</p>
         <p>Fecha: ${formatearFecha(fechaVenta.value)}</p>
         <p>No. Comp: </p>
         <p>${ptoVta.value}-${nroComp.value}</p>
@@ -609,9 +615,9 @@ const printSale = async () => {
         </table>
         <hr>
         <p class="fs-6 fw-bold">Total: $ ${total.toLocaleString("es-AR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}</p>
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}</p>
         <hr>
         <p class="mb-1">${observacion.value}</p>
         <p class="fw-bold">¡Gracias por su compra!</p>
@@ -619,56 +625,62 @@ const printSale = async () => {
 </body>
 </html>
 `;
-    const ventana = window.open("", "", "width=200,height=500");
-    ventana.document.write(contenido_ticket);
-    ventana.document.close();
+      const ventana = window.open("", "", "width=200,height=500");
+      ventana.document.write(contenido_ticket);
+      ventana.document.close();
 
-    const tabla = ventana.document.getElementById("detalle-factura");
-    saleDetail.forEach((product) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
+      const tabla = ventana.document.getElementById("detalle-factura");
+      saleDetail.forEach((product) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
               <td>${product.cantidad}</td>
               <td>${product.producto}</td>
               <td>${product.subtotal.toLocaleString("es-AR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}</td>`;
-      tabla.appendChild(row);
-    });
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}</td>`;
+        tabla.appendChild(row);
+      });
 
-    ventana.print();
-    ventana.onafterprint = () => ventana.close();
-  };
+      ventana.print();
+      ventana.onafterprint = () => ventana.close();
+    };
 
-  if (tipoComprobante.selectedOptions[0].innerText.includes("Ticket")) {
-    imprimir_ticket();
+    if (tipoComprobante.selectedOptions[0].innerText.includes("Ticket")) {
+      imprimir_ticket();
+    } else {
+      imprimir_a4();
+    }
   } else {
-    imprimir_a4();
+    await window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      `Debe cargar los datos de su empresa para poder imprimir comprobantes. Ir a Archivo->Opciones y cargar los datos solicitados.`
+    );
   }
-}else{
-  await window.prismaFunctions.showMSG("error", "Prisma",`Debe cargar los datos de su empresa para poder imprimir comprobantes. Ir a Archivo->Opciones y cargar los datos solicitados.`)
-}
 };
 const updateStock = () => {
   productsSales.forEach(async (product) => {
     console.log(product);
-    
-    if(product.controla_stock){
-    const productData = {
-      stock: product.stock - product.cantidad,
-    };
-    const stockData = {
-      producto: { id: product.id },
-      detalle: `Venta - ${tipoComprobante.value + ptoVta.value}-${nroComp.value
-        }`,
-      operacion: "Egreso",
-      cantidad: -product.cantidad,
-      stockResultante: product.stock - product.cantidad,
-    };
 
-    await window.prismaFunctions.editProduct(product.id, productData);
-    await window.prismaFunctions.addStock(stockData);
-  }});
+    if (product.controla_stock) {
+      const productData = {
+        stock: product.stock - product.cantidad,
+      };
+      const stockData = {
+        producto: { id: product.id },
+        detalle: `Venta - ${tipoComprobante.value + ptoVta.value}-${
+          nroComp.value
+        }`,
+        operacion: "Egreso",
+        cantidad: -product.cantidad,
+        stockResultante: product.stock - product.cantidad,
+      };
+
+      await window.prismaFunctions.editProduct(product.id, productData);
+      await window.prismaFunctions.addStock(stockData);
+    }
+  });
 };
 const getLastInvoice = async () => {
   const resInvoices = await window.prismaFunctions.getSales();
@@ -713,6 +725,21 @@ inputCodigoCliente.addEventListener("keyup", async (event) => {
       labelNombreCliente.textContent = codeToSearch.razon_social;
       codigoProducto.focus();
     }
+  }
+});
+inputCodigoCliente.addEventListener("focusout", async () => {
+  await loadClients();
+  const codeToSearch = clients.find(
+    (client) => client.codigo == inputCodigoCliente.value
+  );
+  if (!codeToSearch) {
+    inputCodigoCliente.value = "";
+    inputCodigoCliente.focus();
+    labelNombreCliente.textContent = "Cliente no encotrado.";
+  } else {
+    idClient = codeToSearch.id;
+    labelNombreCliente.textContent = codeToSearch.razon_social;
+    codigoProducto.focus();
   }
 });
 inputCodigoProducto.addEventListener("keyup", async (event) => {
