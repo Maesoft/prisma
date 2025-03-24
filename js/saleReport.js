@@ -31,30 +31,6 @@ const makeReport = async () => {
   const ventasFiltradas = sales.filter((venta) => {
     const fechaVenta = new Date(venta.fecha);
 
-<<<<<<< HEAD
-const generarInforme = async () => {
-  await cargarVentas();
-  const fechaInicio = document.getElementById("fechaInicio").value
-    ? new Date(document.getElementById("fechaInicio").value)
-    : null;
-  const fechaFin = document.getElementById("fechaFin").value
-    ? new Date(document.getElementById("fechaFin").value)
-    : null;
-  const ventasFiltradas = ventas.filter((venta) => {
-    const fechaVenta = new Date(venta.fecha);
-
-    return (
-      (!fechaInicio || fechaVenta >= fechaInicio) &&
-      (!fechaFin || fechaVenta <= fechaFin)
-    );
-  });
-  
-  const totalVentas = ventasFiltradas.reduce(
-    (acc, venta) => acc + venta.total,
-    0
-  );
-
-=======
     return (
       (!fechaInicio || fechaVenta >= fechaInicio) &&
       (!fechaFin || fechaVenta <= fechaFin)
@@ -120,5 +96,4 @@ const renderReport = (report) => {
 </body>
 </html>`);
 ventana.document.close();
->>>>>>> 55741334a09827baa45b02d98623d565446230b8
 };
