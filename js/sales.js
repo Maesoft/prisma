@@ -515,69 +515,68 @@ const printSale = async () => {
   if (tipoComprobante.selectedOptions[0].innerText.includes("Ticket")) {
     htmlContent = `
       <!DOCTYPE html>
-      <html lang="es">
-      <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Ticket de Venta</title>
-          <link rel="stylesheet" href="../css/bootstrap.min.css" />
-          <script defer src="../js/bootstrap.min.js"></script>
-          <style>
-              body { font-size: 0.9rem; }
-              .container { max-width: 300px; padding: 5px; }
-              .border { padding: 5px; }
-              p, h3 { margin: 2px 0; }
-              hr { margin: 5px 0; }
-              table { margin-bottom: 5px; }
-              th, td { font-size: 0.6rem; }
-              /* Estilos para impresión */
-              @media print {
-                body { margin: 0; padding: 0; }
-                .container { width: 100%; }
-                img { display: block !important; max-width: 100% !important; }
-              }
-          </style>
-      </head>
-      <body class="container text-center">
-          <div class="border">
-              <img src="${logoSrc}" alt="Logo" width="40" class="mb-1">
-              <h3 class="fw-bold">${nombre}</h3>
-              <p>CUIT: ${cuit}</p>
-              <p>${domicilio}</p>
-              <p>Tel: ${telefono}</p>
-              <hr>
-              <p class="fw-bold">${tipoComprobante.options[tipoComprobante.selectedIndex].text}</p>
-              <p>Fecha: ${formatearFecha(fechaVenta.value)}</p>
-              <p>No. Comp: ${ptoVta.value}-${nroComp.value}</p>
-              <hr>
-              <p><strong>Cliente:</strong></p>
-              <p>${clientSelect.razon_social}</p>
-              <p><strong>CUIT:</strong> ${clientSelect.cuit}</p>
-              <hr>
-              <table class="table table-borderless">
-                  <thead>
-                      <tr>
-                          <th style="width: 20%;">Cant</th>
-                          <th style="width: 50%;">Desc</th>
-                          <th style="width: 30%;">$</th>
-                      </tr>
-                  </thead>
-                  <tbody id="detalle-factura">
-                      <!-- Se insertarán los productos -->
-                  </tbody>
-              </table>
-              <hr>
-              <p class="fs-6 fw-bold">Total: $ ${total.toLocaleString("es-AR", { 
-                minimumFractionDigits: 2, 
-                maximumFractionDigits: 2 
-              })}</p>
-              <hr>
-              <p class="mb-1">${observacion.value}</p>
-              <p class="fw-bold">¡Gracias por su compra!</p>
-          </div>
-      </body>
-      </html>
-    `;
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket de Venta</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <script defer src="../js/bootstrap.min.js"></script>
+    <style>
+        @page { size: auto; margin: 0; }
+        body { font-size: 12px; margin: 0; padding: 0; width: 58mm; }
+        .container { width: 58mm; max-width: 100%; padding: 5px; text-align: center; }
+        .border { padding: 5px; }
+        p, h3 { margin: 2px 0; font-size: 10px; }
+        hr { margin: 5px 0; }
+        table { width: 100%; margin-bottom: 5px; }
+        th, td { font-size: 10px; text-align: left; }
+        img { display: block !important; max-width: 100% !important; height: auto !important; }
+        @media print {
+            body, .container { width: 58mm; margin: 0; padding: 0; }
+            img { max-width: 100% !important; }
+        }
+    </style>
+</head>
+<body class="container">
+    <div class="border">
+        <img src="${logoSrc}" alt="Logo" width="40" class="mb-1">
+        <h3 class="fw-bold">${nombre}</h3>
+        <p>CUIT: ${cuit}</p>
+        <p>${domicilio}</p>
+        <p>Tel: ${telefono}</p>
+        <hr>
+        <p class="fw-bold">${tipoComprobante.options[tipoComprobante.selectedIndex].text}</p>
+        <p>Fecha: ${formatearFecha(fechaVenta.value)}</p>
+        <p>No. Comp: ${ptoVta.value}-${nroComp.value}</p>
+        <hr>
+        <p><strong>Cliente:</strong> ${clientSelect.razon_social}</p>
+        <p><strong>CUIT:</strong> ${clientSelect.cuit}</p>
+        <hr>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 20%;">Cant</th>
+                    <th style="width: 50%;">Desc</th>
+                    <th style="width: 30%;">$</th>
+                </tr>
+            </thead>
+            <tbody id="detalle-factura">
+                <!-- Se insertarán los productos -->
+            </tbody>
+        </table>
+        <hr>
+        <p class="fs-6 fw-bold">Total: $ ${total.toLocaleString("es-AR", { 
+          minimumFractionDigits: 2, 
+          maximumFractionDigits: 2 
+        })}</p>
+        <hr>
+        <p class="mb-1">${observacion.value}</p>
+        <p class="fw-bold">¡Gracias por su compra!</p>
+    </div>
+</body>
+</html>
+`
     openAndPrint(htmlContent, 200, 500, true);
   } else {
     htmlContent = `
