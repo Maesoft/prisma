@@ -591,11 +591,10 @@ const printSale = async () => {
           <script defer src="../js/bootstrap.min.js"></script>
           <style>
               /* Estilos básicos */
-              .container { margin-top: 20px; }
-              @media print {
-                body { margin: 0; padding: 0; }
-                .container { width: 100%; }
-                img { display: block !important; max-width: 100% !important; }
+              .container { 
+              margin-top: 20px;
+              width: 100vw !important;
+              max-width: 100% !important;
               }
           </style>
       </head>
@@ -603,18 +602,18 @@ const printSale = async () => {
         <div class="container my-4">
           <img src="${logoSrc}" alt="Logo de la empresa" class="img-fluid" id="logo-empresa" style="width:50px">
           <div class="row border-bottom pb-3">
-              <div class="col-md-4">
+              <div class="col-4">
                 <h3 class="mb-0 mt-0">${nombre}</h3>
                 <p class="mb-0 mt-0">${cuit}</p>
                 <p class="mb-0 mt-0">${domicilio}</p>
                 <p class="mb-0 mt-0">${telefono}</p>
               </div>
-              <div class="col-md-4 text-center">
+              <div class="col-4 text-center">
                   <h1 class="display-6" id="tipo-comprobante">
                     ${tipoComprobante.options[tipoComprobante.selectedIndex].text}
                   </h1>
               </div>
-              <div class="col-md-4 text-center">
+              <div class="col-4 text-center">
                   <p><strong>Fecha:</strong> <span id="fecha-comprobante">${formatearFecha(fechaVenta.value)}</span></p>
                   <p class="mb-0"><strong>No. Comprobante:</strong></p>
                   <p class="mt-0">${ptoVta.value}-${nroComp.value}</p>
