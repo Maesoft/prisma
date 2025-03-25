@@ -5,7 +5,7 @@ let sales = [];
 
 const formatearFecha = (fechaISO) => {
   const [anio, mes, dia] = fechaISO.split("-");
-  return `${dia}-${mes}-${anio}`;
+  return `${dia}/${mes}/${anio}`;
 };
 
 const loadSales = async () => {
@@ -20,6 +20,7 @@ const loadSales = async () => {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
 };
+
 const makeReport = async () => {
   await loadSales();
   fechaInicio = document.getElementById("fechaInicio").value
@@ -30,19 +31,17 @@ const makeReport = async () => {
     : null;
   const ventasFiltradas = sales.filter((venta) => {
     const fechaVenta = new Date(venta.fecha);
-
     return (
       (!fechaInicio || fechaVenta >= fechaInicio) &&
       (!fechaFin || fechaVenta <= fechaFin)
     );
   });
-  const totalVentas = ventasFiltradas.reduce(
-    (acc, venta) => acc + venta.total,
-    0
-  );
-  renderReport(ventasFiltradas)
+  renderReport(ventasFiltradas);
 };
 const renderReport = (report) => {
+  const totalVentas = report.reduce((acc, venta) => acc + venta.total, 0);
+  fechaInicio.setDate(fechaInicio.getDate() + 1);
+  fechaFin.setDate(fechaFin.getDate() + 1);
   const ventana = window.open("", "", "width=1100,height=800");
 
   ventana.document.write(`
@@ -59,9 +58,12 @@ const renderReport = (report) => {
 
 <div class="container">
     <div class="d-flex justify-content-between mt-2 mb-2">
-      <p class="text-center">Desde: ${fechaInicio || "Sin especificar"} <br> Hasta: ${fechaFin || "Sin especificar"}</p>
+      <p class="text-center">
+        Desde: ${fechaInicio ? fechaInicio.toLocaleDateString("es-AR") : "Sin especificar"} <br> 
+        Hasta: ${fechaFin ? fechaFin.toLocaleDateString("es-AR") : "Sin especificar"}
+      </p>
       <h2 class="text-center">Reporte de Ventas</h2>
-      <p class="text-center mt-1">Emitido el ${fechaActual}</p>
+      <p class="text-center mt-1">Emitido el ${formatearFecha(fechaActual)}</p>
     </div>
     <table class="table table-striped">
         <colgroup>
@@ -77,7 +79,7 @@ const renderReport = (report) => {
                 <th class="text-start">Comprobante</th>
                 <th class="text-start">Cliente</th>
                 <th class="text-start">Observación</th>
-                <th>Total</th>
+                <th class="text-end">Total</th>
             </tr>
         </thead>
         <tbody>
@@ -87,13 +89,17 @@ const renderReport = (report) => {
                 <td>${sale.tipo_comprobante + sale.numero_comprobante}</td>
                 <td>${sale.client.razon_social}</td>
                 <td>${sale.observacion}</td>
-                <td class="text-end">$${sale.total.toFixed(2)}</td>
+                <td class="text-end">$${sale.total.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</td>
             </tr>
             `).join('')}
         </tbody>
     </table>
+    <div class="text-end">
+        <h5>Total: $ ${totalVentas.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</h5>
+    </div>
 </div>
 </body>
 </html>`);
-ventana.document.close();
+
+  ventana.document.close();
 };
