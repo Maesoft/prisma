@@ -285,7 +285,6 @@ const addProductToSale = (product) => {
   const existingProduct = productsSales.find(
     (item) => item.codigo === product.codigo
   );
-
   if (product.controla_stock) {
     if (product.stock > 0) {
       if (existingProduct) {

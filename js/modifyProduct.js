@@ -154,7 +154,7 @@ const saveProduct = async () => {
       precio2: inputPrice2.value,
     };
     const res = await window.prismaFunctions.editProduct(
-      inputId.value,
+      inputId,
       productData
     );
     if (res.success) {
