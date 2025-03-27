@@ -334,7 +334,7 @@ const addProductToSale = (product) => {
         codigo: product.codigo,
         nombre: product.nombre,
         controla_stock: product.controla_stock,
-        stock: null, // No se maneja stock
+        stock: null,
         cantidad: 1,
         costo: product.costo,
         precio1: product.precio1,
@@ -343,7 +343,6 @@ const addProductToSale = (product) => {
       });
     }
   }
-
   renderProductSales();
 };
 const collect = async () => {

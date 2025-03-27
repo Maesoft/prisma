@@ -2,12 +2,10 @@ const fechaActual = new Date().toISOString().split("T")[0];
 let fechaInicio;
 let fechaFin;
 let sales = [];
-
 const formatearFecha = (fechaISO) => {
   const [anio, mes, dia] = fechaISO.split("-");
   return `${dia}/${mes}/${anio}`;
 };
-
 const loadSales = async () => {
   try {
     const res = await window.prismaFunctions.getSales();
@@ -20,7 +18,6 @@ const loadSales = async () => {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
 };
-
 const makeReport = async () => {
   await loadSales();
   fechaInicio = document.getElementById("fechaInicio").value
@@ -43,9 +40,8 @@ const renderReport = (report) => {
   fechaInicio.setDate(fechaInicio.getDate() + 1);
   fechaFin.setDate(fechaFin.getDate() + 1);
   const ventana = window.open("", "", "width=1100,height=800");
-
   ventana.document.write(`
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
