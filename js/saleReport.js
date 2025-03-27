@@ -33,12 +33,12 @@ const makeReport = async () => {
       (!fechaFin || fechaVenta <= fechaFin)
     );
   });
-  renderReport(ventasFiltradas);
+  printReport(ventasFiltradas);
 };
-const renderReport = (report) => {
+const printReport = (report) => {
   const totalVentas = report.reduce((acc, venta) => acc + venta.total, 0);
-  fechaInicio.setDate(fechaInicio.getDate() + 1);
-  fechaFin.setDate(fechaFin.getDate() + 1);
+  if(fechaInicio)fechaInicio.setDate(fechaInicio.getDate() + 1);
+  if(fechaFin)fechaFin.setDate(fechaFin.getDate() + 1);
   const ventana = window.open("", "", "width=1100,height=800");
   ventana.document.write(`
 <!DOCTYPE html>
@@ -49,17 +49,35 @@ const renderReport = (report) => {
     <title>Reporte de Ventas</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <script defer src="../js/bootstrap.min.js"></script>
+
+    <style>
+        @page {
+          size: A4 landscape; /* A4 en orientación horizontal */
+          margin: 10mm; /* Márgenes opcionales */
+        }
+        @media print {
+          .text-end {
+             text-align: right !important;
+          }
+          .text-start {
+             text-align: left !important;
+          }
+          .text-center {
+             text-align: center !important;
+          }
+      </style>
+
 </head>
 <body>
 
 <div class="container">
     <div class="d-flex justify-content-between mt-2 mb-2">
+    <h2 class="text-center">Reporte de Ventas</h2>
+    <p class="text-center mt-1">Emitido el ${formatearFecha(fechaActual)}</p>
       <p class="text-center">
         Desde: ${fechaInicio ? fechaInicio.toLocaleDateString("es-AR") : "Sin especificar"} <br> 
         Hasta: ${fechaFin ? fechaFin.toLocaleDateString("es-AR") : "Sin especificar"}
       </p>
-      <h2 class="text-center">Reporte de Ventas</h2>
-      <p class="text-center mt-1">Emitido el ${formatearFecha(fechaActual)}</p>
     </div>
     <table class="table table-striped">
         <colgroup>
@@ -89,13 +107,15 @@ const renderReport = (report) => {
             </tr>
             `).join('')}
         </tbody>
-    </table>
-    <div class="text-end">
-        <h5>Total: $ ${totalVentas.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</h5>
-    </div>
+        </table>
+        <div class="text-center">
+            <h5>Total: $ ${totalVentas.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</h5>
+        </div>
 </div>
 </body>
 </html>`);
 
   ventana.document.close();
+  ventana.print();
+  ventana.onafterprint = () => ventana.close();
 };
