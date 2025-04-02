@@ -25,6 +25,9 @@ export class Product {
     @Column()
     imagen: string
 
+    @Column()
+    controla_stock:boolean
+
     @Column({default: 0})
     stock: number
 

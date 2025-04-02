@@ -7,8 +7,11 @@ contextBridge.exposeInMainWorld("prismaFunctions", {
   editProvider: (id, providerData) =>
     ipcRenderer.invoke("edit-provider", id, providerData),
   deleteProvider: (id) => ipcRenderer.invoke("delete-provider",id),
+  deleteClient: (id) => ipcRenderer.invoke("delete-client",id),
   addClient: (clientData) => ipcRenderer.invoke("add-client", clientData),
   getClients: () => ipcRenderer.invoke("get-clients"),
+  editClient: (id, clientData) =>
+    ipcRenderer.invoke("edit-client", id, clientData),
   addProduct: (productData) => ipcRenderer.invoke("add-product", productData),
   getProducts: () => ipcRenderer.invoke("get-products"),
   addPrice: (priceData) => ipcRenderer.invoke("add-price",priceData),
@@ -21,7 +24,9 @@ contextBridge.exposeInMainWorld("prismaFunctions", {
   getSales: () => ipcRenderer.invoke("get-sales"),
   addStock: (stockData) => ipcRenderer.invoke("add-stock", stockData),
   addSale: (saleData) => ipcRenderer.invoke("add-sale", saleData),
-  addDetail: (detailData) => ipcRenderer.invoke("add-detail", detailData),
+  addPurchase: (purchaseData) => ipcRenderer.invoke("add-purchase", purchaseData),
+  addDetailSale: (detailData) => ipcRenderer.invoke("add-detail-sale", detailData),
+  addDetailPurchase: (detailData) => ipcRenderer.invoke("add-detail-purchase", detailData),
   showMSG: (icon, title, message, buttons, defaultId) => ipcRenderer.invoke("show-message", icon, title, message, buttons, defaultId),
   saveOption: (optionData) => ipcRenderer.invoke("save-option", optionData),
   loadOption: () => ipcRenderer.invoke("load-option"),

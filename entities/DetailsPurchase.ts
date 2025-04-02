@@ -1,13 +1,13 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Sale } from "./Sale";
+import { Purchase } from "./Purchase";
 
 @Entity()
-export class Details {
+export class DetailsPurchase {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Sale, (sale) => sale.details, { nullable: false })
-  sale: Sale;
+  @ManyToOne(() => Purchase, (purchase) => purchase.details, { nullable: false, onDelete: "CASCADE" })
+  purchase: Purchase;
 
   @Column()
   producto: string;

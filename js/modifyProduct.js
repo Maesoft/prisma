@@ -1,5 +1,4 @@
 const productsTableBody = document.querySelector("#productsTable tbody");
-const inputId = document.getElementById("itemId");
 const inputCode = document.getElementById("productCode");
 const inputName = document.getElementById("productName");
 const selectCategory = document.getElementById("productCategory");
@@ -7,6 +6,8 @@ const inputStock = document.getElementById("initialStock");
 const inputImage = document.getElementById("productImage");
 const inputDesc = document.getElementById("productDescription");
 const selectPrices = document.getElementById("productPrices");
+const productControlStock = document.getElementById("productControlStock");
+const productTax = document.getElementById("productTax");
 
 let products = [];
 let idProduct=0;
@@ -16,7 +17,7 @@ const renderProducts = (productList) => {
   if (productList.length === 0) {
     productsTableBody.innerHTML = `
       <tr>
-        <td colspan="4">No se encontraron productos.</td>
+        <td colspan="4">No se encontraron articulos.</td>
       </tr>`;
     return;
   }
@@ -81,6 +82,9 @@ const loadProductIntoForm = (product) => {
     option.textContent = `${price.titulo} - $ ${price.precio}`;
     selectPrices.appendChild(option);
   });
+  productControlStock.checked= product.controla_stock;
+  
+
   document.getElementById("productSearchModal").style.display = "none";
 };
 const clearFields = () => {
@@ -91,10 +95,9 @@ const clearFields = () => {
   inputStock.value = 0;
   inputImage.src = "../assets/sin_imagen.png";
   inputDesc.innerText = "";
-  // inputCost.value = "";
-  // inputPrice1.value = "";
-  // inputPrice2.value = "";
   document.getElementById("productSearchModal").style.display = "block";
+  selectPrices.innerHTML="";
+  productTax.innerHTML="";
 };
 const addCategory = async () => {
   const newCategoryName = document

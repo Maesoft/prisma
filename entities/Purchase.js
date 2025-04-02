@@ -9,48 +9,45 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Client = void 0;
+exports.Purchase = void 0;
 const typeorm_1 = require("typeorm");
-const Sale_1 = require("./Sale");
-let Client = class Client {
+const Provider_1 = require("./Provider");
+const DetailsPurchase_1 = require("./DetailsPurchase");
+let Purchase = class Purchase {
 };
-exports.Client = Client;
+exports.Purchase = Purchase;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Client.prototype, "id", void 0);
+], Purchase.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true, nullable: false }),
-    __metadata("design:type", String)
-], Client.prototype, "codigo", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ unique: true, nullable: false }),
-    __metadata("design:type", String)
-], Client.prototype, "razon_social", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ unique: true, nullable: true }),
-    __metadata("design:type", String)
-], Client.prototype, "cuit", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], Client.prototype, "direccion", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], Client.prototype, "telefono", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], Client.prototype, "email", void 0);
+    (0, typeorm_1.Column)({ type: 'date' }),
+    __metadata("design:type", Date)
+], Purchase.prototype, "fecha", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Client.prototype, "regimen", void 0);
+], Purchase.prototype, "tipo_comprobante", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Sale_1.Sale, (sale) => sale.client),
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Purchase.prototype, "numero_comprobante", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Provider_1.Provider, (provider) => provider.purchase, { onDelete: "CASCADE" }),
+    __metadata("design:type", Provider_1.Provider)
+], Purchase.prototype, "provider", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 15, scale: 2 }),
+    __metadata("design:type", Number)
+], Purchase.prototype, "total", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Purchase.prototype, "observacion", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => DetailsPurchase_1.DetailsPurchase, (details) => details.purchase),
     __metadata("design:type", Array)
-], Client.prototype, "sales", void 0);
-exports.Client = Client = __decorate([
+], Purchase.prototype, "details", void 0);
+exports.Purchase = Purchase = __decorate([
     (0, typeorm_1.Entity)()
-], Client);
+], Purchase);

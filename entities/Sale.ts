@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Client } from "./Client";
-import { Details } from "./Details";
+import { DetailsSale } from "./DetailsSale";
 
 @Entity()
 export class Sale {
@@ -16,15 +16,15 @@ export class Sale {
   @Column()
   numero_comprobante: string;
 
-  @ManyToOne(() => Client, (client) => client.sales)
+  @ManyToOne(() => Client, (client) => client.sales, { onDelete: "CASCADE" })
   client: Client;
 
   @Column({ type: 'decimal', precision: 15, scale: 2 })
   total: number;
-  
+
   @Column()
   observacion: string;
 
-  @OneToMany(() => Details, (details) => details.sale, { cascade: true })
-  details: Details[];
+  @OneToMany(() => DetailsSale, (details) => details.sale)
+  details: DetailsSale[];
 }

@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css">
     <script defer src="../js/products.js"></script>
-    <script defer src="../js/bootstrap.bundle.min.js"></script>
-    <title>Nuevo Producto</title>
+    <script defer src="../js/bootstrap.min.js"></script>
+    <title>Prisma</title>
 </head>
 
 <body>
-    <div class="container mt-5">
-        <h1>Alta de Nuevo Producto</h1>
+    <div class="container mt-3">
+        <h1>Alta de Nuevo Articulo</h1>
         <form id="productForm">
             <div class="row">
                 <div class="col-md-6">
@@ -26,10 +26,9 @@
                         <label for="productName">Nombre</label>
                         <input type="text" class="form-control" id="productName" required>
                     </div>
-
                     <div class="form-group">
                         <label for="productDescription" class="form-label mb-0">Descripción</label>
-                        <textarea class="form-control mt-0" id="productDescription" rows="2"></textarea>
+                        <textarea class="form-control " id="productDescription" rows="2"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="productCategory">Categoría</label>
@@ -43,14 +42,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-check-label" for="productControlStock">Stock Inicial</label>
-                        <input type="number" class="form-control" id="initialStock" value="0" required>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="initialStock">Stock Inicial</label>
+                            <input type="number" class="form-control" id="initialStock" min="0" value="0" required>
+                        </div>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input bg-dark" type="checkbox" id="productControlStock" checked>
+                            <label class="form-check-label" for="productControlStock">Controla Stock</label>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group text-center mt-2">
-                        <img class="img-thumbnail rounded w-75 mt-4" id="productImage" src="../assets/sin_imagen.png"
+                        <img class="img-thumbnail rounded w-75 mt-2" id="productImage" src="../assets/sin_imagen.png"
                             alt="Imagen del producto">
                         <input type="file" id="productImageInput" accept="image/*" style="display: none;">
                     </div>
@@ -70,16 +75,16 @@
                     </div>
 
                 </div>
-                <div class="form-group mt-5 text-center">
-                    <button type="button" class="btn btn-secondary" onclick="window.close()">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="newProduct()">Guardar</button>
-                </div>
+            </div>
+            <div class="form-group mt-4 text-center">
+                <button type="button" class="btn btn-dark" onclick="window.close()">Cancelar</button>
+                <button type="button" class="btn btn-secondary" onclick="newProduct()">Guardar</button>
             </div>
         </form>
     </div>
 </body>
 
-<!-- Modal para agregar nueva Categoria -->
+<!-- Modal para agregar categorías -->
 <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

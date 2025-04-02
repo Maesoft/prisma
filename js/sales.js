@@ -182,8 +182,8 @@ const renderProductSales = () => {
     btn.addEventListener("click", deleteItem);
   });
 };
-const replaceSelect= (event) =>{
-  const select = event.currentTarget
+const replaceSelect = (event) => {
+  const select = event.currentTarget;
   const input = document.createElement("input");
   input.type = "number";
   input.step = "1";
@@ -194,26 +194,26 @@ const replaceSelect= (event) =>{
   select.parentNode.replaceChild(input, select);
   input.focus();
   input.select();
-  input.addEventListener("keyup",(e)=>{
-  if(e.key=="Enter"){
-    const newSelect = document.createElement("select");
-    newSelect.className = "precio-select";
-    const option = document.createElement("option");
-    option.value = input.value;
-    option.textContent = parseFloat(input.value).toLocaleString("es-AR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-    newSelect.appendChild(option);
+  input.addEventListener("keyup", (e) => {
+    if (e.key == "Enter") {
+      const newSelect = document.createElement("select");
+      newSelect.className = "precio-select";
+      const option = document.createElement("option");
+      option.value = input.value;
+      option.textContent = parseFloat(input.value).toLocaleString("es-AR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      newSelect.appendChild(option);
 
-    // Reasignar los eventos necesarios
-    newSelect.addEventListener("change", updateSubTotal);
-    newSelect.addEventListener("contextmenu", replaceSelect)
-    input.parentNode.replaceChild(newSelect, input);
-    updateSubTotal({ target: newSelect });
-  };
-  })
-}
+      // Reasignar los eventos necesarios
+      newSelect.addEventListener("change", updateSubTotal);
+      newSelect.addEventListener("contextmenu", replaceSelect);
+      input.parentNode.replaceChild(newSelect, input);
+      updateSubTotal({ target: newSelect });
+    }
+  });
+};
 const deleteItem = (event) => {
   const target = event.target;
   const row = target.closest("tr");
@@ -294,32 +294,66 @@ const calculateTotal = () => {
   }
 };
 const addProductToSale = (product) => {
-  if (product.stock > 0) {
-    const existingProduct = productsSales.find(
-      (item) => item.codigo === product.codigo
-    );
+  const existingProduct = productsSales.find(
+    (item) => item.codigo === product.codigo
+  );
+  if (product.controla_stock) {
+    if (product.stock > 0) {
+      if (existingProduct) {
+        if (existingProduct.cantidad < existingProduct.stock) {
+          existingProduct.cantidad += 1;
+          existingProduct.total =
+            existingProduct.cantidad * existingProduct.precio1;
+        } else {
+          window.prismaFunctions.showMSG(
+            "warning",
+            "Stock Insuficiente",
+            `No puedes agregar más de ${product.stock} unidades de ${product.nombre}.`
+          );
+          return;
+        }
+      } else {
+        productsSales.push({
+          id: product.id,
+          codigo: product.codigo,
+          nombre: product.nombre,
+          controla_stock: product.controla_stock,
+          stock: product.stock,
+          cantidad: 1,
+          costo: product.costo,
+          precio1: product.precio1,
+          precio2: product.precio2,
+          total: product.precio1,
+        });
+      }
+    } else {
+      window.prismaFunctions.showMSG(
+        "info",
+        "Stock Faltante",
+        `El producto ${product.nombre} no tiene stock suficiente.`
+      );
+      return;
+    }
+  } else {
+    // Si el producto no controla stock, se agrega sin restricciones
     if (existingProduct) {
-      if (existingProduct.stock > existingProduct.cantidad)
-        existingProduct.cantidad += 1;
+      existingProduct.cantidad += 1;
+      existingProduct.total =
+        existingProduct.cantidad * existingProduct.precio1;
     } else {
       productsSales.push({
         id: product.id,
         codigo: product.codigo,
         nombre: product.nombre,
-        stock: product.stock,
+        controla_stock: product.controla_stock,
+        stock: null,
         cantidad: 1,
         precios: product.precios,
         total: product.precio,
       });
     }
-    renderProductSales();
-  } else {
-    window.prismaFunctions.showMSG(
-      "info",
-      "Stock Faltante",
-      `El producto ${product.nombre} no tiene stock suficiente.`
-    );
   }
+  renderProductSales();
 };
 const collect = async () => {
   if (!inputCodigoCliente.value || total === 0 || !fechaVenta.value) {
@@ -331,7 +365,7 @@ const collect = async () => {
     return;
   }
   for (const product of productsSales) {
-    if (product.stock < product.cantidad) {
+    if (product.controla_stock && product.stock < product.cantidad) {
       window.prismaFunctions.showMSG(
         "info",
         "Stock Faltante",
@@ -370,7 +404,6 @@ const collect = async () => {
     try {
       const saleResponse = await window.prismaFunctions.addSale(saleData);
       const saleId = saleResponse.saleId;
-      
       if (!saleId) {
         throw new Error("No se pudo obtener el ID de la venta.");
       }
@@ -390,8 +423,7 @@ const collect = async () => {
           sale: saleId,
         });
       }
-      
-      await window.prismaFunctions.addDetail(saleDetail);
+      await window.prismaFunctions.addDetailSale(saleDetail);
       updateStock();
       await printSale();
       cleanFields();
@@ -416,128 +448,80 @@ const cleanFields = () => {
 };
 const printSale = async () => {
   const resDatosEmpresa = await window.prismaFunctions.loadOption();
+  if (!resDatosEmpresa.success) {
+    await window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      "Debe cargar los datos de su empresa para poder imprimir comprobantes. Ir a Archivo->Opciones y cargar los datos solicitados."
+    );
+    return;
+  }
+
+  // Datos de la empresa y cliente
   const { nombre, cuit, domicilio, telefono, logo } = resDatosEmpresa.options;
   const clientSelect = clients.find((client) => client.id == idClient);
 
-  const imprimir_a4 = () => {
-    const contenido_a4 = `
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Factura</title>
-              <link rel="stylesheet" href="../css/bootstrap.min.css" />
-              <script defer src="../js/bootstrap.min.js"></script>
-          </head>
-          <body>
-            <div class="container my-4">
-              <img src="${logo}" alt="Logo de la empresa" class="img-fluid ml-5" id="logo-empresa" style="width:50px">
-              <div class="row border-bottom pb-3">
-                  <div class="col-md-4">
-                    <h3 class="mb-0 mt-0">${nombre}</h3>
-                    <p class="mb-0 mt-0">${cuit}</p>
-                    <p class="mb-0 mt-0">${domicilio}</p>
-                    <p class="mb-0 mt-0">${telefono}</p>
-                  </div>
-                  <div class="col-md-4 text-center">
-                      <h1 class="display-6" id="tipo-comprobante">
-                      ${
-                        tipoComprobante.options[tipoComprobante.selectedIndex]
-                          .text
-                      }
-                      </h1>
-                  </div>
-                  <div class="col-md-4 text-center">
-                      <p><strong>Fecha:</strong> <span id="fecha-comprobante">${formatearFecha(
-                        fechaVenta.value
-                      )}</span></p>
-                      <p class="mb-0"><strong>No. Comprobante:</strong></p>
-                      <p class="mt-0">${ptoVta.value}-${nroComp.value}</p>
-                  </div>
-              </div>
-              <div class="row mt-4 border-bottom">
-                  <div class="col-6">
-                      <p><strong>Razón Social: </strong>${
-                        clientSelect.razon_social
-                      }</p>
-                      <p><strong>CUIT: </strong>${clientSelect.cuit}</p>
-                  </div>
-                  <div class="col-6">
-                      <p><strong>Teléfono: </strong> ${
-                        clientSelect.telefono
-                      }</p>
-                      <p><strong>Domicilio: </strong>${
-                        clientSelect.direccion
-                      }</p>
-                  </div>
-              </div>
-              <div class="row mt-4">
-                  <div class="col-12">
-                      <table class="table table-bordered">
-                          <colgroup>
-                              <col style="width: 5%">
-                              <col style="width: 55%">
-                              <col style="width: 20%">
-                              <col style="width: 20%">
-                          </colgroup>
-                          <thead class="table-light">
-                              <tr>
-                                  <th>Cantidad</th>
-                                  <th>Descripción</th>
-                                  <th>Precio Unitario</th>
-                                  <th>Subtotal</th>
-                              </tr>
-                          </thead>
-                          <tbody id="detalle-factura">
-                              
-                          </tbody>
-                      </table>
-                  </div>
-              </div>
-              <div class="row mt-4">
-                  <div class="col-12 text-end">
-                      <p class="fs-5"><strong>Total:</strong> <span>$ ${total.toLocaleString(
-                        "es-AR",
-                        {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        }
-                      )}</span></p>
-                  </div>
-              </div>
-              <p>${observacion.value}</p>
-            </div>
-          </body>
-          </html>
-        `;
-    const ventana = window.open("", "", "width=800,height=1100");
-    ventana.document.write(contenido_a4);
-    ventana.document.close();
+  // Aseguramos que el logo tenga el prefijo base64 si es necesario.
+  const logoSrc = logo.startsWith("data:image/") ? logo : `data:image/png;base64,${logo}`;
 
-    const tabla = ventana.document.getElementById("detalle-factura");
+  // Función para insertar los detalles de la factura
+  const insertSaleDetailRows = (win, isTicket = false) => {
+    const tabla = win.document.getElementById("detalle-factura");
     saleDetail.forEach((product) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-              <td>${product.cantidad}</td>
-              <td>${product.producto}</td>
-              <td>${product.precio_unitario.toLocaleString("es-AR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}</td>
-              <td>${product.subtotal.toLocaleString("es-AR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}</td>`;
+      const row = win.document.createElement("tr");
+      if (isTicket) {
+        row.innerHTML = `
+          <td>${product.cantidad}</td>
+          <td>${product.producto}</td>
+          <td>${product.subtotal.toLocaleString("es-AR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}</td>`;
+      } else {
+        row.innerHTML = `
+          <td>${product.cantidad}</td>
+          <td>${product.producto}</td>
+          <td>${product.precio_unitario.toLocaleString("es-AR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}</td>
+          <td>${product.subtotal.toLocaleString("es-AR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}</td>`;
+      }
       tabla.appendChild(row);
     });
-
-    ventana.print();
-    ventana.onafterprint = () => ventana.close();
   };
-  const imprimir_ticket = () => {
-    const contenido_ticket = `
-<!DOCTYPE html>
+
+  // Función que abre una ventana, escribe el contenido y se encarga de la impresión
+  const openAndPrint = (contenido, width, height, isTicket = false) => {
+    const ventana = window.open("", "", `width=${width},height=${height}`);
+    ventana.document.write(contenido);
+    ventana.document.close();
+
+    // Función de sondeo para esperar a que exista la tabla "detalle-factura"
+    const waitForTable = () => {
+      const tabla = ventana.document.getElementById("detalle-factura");
+      if (tabla) {
+        insertSaleDetailRows(ventana, isTicket);
+        // Esperamos un poco más para asegurarnos de que todo se renderice bien
+        setTimeout(() => {
+          ventana.print();
+          ventana.onafterprint = () => ventana.close();
+        }, 300);
+      } else {
+        setTimeout(waitForTable, 100);
+      }
+    };
+    waitForTable();
+  };
+
+  // Generación del HTML para Ticket o A4
+  let htmlContent = "";
+  if (tipoComprobante.selectedOptions[0].innerText.includes("Ticket")) {
+    htmlContent = `
+      <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -546,50 +530,52 @@ const printSale = async () => {
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <script defer src="../js/bootstrap.min.js"></script>
     <style>
-        body { font-size: 0.9rem; }
-        .container { max-width: 300px; padding: 5px; }
+        @page { size: auto; margin: 0; }
+        body { font-size: 12px; margin: 0; padding: 0; width: 58mm; }
+        .container { width: 58mm; max-width: 100%; padding: 5px; text-align: center; }
         .border { padding: 5px; }
-        p, h3 { margin: 2px 0; }
+        p, h3 { margin: 2px 0; font-size: 10px; }
         hr { margin: 5px 0; }
-        table { margin-bottom: 5px; }
-        th,td  { font-size: 0.6rem; }
+        table { width: 100%; margin-bottom: 5px; }
+        th, td { font-size: 10px; text-align: left; }
+        img { display: block !important; max-width: 100% !important; height: auto !important; }
+        @media print {
+            body, .container { width: 58mm; margin: 0; padding: 0; }
+            img { max-width: 100% !important; }
+        }
     </style>
 </head>
-<body class="container text-center">
+<body class="container">
     <div class="border">
-        <img src="${logo}" alt="Logo" width="40" class="mb-1">
+        <img src="${logoSrc}" alt="Logo" width="40" class="mb-1">
         <h3 class="fw-bold">${nombre}</h3>
         <p>CUIT: ${cuit}</p>
         <p>${domicilio}</p>
         <p>Tel: ${telefono}</p>
         <hr>
-        <p class="fw-bold">${
-          tipoComprobante.options[tipoComprobante.selectedIndex].text
-        }</p>
+        <p class="fw-bold">${tipoComprobante.options[tipoComprobante.selectedIndex].text}</p>
         <p>Fecha: ${formatearFecha(fechaVenta.value)}</p>
-        <p>No. Comp: </p>
-        <p>${ptoVta.value}-${nroComp.value}</p>
+        <p>No. Comp: ${ptoVta.value}-${nroComp.value}</p>
         <hr>
-        <p><strong>Cliente:</strong></p>
-        <p>${clientSelect.razon_social}</p>
+        <p><strong>Cliente:</strong> ${clientSelect.razon_social}</p>
         <p><strong>CUIT:</strong> ${clientSelect.cuit}</p>
         <hr>
-        <table class="table table-borderless">
+        <table>
             <thead>
                 <tr>
-                    <th scope="col" style="width: 20%;">Cant</th>
-                    <th scope="col" style="width: 50%;">Desc</th>
-                    <th scope="col" style="width: 30%;">$</th>
+                    <th style="width: 20%;">Cant</th>
+                    <th style="width: 50%;">Desc</th>
+                    <th style="width: 30%;">$</th>
                 </tr>
             </thead>
             <tbody id="detalle-factura">
-                <!-- Aquí van los productos -->
+                <!-- Se insertarán los productos -->
             </tbody>
         </table>
         <hr>
-        <p class="fs-6 fw-bold">Total: $ ${total.toLocaleString("es-AR", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
+        <p class="fs-6 fw-bold">Total: $ ${total.toLocaleString("es-AR", { 
+          minimumFractionDigits: 2, 
+          maximumFractionDigits: 2 
         })}</p>
         <hr>
         <p class="mb-1">${observacion.value}</p>
@@ -597,51 +583,118 @@ const printSale = async () => {
     </div>
 </body>
 </html>
-`;
-    const ventana =window.open("", "", "width=200,height=500");
-    ventana.document.write(contenido_ticket);
-    ventana.document.close();
-
-    const tabla = ventana.document.getElementById("detalle-factura");
-    saleDetail.forEach((product) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-              <td>${product.cantidad}</td>
-              <td>${product.producto}</td>
-              <td>${product.subtotal.toLocaleString("es-AR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}</td>`;
-      tabla.appendChild(row);
-    });
-
-    ventana.print();
-    ventana.onafterprint = () => ventana.close();
-  };
-
-  if (tipoComprobante.selectedOptions[0].innerText.includes("Ticket")) {
-    imprimir_ticket();
+`
+    openAndPrint(htmlContent, 200, 500, true);
   } else {
-    imprimir_a4();
+    htmlContent = `
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Factura</title>
+          <link rel="stylesheet" href="../css/bootstrap.min.css" />
+          <script defer src="../js/bootstrap.min.js"></script>
+          <style>
+              /* Estilos básicos */
+              .container { 
+              margin-top: 20px;
+              width: 100vw !important;
+              max-width: 100% !important;
+              }
+          </style>
+      </head>
+      <body>
+        <div class="container my-4">
+          <img src="${logoSrc}" alt="Logo de la empresa" class="img-fluid" id="logo-empresa" style="width:50px">
+          <div class="row border-bottom pb-3">
+              <div class="col-4">
+                <h3 class="mb-0 mt-0">${nombre}</h3>
+                <p class="mb-0 mt-0">${cuit}</p>
+                <p class="mb-0 mt-0">${domicilio}</p>
+                <p class="mb-0 mt-0">${telefono}</p>
+              </div>
+              <div class="col-4 text-center">
+                  <h1 class="display-6" id="tipo-comprobante">
+                    ${tipoComprobante.options[tipoComprobante.selectedIndex].text}
+                  </h1>
+              </div>
+              <div class="col-4 text-center">
+                  <p><strong>Fecha:</strong> <span id="fecha-comprobante">${formatearFecha(fechaVenta.value)}</span></p>
+                  <p class="mb-0"><strong>No. Comprobante:</strong></p>
+                  <p class="mt-0">${ptoVta.value}-${nroComp.value}</p>
+              </div>
+          </div>
+          <div class="row mt-4 border-bottom">
+              <div class="col-6">
+                  <p><strong>Razón Social: </strong>${clientSelect.razon_social}</p>
+                  <p><strong>CUIT: </strong>${clientSelect.cuit}</p>
+              </div>
+              <div class="col-6">
+                  <p><strong>Teléfono: </strong>${clientSelect.telefono}</p>
+                  <p><strong>Domicilio: </strong>${clientSelect.direccion}</p>
+              </div>
+          </div>
+          <div class="row mt-4">
+              <div class="col-12">
+                  <table class="table table-bordered">
+                      <colgroup>
+                          <col style="width: 5%">
+                          <col style="width: 55%">
+                          <col style="width: 20%">
+                          <col style="width: 20%">
+                      </colgroup>
+                      <thead class="table-light">
+                          <tr>
+                              <th>Cantidad</th>
+                              <th>Descripción</th>
+                              <th>Precio Unitario</th>
+                              <th>Subtotal</th>
+                          </tr>
+                      </thead>
+                      <tbody id="detalle-factura">
+                          <!-- Se insertarán los productos -->
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+          <div class="row mt-4">
+              <div class="col-12 text-end">
+                  <p class="fs-5"><strong>Total:</strong> <span>$ ${total.toLocaleString("es-AR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}</span></p>
+              </div>
+          </div>
+          <p>${observacion.value}</p>
+        </div>
+      </body>
+      </html>
+    `;
+    openAndPrint(htmlContent, 800, 1100, false);
   }
 };
 const updateStock = () => {
   productsSales.forEach(async (product) => {
-    const productData = {
-      stock: product.stock - product.cantidad,
-    };
-    const stockData = {
-      producto: { id: product.id },
-      detalle: `Venta - ${tipoComprobante.value + ptoVta.value}-${
-        nroComp.value
-      }`,
-      operacion: "Egreso",
-      cantidad: -product.cantidad,
-      stockResultante: product.stock - product.cantidad,
-    };
+    console.log(product);
 
-    await window.prismaFunctions.editProduct(product.id, productData);
-    await window.prismaFunctions.addStock(stockData);
+    if (product.controla_stock) {
+      const productData = {
+        stock: product.stock - product.cantidad,
+      };
+      const stockData = {
+        producto: { id: product.id },
+        detalle: `Venta - ${tipoComprobante.value + ptoVta.value}-${
+          nroComp.value
+        }`,
+        operacion: "Egreso",
+        cantidad: -product.cantidad,
+        stockResultante: product.stock - product.cantidad,
+      };
+
+      await window.prismaFunctions.editProduct(product.id, productData);
+      await window.prismaFunctions.addStock(stockData);
+    }
   });
 };
 const getLastInvoice = async () => {
@@ -687,6 +740,21 @@ inputCodigoCliente.addEventListener("keyup", async (event) => {
       labelNombreCliente.textContent = codeToSearch.razon_social;
       codigoProducto.focus();
     }
+  }
+});
+inputCodigoCliente.addEventListener("focusout", async () => {
+  await loadClients();
+  const codeToSearch = clients.find(
+    (client) => client.codigo == inputCodigoCliente.value
+  );
+  if (!codeToSearch) {
+    inputCodigoCliente.value = "";
+    inputCodigoCliente.focus();
+    labelNombreCliente.textContent = "Cliente no encotrado.";
+  } else {
+    idClient = codeToSearch.id;
+    labelNombreCliente.textContent = codeToSearch.razon_social;
+    codigoProducto.focus();
   }
 });
 inputCodigoProducto.addEventListener("keyup", async (event) => {

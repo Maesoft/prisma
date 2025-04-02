@@ -12,16 +12,16 @@ export class Client {
     @Column({ unique: true, nullable: false })
     razon_social: string;
 
-    @Column({ unique: true, nullable: false })
-    cuit: number;
+    @Column({ unique: true, nullable: true })
+    cuit: string;
 
-    @Column()
+    @Column({nullable:true})
     direccion: string;
 
-    @Column()
+    @Column({nullable:true})
     telefono: string;
 
-    @Column()
+    @Column({nullable:true})
     email: string;
 
     @Column()
