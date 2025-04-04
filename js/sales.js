@@ -140,6 +140,9 @@ const renderProductSales = () => {
 
     tablaProductos.appendChild(row);
     const selectPrecio = row.querySelector(".precio-select");
+    console.log(product.precios);
+    console.log(product);
+    
     product.precios.sort((a, b) => {
       const strA = String(a.titulo); // Convertimos en string
       const strB = String(b.titulo);
@@ -303,7 +306,7 @@ const addProductToSale = (product) => {
         if (existingProduct.cantidad < existingProduct.stock) {
           existingProduct.cantidad += 1;
           existingProduct.total =
-            existingProduct.cantidad * existingProduct.precio1;
+            existingProduct.cantidad * existingProduct.precios[0].precio;
         } else {
           window.prismaFunctions.showMSG(
             "warning",
@@ -320,10 +323,8 @@ const addProductToSale = (product) => {
           controla_stock: product.controla_stock,
           stock: product.stock,
           cantidad: 1,
-          costo: product.costo,
-          precio1: product.precio1,
-          precio2: product.precio2,
-          total: product.precio1,
+          precios: product.precios,
+          total: product.precios[0].precio,
         });
       }
     } else {
@@ -339,7 +340,7 @@ const addProductToSale = (product) => {
     if (existingProduct) {
       existingProduct.cantidad += 1;
       existingProduct.total =
-        existingProduct.cantidad * existingProduct.precio1;
+        existingProduct.cantidad * existingProduct.precios[0].precio;
     } else {
       productsSales.push({
         id: product.id,
