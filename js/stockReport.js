@@ -89,9 +89,9 @@ const printReport = (report) => {
         </colgroup>
         <thead class="text-center">
             <tr>
-                <th class="text-start">Fecha</th>
-                <th class="text-start">Comprobante</th>
-                <th class="text-start">Cliente</th>
+                <th class="text-start">Codigo</th>
+                <th class="text-start">Producto</th>
+                <th class="text-start">Categoria</th>
                 <th class="text-start">Observación</th>
                 <th class="text-end">Total</th>
             </tr>

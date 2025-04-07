@@ -111,7 +111,7 @@ const renderProducts = (arrProducts) => {
 };
 const renderProductPurchase = () => {
     tablaProductos.innerHTML = "";
-
+    console.log(productsPurchase);
     productsPurchase.forEach((product, index) => {
         const row = document.createElement("tr");
         row.innerHTML = `
@@ -127,10 +127,10 @@ const renderProductPurchase = () => {
         />
       </td>
       <td>
-        <input class="precio-input" type="number" data-index="${index}" value="${product.costo}">
+        <input class="precio-input" type="number" data-index="${index}" value="${product.precios[0].precio}" min="0"/>
       </td>
       <td class="total-cell">
-      ${(product.costo * product.cantidad).toLocaleString("es-AR", {
+      ${(product.precios[0].precio * product.cantidad).toLocaleString("es-AR", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         })}</td>
@@ -243,7 +243,7 @@ const addProductToPurchase = (product) => {
 
     if (existingProduct) {
         existingProduct.cantidad += 1;
-        existingProduct.total = existingProduct.cantidad * existingProduct.precio1;
+        existingProduct.total = existingProduct.cantidad * existingProduct.precios[0].precio;
     } else {
         productsPurchase.push({
             id: product.id,
@@ -252,10 +252,8 @@ const addProductToPurchase = (product) => {
             controla_stock: product.controla_stock,
             stock: product.stock,
             cantidad: 1,
-            costo: product.costo,
-            precio1: product.precio1,
-            precio2: product.precio2,
-            total: product.precio1,
+            precios: product.precios,
+            total: product.precios[0].precio,
         });
     }
     renderProductPurchase();
@@ -366,9 +364,24 @@ inputCodigoProveedor.addEventListener("keyup", async (event) => {
         } else {
             idProvider = codeToSearch.id;
             labelNombreProveedor.textContent = codeToSearch.razon_social;
-            codigoProducto.focus();
+            ptoVta.focus();
         }
     }
+});
+inputCodigoProveedor.addEventListener("focusout", async (event) => {
+    await loadProviders();
+        const codeToSearch = providers.find(
+            (provider) => provider.codigo == inputCodigoProveedor.value
+        );
+        if (!codeToSearch) {
+            inputCodigoProveedor.value = "";
+            inputCodigoProveedor.focus();
+            labelNombreProveedor.textContent = "Proveedor no encotrado.";
+        } else {
+            idProvider = codeToSearch.id;
+            labelNombreProveedor.textContent = codeToSearch.razon_social;
+            ptoVta.focus();
+        }
 });
 inputCodigoProducto.addEventListener("keyup", async (event) => {
     if (event.key === "F3") {
@@ -409,5 +422,17 @@ inputModalProduct.addEventListener("input", (e) => {
         product.nombre.toLowerCase().includes(criterio.toLowerCase())
     );
     renderProducts(filteredProducts);
+});
+ptoVta.addEventListener("focusout",()=> {
+    if(ptoVta.value.length < 4){
+        ptoVta.value = ptoVta.value.padStart(4, "0");
+    }
+    nroComp.focus();
+});
+nroComp.addEventListener("focusout",()=> {
+    if(nroComp.value.length < 8){
+        nroComp.value = nroComp.value.padStart(8, "0");
+    }
+    fechaCompra.focus();
 });
 btnCobrar.addEventListener("click", collect);
