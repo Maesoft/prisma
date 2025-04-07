@@ -788,5 +788,16 @@ inputModalProduct.addEventListener("input", (e) => {
   );
   renderProducts(filteredProducts);
 });
+ptoVta.addEventListener("focusout",()=> {
+  if(ptoVta.value.length < 4){
+      ptoVta.value = ptoVta.value.padStart(4, "0");
+  }
+  nroComp.focus();
+});
+nroComp.addEventListener("focusout",()=> {
+  if(nroComp.value.length < 8){
+      nroComp.value = nroComp.value.padStart(8, "0");
+  }
+});
 btnCobrar.addEventListener("click", collect);
 document.addEventListener("DOMContentLoaded", getLastInvoice);
