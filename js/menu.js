@@ -48,7 +48,7 @@ const menuTemplate = [
     submenu: [
       { label: 'Ingreso/Egreso de Stock', click: () => { windowManager.createWindow("stockEntry", 800, 450, true, true) } },
       { type: 'separator' },
-      { label: 'Resumen de Stock', click: () => { } },
+      { label: 'Resumen de Stock', click: () => { windowManager.createWindow("stockReport", 1100,800,true, false) } },
       { type: 'separator' },
       { label: 'Stock Minimo', click: () => { } },
       { type: 'separator' },

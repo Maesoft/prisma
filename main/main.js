@@ -239,7 +239,7 @@ ipcMain.handle("delete-product", async (event, id) => {
 ipcMain.handle("get-products", async () => {
   try {
     const productRepository = AppDataSource.getRepository(Product);
-    const products = await productRepository.find({ relations: ["categoria"] });
+    const products = await productRepository.find({ relations: ["categoria","stockMovements"] });
     return { success: true, products };
   } catch (error) {
     return { success: false, message: error.message };

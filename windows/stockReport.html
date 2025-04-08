@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Prisma</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script defer src="../js/bootstrap.min.js"></script>
+    <script defer src="../js/stockReport.js"></script>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+        }
+
+        .full-width-container {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        table {
+            width: 100% !important;
+        }
+
+        th, td {
+            word-break: break-word;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="full-width-container">
+        <h1 class="text-center">Informe de Stock</h1>
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-striped table-bordered">
+                    <colgroup>
+                        <col style="width: 10%">
+                        <col style="width: 50%">
+                        <col style="width: 10%">
+                        <col style="width: 10%">
+                        <col style="width: 10%">
+                        <col style="width: 10%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th class="text-center">Stock</th>
+                            <th class="text-center">Costo Unit.</th>
+                            <th class="text-center">Costo Total</th>
+                            <th class="text-center">Ult. Mov.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportTable">
+                        
+                    </tbody>
+                </table>
+                <div class="text-end">
+                    <h5 id="totalStock">Total:</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
