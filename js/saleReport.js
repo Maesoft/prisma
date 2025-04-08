@@ -65,6 +65,12 @@ const printReport = (report) => {
           .text-center {
              text-align: center !important;
           }
+          .total-print {
+              font-size: 1rem !important;
+              font-weight: bold !important;
+              text-align: right !important;
+              margin-right: 200px !important;
+            }
       </style>
 
 </head>
@@ -108,8 +114,8 @@ const printReport = (report) => {
             `).join('')}
         </tbody>
         </table>
-        <div class="text-center">
-            <h5>Total: $ ${totalVentas.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</h5>
+        <div class="text-end mt-3">
+            <h5 class="text-end total-print">$ ${totalVentas.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</h5>
         </div>
 </div>
 </body>
