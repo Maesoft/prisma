@@ -4,78 +4,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Informe de Ventas</title>
+    <title>Prisma</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <script defer src="../js/bootstrap.min.js"></script>
     <script defer src="../js/stockReport.js"></script>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+        }
+
+        .full-width-container {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        table {
+            width: 100% !important;
+        }
+
+        th, td {
+            word-break: break-word;
+        }
+    </style>
 </head>
 
-<body class="bg-dark">
-        
-        <form class="bg-light p-4 border rounded" id="salesReportForm">
-            <h2 class="text-center">Generar Informe de Ventas</h2>
-            <div class="row mb-3">
-                <div class="col-6">
-                    <label class="form-label">Fecha Inicio</label>
-                    <input type="date" id="fechaInicio" class="form-control">
+<body>
+    <div class="full-width-container">
+        <h1 class="text-center">Informe de Stock</h1>
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-striped table-bordered">
+                    <colgroup>
+                        <col style="width: 10%">
+                        <col style="width: 50%">
+                        <col style="width: 10%">
+                        <col style="width: 10%">
+                        <col style="width: 10%">
+                        <col style="width: 10%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th class="text-center">Stock</th>
+                            <th class="text-center">Costo Unit.</th>
+                            <th class="text-center">Costo Total</th>
+                            <th class="text-center">Ult. Mov.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportTable">
+                        
+                    </tbody>
+                </table>
+                <div class="text-end">
+                    <h5 id="totalStock">Total:</h5>
                 </div>
-                <div class="col-6">
-                    <label class="form-label">Fecha Fin</label>
-                    <input type="date" id="fechaFin" class="form-control">
-                </div>
             </div>
-
-            <div class="mb-3">
-                <label class="form-label">Cliente</label>
-                <input type="text" class="form-control" id="inputClient" placeholder="Si no selecciona ningun cliente se incluiran todos en el informe.">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Artículo</label>
-                <input type="text" class="form-control" id="inputItem" placeholder="Si no selecciona ningun artículo se incluiran todos en el informe.">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">IVA</label>
-                <select class="form-select">
-                    <option>Incluir IVA</option>
-                    <option>No Incluir IVA</option>
-                    <option>Solo IVA</option>
-                </select>
-            </div>
-
-            <button type="button" class="btn btn-primary w-100 mb-1" onclick="makeReport()">Generar Informe</button>
-            <button type="button" class="btn btn-dark w-100" onclick="window.close()">Cancelar</button>
-        </form>
-</body>
-<div class="modal fade" id="modalClients" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-black text-white">
-                <h5 class="modal-title" id="clientSearchModalLabel">
-                    Buscar Cliente
-                </h5>
-                <button type="button" class="btn-close bg-secondary w-2" onclick="window.close()"></button>
-            </div>
-            <div class="form-group p-4">
-                <input type="text" class="form-control bg-secondary" id="inputModalClients" tabindex="1" oninput="searchClient()" />
-            </div>
-
-            <table class="table text-center" style="cursor: default;">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Razon Social</th>
-                        <th>CUIT</th>
-                        <th>Regimen</th>
-                    </tr>
-                </thead>
-                <tbody id="listClients" style="cursor: pointer;">
-
-                </tbody>
-            </table>
-
         </div>
     </div>
-</div>
+</body>
+
 </html>
