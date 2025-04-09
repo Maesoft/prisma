@@ -1,6 +1,7 @@
 const fechaActual = new Date().toISOString().split("T")[0];
 const reportTable = document.querySelector("tbody");
 const total = document.querySelector("#totalStock");
+const fechaEmision = document.querySelector(".fechaEmision");
 let products = [];
 const formatearFecha = (fechaISO) => {
   const [anio, mes, dia] = fechaISO.split("-");
@@ -25,13 +26,15 @@ const makeReport = async () => {
       acumulador + productoActual.costo * productoActual.stock,
     0
   );
+
+  fechaEmision.innerHTML = 'Emitido el ' + formatearFecha(fechaActual)
   reportTable.innerHTML = "";
 
   reportTable.innerHTML = `
     ${products
       .map((product) => {
         const ultMovimiento = product.stockMovements?.[product.stockMovements.length - 1];
-  
+
         return `<tr>
           <td>${product.codigo}</td>
           <td>${product.nombre}</td>

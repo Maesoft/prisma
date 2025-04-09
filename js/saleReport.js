@@ -72,10 +72,8 @@ const printReport = (report) => {
               margin-right: 200px !important;
             }
       </style>
-
 </head>
 <body>
-
 <div class="container">
     <div class="d-flex justify-content-between mt-2 mb-2">
     <h2 class="text-center">Reporte de Ventas</h2>
