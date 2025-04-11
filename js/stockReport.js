@@ -1,6 +1,7 @@
 const fechaActual = new Date().toISOString().split("T")[0];
 const reportTable = document.querySelector("tbody");
 const total = document.querySelector("#totalStock");
+const fechaEmision = document.querySelector(".fechaEmision");
 let products = [];
 const formatearFecha = (fechaISO) => {
   const [anio, mes, dia] = fechaISO.split("-");
@@ -25,24 +26,27 @@ const makeReport = async () => {
       acumulador + productoActual.costo * productoActual.stock,
     0
   );
+
+  fechaEmision.innerHTML = 'Emitido el ' + formatearFecha(fechaActual)
   reportTable.innerHTML = "";
 
   reportTable.innerHTML = `
     ${products
       .map((product) => {
         const ultMovimiento = product.stockMovements?.[product.stockMovements.length - 1];
+
         return `<tr>
           <td>${product.codigo}</td>
           <td>${product.nombre}</td>
           <td class="text-center">${product.stock}</td>
-          <td class="text-center">${product.precios[0].precio}</td>
-          <td class="text-center">${(product.precios[0].precio * product.stock).toFixed(2)}</td>
+          <td class="text-center">${product.costo}</td>
+          <td class="text-center">${(product.costo * product.stock).toFixed(2)}</td>
           <td class="text-center">${ultMovimiento?.fecha.toLocaleDateString("es-AR") || 'Sin movimientos'}</td>
         </tr>`;
       })
       .join("")}
   `;
-  total.innerHTML = `Valor Inventario: $ ${(totalStock||0).toLocaleString("es-AR", {
+  total.innerHTML = `Valor Inventario: $ ${totalStock.toLocaleString("es-AR", {
     minimumFractionDigits: 2,
   })}`;
   setTimeout(() => {

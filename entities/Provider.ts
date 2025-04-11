@@ -28,5 +28,5 @@ export class Provider {
     regimen: 'Monotributista' | 'Responsable Inscripto';
     
     @OneToMany(() => Purchase, (purchase) => purchase.provider)
-        purchase: Purchase[];
+    purchase: Purchase[];
 }
