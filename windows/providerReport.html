@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resumen de Cuenta de Proveedor</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css" />
+  <script defer src="../js/bootstrap.min.js"></script>
+  <script defer src="../js/providerReport.js"></script>
+</head>
+
+<body class="bg-dark">
+  <form class="bg-light p-4 border rounded" id="supplierReportForm">
+    <h2 class="text-center mt-3">Resumen de Cuenta de Proveedor</h2>
+
+    <div class="row mt-3 mb-3">
+      <div class="col-6">
+        <label class="form-label" for="fechaInicio">Fecha Inicio</label>
+        <input type="date" id="fechaInicio" class="form-control" />
+      </div>
+      <div class="col-6">
+        <label class="form-label" for="fechaFin">Fecha Fin</label>
+        <input type="date" id="fechaFin" class="form-control" />
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label" for="inputSupplier">Proveedor</label>
+      <input type="text" class="form-control" id="inputSupplier"
+        placeholder="Ingrese el codigo o presione F3 para buscar." />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label" for="inputDocument">Tipo de Comprobante</label>
+      <input type="text" class="form-control" id="inputDocument"
+        placeholder="Filtrar por tipo de comprobante (opcional)" />
+    </div>
+    <button type="button" class="btn btn-primary w-100 mt-5 mb-1" onclick="generateSupplierReport()">
+      Generar Resumen
+    </button>
+    <button type="button" class="btn btn-dark w-100" onclick="window.close()">
+      Cancelar
+    </button>
+  </form>
+
+  <!-- Modal de búsqueda de proveedor -->
+  <div class="modal fade" id="modalSuppliers" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-black text-white">
+          <h5 class="modal-title">Buscar Proveedor</h5>
+          <button type="button" class="btn-close bg-secondary" onclick="window.close()"></button>
+        </div>
+        <div class="form-group p-4">
+          <input type="text" class="form-control bg-secondary" id="inputModalSuppliers"
+            oninput="searchSupplier()" />
+        </div>
+        <table class="table text-center">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Razón Social</th>
+              <th>CUIT</th>
+              <th>Condición IVA</th>
+            </tr>
+          </thead>
+          <tbody id="listSuppliers" style="cursor: pointer;"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
