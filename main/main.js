@@ -52,7 +52,7 @@ ipcMain.handle("add-provider", async (event, providerData) => {
 ipcMain.handle("get-providers", async () => {
   try {
     const providerRepository = AppDataSource.getRepository(Provider);
-    const providers = await providerRepository.find();
+    const providers = await providerRepository.find({ relations: ["payment","purchase"] });
     return { success: true, providers };
   } catch (error) {
     return { success: false, message: error.message };
