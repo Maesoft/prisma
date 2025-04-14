@@ -13,6 +13,21 @@
 <body class="bg-dark">
   <form class="bg-light p-4 border rounded" id="supplierReportForm">
     <h2 class="text-center mt-3">Resumen de Cuenta de Proveedor</h2>
+    
+    <div class="mb-4 d-flex gap-3 align-items-start">
+      <div class="w-50">
+        <label class="form-label" for="inputSupplier">Proveedor</label>
+        <input type="text" class="form-control" id="inputSupplier"
+          placeholder="Ingrese el código o presione F3 para buscar." />
+      </div>
+    
+      <div class="w-50">
+        <label class="form-label" for="inputDocument">Tipo de Comprobante</label>
+        <input type="text" class="form-control" id="inputDocument"
+          placeholder="Filtrar por tipo de comprobante (opcional)" />
+      </div>
+    </div>
+    
 
     <div class="row mt-3 mb-3">
       <div class="col-6">
@@ -26,17 +41,9 @@
     </div>
 
     <div class="mb-3">
-      <label class="form-label" for="inputSupplier">Proveedor</label>
-      <input type="text" class="form-control" id="inputSupplier"
-        placeholder="Ingrese el codigo o presione F3 para buscar." />
-    </div>
 
-    <div class="mb-3">
-      <label class="form-label" for="inputDocument">Tipo de Comprobante</label>
-      <input type="text" class="form-control" id="inputDocument"
-        placeholder="Filtrar por tipo de comprobante (opcional)" />
     </div>
-    <button type="button" class="btn btn-primary w-100 mt-5 mb-1" onclick="generateSupplierReport()">
+    <button type="button" class="btn btn-primary w-100 mt-3 mb-1" onclick="generateSupplierReport()">
       Generar Resumen
     </button>
     <button type="button" class="btn btn-dark w-100" onclick="window.close()">

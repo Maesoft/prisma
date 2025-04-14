@@ -17,7 +17,7 @@ const menuTemplate = [
       { label: 'Eliminar Proveedor', click: () => { windowManager.createWindow("deleteProvider", 600, 400, false, true) } },
       { label: 'Modificar Proveedor', click: () => { windowManager.createWindow("modifyProvider", 800, 600, true, false) } },
       { type: 'separator' },
-      { label: 'Resumen de Cuenta', click: () => { windowManager.createWindow("providerReport", 700, 520, false, false) } },
+      { label: 'Resumen de Cuenta', click: () => { windowManager.createWindow("providerReport", 700, 388, false, false) } },
       { label: 'Lista de Proveedores', click: () => { /* Función para lista de proveedores */ } }
     ]
   },
