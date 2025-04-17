@@ -12,6 +12,7 @@ const { Option } = require("../entities/Options");
 const { DetailsSale } = require("../entities/DetailsSale");
 const { DetailsPurchase } = require("../entities/DetailsPurchase");
 const { Purchase } = require("../entities/Purchase");
+const { Payment } = require("../entities/Payment");
 
 //Manejo de la App
 app.on("ready", async () => {
@@ -33,6 +34,31 @@ app.on("activate", () => {
 });
 
 //Funciones que interactuan con la BD
+ipcMain.handle("get-payments", async () => {
+  try {
+    const paymentRepository = AppDataSource.getRepository(Payment);
+    const payments = await paymentRepository.find({
+      relations: ["provider", "methodProvider"],
+      order: { fecha: "ASC" },
+    });
+    return { success: true, payments };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("get-purchases", async () => {
+  try {
+    const purchaseRepository = AppDataSource.getRepository(Purchase);
+    const purchases = await purchaseRepository.find({
+      relations: ["provider", "details"],
+      order: { fecha: "ASC" },
+    });
+    return { success: true, purchases };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+}
+);
 ipcMain.handle("add-provider", async (event, providerData) => {
   try {
     const providerRepository = AppDataSource.getRepository(Provider);
@@ -52,7 +78,9 @@ ipcMain.handle("add-provider", async (event, providerData) => {
 ipcMain.handle("get-providers", async () => {
   try {
     const providerRepository = AppDataSource.getRepository(Provider);
-    const providers = await providerRepository.find({ relations: ["payment","purchase"] });
+    const providers = await providerRepository.find({ 
+      relations: ["payment","purchase"],
+    });
     return { success: true, providers };
   } catch (error) {
     return { success: false, message: error.message };
@@ -121,7 +149,9 @@ ipcMain.handle("delete-client", async (event, id) => {
 ipcMain.handle("get-clients", async () => {
   try {
     const clientRepository = AppDataSource.getRepository(Client);
-    const clients = await clientRepository.find();
+    const clients = await clientRepository.find({
+      relations: ["sales"],
+    });
     return { success: true, clients };
   } catch (error) {
     return { success: false, message: error.message };
@@ -286,7 +316,10 @@ ipcMain.handle("add-purchase", async (event, purchaseData) => {
 ipcMain.handle("get-sales", async () => {
   try {
     const salesRepository = AppDataSource.getRepository(Sale);
-    const sales = await salesRepository.find({ relations: ["client", "details"], order:{fecha:"ASC"} });
+    const sales = await salesRepository.find({ 
+      relations: ["client", "details"], 
+      order:{fecha:"ASC"}
+     });
     return { success: true, sales };
   } catch (error) {
     return { success: false, message: error.message };

@@ -3,6 +3,8 @@ const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("prismaFunctions", {
   addProvider: (providerData) =>
     ipcRenderer.invoke("add-provider", providerData),
+  getPayments: () => ipcRenderer.invoke("get-payments"),
+  getPurchases: () => ipcRenderer.invoke("get-purchases"),
   getProviders: () => ipcRenderer.invoke("get-providers"),
   editProvider: (id, providerData) =>
     ipcRenderer.invoke("edit-provider", id, providerData),
