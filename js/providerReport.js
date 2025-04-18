@@ -5,12 +5,12 @@ const fechaActual = new Date().toISOString().split("T")[0];
 let fechaInicio;
 let fechaFin;
 let providers = [];
+let idProvider = 0;
 
 const parseDateLocal = (str) => {
   const [year, month, day] = str.split("-");
   return new Date(Number(year), Number(month) - 1, Number(day));
 };
-
 const loadProviders = async () => {
   try {
     const res = await window.prismaFunctions.getProviders();
@@ -23,15 +23,43 @@ const loadProviders = async () => {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
 };
-
-const makeReport = async () => {
-  if(!inputCodigoProveedor.value){
+const renderProviders = (arrProviders) => {
+  const listProviders = document.getElementById("listProviders");
+  listProviders.innerHTML = "";
+  if (arrProviders.length === 0) {
+      listProviders.innerHTML = `
+    <tr>
+      <td colspan="4">No se encontraron proveedores.</td>
+    </tr>`;
+      return;
+  }
+  arrProviders.forEach((provider) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+      <td>${provider.codigo}</td>
+      <td>${provider.razon_social}</td>
+      <td>${provider.cuit}</td>
+      <td>${provider.regimen}</td>`;
+      row.addEventListener("click", () => {
+          idProvider = provider.id;
+          inputCodigoProveedor.value = provider.codigo;
+          labelNombreProveedor.textContent = provider.razon_social;
+          const modalProviders = bootstrap.Modal.getInstance(
+              document.getElementById("modalProviders")
+          );
+          modalProviders.hide();
+      });
+      listProviders.appendChild(row);
+  });
+};
+const makeReport = async (provider) => {
+  if (!inputCodigoProveedor.value) {
     window.prismaFunctions.showMSG(
       "error",
       "Error",
       "Verifique si ingresó un proveedor existente"
-  );
-  return;
+    );
+    return;
   }
   await loadProviders();
 
@@ -91,48 +119,38 @@ const makeReport = async () => {
   const datosFiltrados = movimientos.sort((a, b) => a.fecha - b.fecha);
   printReport(datosFiltrados);
 };
-
-
 const printReport = (report) => {
   console.log("Report", report);
 };
 inputCodigoProveedor.addEventListener("focusout", async (event) => {
-  await loadProviders();
-      const codeToSearch = providers.find(
-          (provider) => provider.codigo == inputCodigoProveedor.value
-      );
-      if (!codeToSearch) {
-          inputCodigoProveedor.value = "";
-          inputCodigoProveedor.focus();
-          labelNombreProveedor.textContent = "Proveedor no encotrado.";
-      } else {
-          idProvider = codeToSearch.id;
-          labelNombreProveedor.textContent = codeToSearch.razon_social;
-      }
+  seleccionarProveedor()
 });
 inputCodigoProveedor.addEventListener("keyup", async (event) => {
   if (event.key === "F3") {
-      const providerSearchModal = new bootstrap.Modal(
-          document.getElementById("modalProviders")
-      );
-      providerSearchModal.show();
-      await loadProviders();
-      renderProviders(providers);
-      setTimeout(() => inputModalProviders.focus(), 200);
+    const providerSearchModal = new bootstrap.Modal(
+      document.getElementById("modalProviders")
+    );
+    providerSearchModal.show();
+    await loadProviders();
+    renderProviders(providers);
+    setTimeout(() => inputModalProviders.focus(), 200);
   }
   if (event.key === "Enter") {
-      await loadProviders();
-      const codeToSearch = providers.find(
-          (provider) => provider.codigo == inputCodigoProveedor.value
-      );
-      if (!codeToSearch) {
-          inputCodigoProveedor.value = "";
-          inputCodigoProveedor.focus();
-          labelNombreProveedor.textContent = "Proveedor no encotrado.";
-      } else {
-          idProvider = codeToSearch.id;
-          labelNombreProveedor.textContent = codeToSearch.razon_social;
-          inputDocument.focus()
-      }
+    seleccionarProveedor()
   }
 });
+const seleccionarProveedor = async () => {
+  await loadProviders();
+  const codeToSearch = providers.find(
+    (provider) => provider.codigo == inputCodigoProveedor.value
+  );
+  if (!codeToSearch) {
+    inputCodigoProveedor.value = "";
+    inputCodigoProveedor.focus();
+    labelNombreProveedor.textContent = "Proveedor no encotrado.";
+  } else {
+    idProvider = codeToSearch.id;
+    labelNombreProveedor.textContent = codeToSearch.razon_social;
+    inputDocument.focus()
+  }
+}
