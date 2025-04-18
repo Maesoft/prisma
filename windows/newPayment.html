@@ -17,27 +17,27 @@
             <div class="col-4">
                 <div class="input-container text-center">
                     <label for="paymentDate" class="form-label">Fecha de Pago</label>
-                    <input type="date" id="paymentDate" class="form-control" />
+                    <input type="date" id="paymentDate" class="form-control text-center">
                 </div>
             </div>
             <div class="col-4">
                 <div class="input-container text-center">
                     <label for="orderNumber" class="form-label">Número de Orden</label>
-                    <input type="text" id="orderNumber" class="form-control" placeholder="Ingrese el número de orden" />
+                    <input type="text" id="orderNumber" class="form-control text-center"/>
                 </div>
             </div>
             <div class="col-4">
                 <div class="input-container text-center">
                     <label for="customerName" class="form-label">Proveedor</label>
-                    <input type="text" id="customerName" class="form-control" placeholder="F3 para buscar." />
+                    <input type="text" id="customerName" class="form-control text-center" placeholder="F3 para buscar." />
                 </div>
             </div>
         </div>
         <div class="row mt-3">
-            <div class="col-6">
+            <div class="col-4">
                 <div class="input-container text-center">
                     <label for="paymentMethod" class="form-label">Método de Pago</label>
-                    <select class="form-select" id="paymentMethod">
+                    <select class="form-select text-center" id="paymentMethod">
                         <option value="" selected>Seleccione un método</option>
                         <option value="creditCard">Tarjeta de Crédito</option>
                         <option value="bankTransfer">Transferencia Bancaria</option>
@@ -45,13 +45,23 @@
                     </select>
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col-4">
                 <div class="input-container text-center">
                     <label for="amount" class="form-label">Monto</label>
-                    <input type="number" id="amount" class="form-control" placeholder="Ingrese el monto" />
+                    <input type="number" id="amount" class="form-control text-center" placeholder="Ingrese el monto" />
                 </div>
             </div>
-
+            <div class="col-4">
+                <div class="input-container text-center">
+                    <label for="paymentMethod" class="form-label">Comprobante</label>
+                    <select class="form-select text-center" id="paymentMethod">
+                        <option value="" selected>Seleccione un método</option>
+                        <option value="creditCard">Tarjeta de Crédito</option>
+                        <option value="bankTransfer">Transferencia Bancaria</option>
+                        <option value="cash">Efectivo</option>
+                    </select>
+                </div>
+            </div>
         </div>
         <div class="form-group mt-3 p-2 bg-dark text-white rounded">
             <p class="form-label">Observaciones</p>
