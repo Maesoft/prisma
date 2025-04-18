@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <script defer src="../js/bootstrap.min.js"></script>
+    <script defer src="../js/payment.js"></script>
+    <title>Prisma</title>
+</head>
+
+<body>
+    <div class="p-3">
+        <h1>Orden de Pago</h1>
+        <div class="row">
+            <div class="col-4">
+                <div class="input-container text-center">
+                    <label for="paymentDate" class="form-label">Fecha de Pago</label>
+                    <input type="date" id="paymentDate" class="form-control" />
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="input-container text-center">
+                    <label for="orderNumber" class="form-label">Número de Orden</label>
+                    <input type="text" id="orderNumber" class="form-control" placeholder="Ingrese el número de orden" />
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="input-container text-center">
+                    <label for="customerName" class="form-label">Proveedor</label>
+                    <input type="text" id="customerName" class="form-control" placeholder="F3 para buscar." />
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-6">
+                <div class="input-container text-center">
+                    <label for="paymentMethod" class="form-label">Método de Pago</label>
+                    <select class="form-select" id="paymentMethod">
+                        <option value="" selected>Seleccione un método</option>
+                        <option value="creditCard">Tarjeta de Crédito</option>
+                        <option value="bankTransfer">Transferencia Bancaria</option>
+                        <option value="cash">Efectivo</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="input-container text-center">
+                    <label for="amount" class="form-label">Monto</label>
+                    <input type="number" id="amount" class="form-control" placeholder="Ingrese el monto" />
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group mt-3 p-2 bg-dark text-white rounded">
+            <p class="form-label">Observaciones</p>
+            <textarea class="form-control bg-secondary" id="observations"></textarea>
+        </div>
+        <div class="text-center mt-3 mb-3">
+            <button class="btn btn-dark btn-custom" onclick="window.close()">
+                Cancelar
+            </button>
+            <button id="btnGenerate" class="btn btn-secondary px-3 btn-custom me-2">
+                Generar Orden
+            </button>
+        </div>
+    </div>
+</body>
+
+</html>
