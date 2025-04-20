@@ -5,7 +5,6 @@ const fechaActual = new Date().toISOString().split("T")[0];
 let fechaInicio;
 let fechaFin;
 let providers = [];
-let idProvider = 0;
 
 const parseDateLocal = (str) => {
   const [year, month, day] = str.split("-");
@@ -27,32 +26,31 @@ const renderProviders = (arrProviders) => {
   const listProviders = document.getElementById("listProviders");
   listProviders.innerHTML = "";
   if (arrProviders.length === 0) {
-      listProviders.innerHTML = `
+    listProviders.innerHTML = `
     <tr>
       <td colspan="4">No se encontraron proveedores.</td>
     </tr>`;
-      return;
+    return;
   }
   arrProviders.forEach((provider) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
+    const row = document.createElement("tr");
+    row.innerHTML = `
       <td>${provider.codigo}</td>
       <td>${provider.razon_social}</td>
       <td>${provider.cuit}</td>
       <td>${provider.regimen}</td>`;
-      row.addEventListener("click", () => {
-          idProvider = provider.id;
-          inputCodigoProveedor.value = provider.codigo;
-          labelNombreProveedor.textContent = provider.razon_social;
-          const modalProviders = bootstrap.Modal.getInstance(
-              document.getElementById("modalProviders")
-          );
-          modalProviders.hide();
-      });
-      listProviders.appendChild(row);
+    row.addEventListener("click", () => {
+      inputCodigoProveedor.value = provider.codigo;
+      labelNombreProveedor.textContent = provider.razon_social;
+      const modalProviders = bootstrap.Modal.getInstance(
+        document.getElementById("modalProviders")
+      );
+      modalProviders.hide();
+    });
+    listProviders.appendChild(row);
   });
 };
-const makeReport = async (provider) => {
+const makeReport = async () => {
   if (!inputCodigoProveedor.value) {
     window.prismaFunctions.showMSG(
       "error",
@@ -76,24 +74,22 @@ const makeReport = async (provider) => {
     // Procesar compras
     if (Array.isArray(provider.purchase)) {
       provider.purchase.forEach((compra) => {
-        const fecha = new Date(compra.fecha);
         if (
           (!fechaInicio || fecha >= fechaInicio) &&
           (!fechaFin || fecha <= fechaFin)
         ) {
-          movimientos.push({
-            tipo: "purchase",
-            fecha,
-            proveedor: provider.razon_social,
-            cuit: provider.cuit,
-            monto: Number(compra.total),
-            numero_comprobante: compra.numero_comprobante,
-            observacion: compra.observacion,
-          });
+          if (inputCodigoProveedor.value == provider.id) {
+            movimientos.push({
+              fecha: compra.fecha,
+              tipo_comprobante: compra.tipo_comprobante,
+              numero_comprobante: compra.numero_comprobante,
+              observacion: compra.observacion,
+              total: Number(compra.total)
+            });
+          }
         }
       });
     }
-
     // Procesar pagos
     if (Array.isArray(provider.payment)) {
       provider.payment.forEach((pago) => {
@@ -102,25 +98,28 @@ const makeReport = async (provider) => {
           (!fechaInicio || fecha >= fechaInicio) &&
           (!fechaFin || fecha <= fechaFin)
         ) {
-          movimientos.push({
-            tipo: "payment",
-            fecha,
-            proveedor: provider.razon_social,
-            cuit: provider.cuit,
-            monto: Number(pago.monto),
-            numero_comprobante: pago.nro_comprobante,
-            metodo_pago: pago.methodPayment?.nombre || "Sin método",
-          });
+          if (inputCodigoProveedor == provider.codigo) {
+            movimientos.push({
+              tipo: "payment",
+              fecha,
+              proveedor: provider.razon_social,
+              cuit: provider.cuit,
+              monto: Number(pago.monto),
+              numero_comprobante: pago.nro_comprobante,
+              metodo_pago: pago.methodPayment?.nombre || "Sin método",
+            });
+          }
         }
       });
     }
   });
-
   const datosFiltrados = movimientos.sort((a, b) => a.fecha - b.fecha);
   printReport(datosFiltrados);
 };
 const printReport = (report) => {
-  console.log("Report", report);
+//Pensar un modo de generar reportes sin crear una nueva ventana... usando modal?
+
+
 };
 inputCodigoProveedor.addEventListener("focusout", async (event) => {
   seleccionarProveedor()

@@ -14,10 +14,10 @@ const menuTemplate = [
     label: 'Proveedores',
     submenu: [
       { label: 'Nuevo Proveedor', click: () => { windowManager.createWindow("newProvider", 800, 600, true, false) } },
-      { label: 'Eliminar Proveedor', click: () => { windowManager.createWindow("deleteProvider", 600, 400, false, true) } },
       { label: 'Modificar Proveedor', click: () => { windowManager.createWindow("modifyProvider", 800, 600, true, false) } },
+      { label: 'Eliminar Proveedor', click: () => { windowManager.createWindow("deleteProvider", 600, 400, false, true) } },
       { type: 'separator' },
-      { label: 'Resumen de Cuenta', click: () => { windowManager.createWindow("providerReport", 700, 422, false, false) } },
+      { label: 'Resumen de Cuenta', click: () => { windowManager.createWindow("providerReport", 700, 423, false, false) } },
       { label: 'Lista de Proveedores', click: () => { /* Función para lista de proveedores */ } }
     ]
   },
@@ -25,8 +25,8 @@ const menuTemplate = [
     label: 'Clientes',
     submenu: [
       { label: 'Nuevo Cliente', click: () => { windowManager.createWindow("newClient", 800, 600, true, false) } },
-      { label: 'Eliminar Cliente', click: () => { windowManager.createWindow("deleteClient", 600, 400, false, true) } },
       { label: 'Modificar Cliente', click: () => { windowManager.createWindow("modifyClient", 800, 600, true, false) } },
+      { label: 'Eliminar Cliente', click: () => { windowManager.createWindow("deleteClient", 600, 400, false, true) } },
       { type: 'separator' },
       { label: 'Resumen de cuenta', click: () => { /* Función para resumen de cuenta de clientes */ } },
       { label: 'Lista de Clientes', click: () => { /* Función para lista de clientes */ } }
