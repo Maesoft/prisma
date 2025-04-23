@@ -20,18 +20,38 @@ app.on("ready", async () => {
   const menu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(menu);
 });
-
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
 });
-
 app.on("activate", () => {
   if (WindowManager.mainWindow === null) {
     WindowManager.createMainWindow();
   }
 });
+
+//Funciones Genearales
+ipcMain.handle("open-window", async (event, windowData) => {
+  const { windowName, width, height, frame, modal, data } = windowData;
+  try {
+    const win = WindowManager.createWindow(windowName, width, height, frame, modal);
+    
+    if (win) {
+      win.once("ready-to-show", () => {
+
+        if (data) {
+          win.webContents.send("reporte-datos", data);
+        }
+        win.show();
+        win.focus();
+      });
+    }
+  } catch (error) {
+    console.error("Error al abrir la ventana:", error);
+  }
+});
+
 
 //Funciones que interactuan con la BD
 ipcMain.handle("get-payments", async () => {

@@ -117,8 +117,6 @@ const makeReport = async () => {
   printReport(datosFiltrados);
 };
 const printReport = (report) => {
-//Pensar un modo de generar reportes sin crear una nueva ventana... usando modal?
-
 
 };
 inputCodigoProveedor.addEventListener("focusout", async (event) => {
