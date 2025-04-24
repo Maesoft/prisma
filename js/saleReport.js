@@ -59,28 +59,21 @@ const printReport = async (report) => {
                 </tr>
             </thead>
             <tbody>
-                ${report
-                  .map(
-                    (sale) => `
+                ${report.map((sale) => `
                 <tr>
                     <td>${formatearFecha(sale.fecha)}</td>
                     <td>${sale.tipo_comprobante + sale.numero_comprobante}</td>
                     <td>${sale.client.razon_social}</td>
                     <td>${sale.observacion}</td>
-                    <td class="text-end">$${sale.total.toLocaleString("es-AR", {
-                      minimumFractionDigits: 2,
-                    })}</td>
-                </tr>
-                `
-                  )
-                  .join("")}
+                    <td class="text-end">$${sale.total.toLocaleString("es-AR", {minimumFractionDigits: 2,})}</td>
+                </tr>`).join("")}
             </tbody>
         </table>
         <div class="text-end mt-3">
             <h5 class="text-end total-print">$ ${totalVentas.toLocaleString(
-              "es-AR",
-              { minimumFractionDigits: 2 }
-            )}</h5>
+    "es-AR",
+    { minimumFractionDigits: 2 }
+  )}</h5>
         </div>`;
 
   await window.prismaFunctions.openWindow({
@@ -90,11 +83,11 @@ const printReport = async (report) => {
     frame: true,
     modal: false,
     data: {
-    html,
-    title: "Reporte de Ventas",
-    fechaEmision: formatearFecha(fechaActual),
-    fechaInicio: fechaInicio ? fechaInicio.toLocaleDateString("es-AR") : "Sin fecha",
-    fechaFin: fechaFin ? fechaFin.toLocaleDateString("es-AR") : "Sin fecha",
+      html,
+      title: "Reporte de Ventas",
+      fechaEmision: formatearFecha(fechaActual),
+      fechaInicio: fechaInicio ? fechaInicio.toLocaleDateString("es-AR") : "Sin fecha",
+      fechaFin: fechaFin ? fechaFin.toLocaleDateString("es-AR") : "Sin fecha",
     },
 
   });

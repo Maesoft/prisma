@@ -100,13 +100,11 @@ const makeReport = async () => {
         ) {
           if (inputCodigoProveedor == provider.codigo) {
             movimientos.push({
-              tipo: "payment",
-              fecha,
-              proveedor: provider.razon_social,
-              cuit: provider.cuit,
-              monto: Number(pago.monto),
-              numero_comprobante: pago.nro_comprobante,
-              metodo_pago: pago.methodPayment?.nombre || "Sin método",
+              fecha: pago.fecha,
+              tipo_comprobante: pago.tipo_comprobante,
+              numero_comprobante: pago.numero_comprobante,
+              observacion: pago.observacion,
+              total: Number(pago.total)
             });
           }
         }
@@ -116,8 +114,67 @@ const makeReport = async () => {
   const datosFiltrados = movimientos.sort((a, b) => a.fecha - b.fecha);
   printReport(datosFiltrados);
 };
-const printReport = (report) => {
+const printReport = async (report) => {
+  console.log(report);
+  
+  const tiposDebe = ['FA', 'FB', 'FC', 'F', 'T', 'TA', 'TB', 'TC', 'NDA', 'NDB', 'NDC', 'VEN'];
+  const tiposHaber = ['OP', 'NCA', 'NCB', 'NCC'];
 
+  
+  if (fechaInicio) fechaInicio.setDate(fechaInicio.getDate() + 1);
+  if (fechaFin) fechaFin.setDate(fechaFin.getDate() + 1);
+  const totalCompras = report.reduce((acc, compra) => acc + compra.total, 0);
+  let saldo = 0;
+  
+  const html=`<table class="table table-striped" id="informe">
+            <colgroup>
+                <col style="width: 10%">
+                <col style="width: 15%">
+                <col style="width: 30%">
+                <col style="width: 35%">
+                <col style="width: 10%">
+            </colgroup>
+            <thead class="text-center">
+                <tr>
+                    <th class="text-start">Fecha</th>
+                    <th class="text-start">Comprobante</th>
+                    <th class="text-start">Debe</th>
+                    <th class="text-start">Haber</th>
+                    <th class="text-end">Saldo</th>
+                </tr>
+            </thead>
+            <tbody>`
+   const tbody = document.querySelector("#informe tbody");
+   report.forEach(rep => {
+    const tr = document.createElement("tr");
+    const debe = tiposDebe.includes(rep.tipo_comprobante) ? rep.total : 0;
+    const haber = tiposHaber.includes(rep.tipo_comprobante) ? rep.total : 0;
+    saldo += debe - haber;
+
+    tr.innerHTML = `
+      <td>${rep.fecha}</td>
+      <td>${rep.tipo_comprobante + rep.numero_comprobante}</td>
+      <td>${debe ? debe.toFixed(2) : ''}</td>
+      <td>${haber ? haber.toFixed(2) : ''}</td>
+      <td>${saldo.toFixed(2)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  await window.prismaFunctions.openWindow({
+    windowName: "printReport",
+    width: 1100,
+    height: 800,
+    frame: true,
+    modal: false,
+    data: {
+      html,
+      title: report.razon_social,
+      fechaEmision: parseDateLocal(fechaActual),
+      fechaInicio: fechaInicio ? fechaInicio.toLocaleDateString("es-AR") : "Sin fecha",
+      fechaFin: fechaFin ? fechaFin.toLocaleDateString("es-AR") : "Sin fecha",
+    }
+  })
 };
 inputCodigoProveedor.addEventListener("focusout", async (event) => {
   seleccionarProveedor()
