@@ -28,7 +28,7 @@
 <body>
     <div class="full-width-container">
         <div class="d-flex justify-content-between mt-2 mb-2">
-            <h2 class="text-center" id="titulo">Titulo</h2>
+            <h1 class="text-center" id="titulo"><strong>Titulo</h1></strong>
             <p class="text-center mt-1" id="fechaEmision">fechaEmision</p>
             <p class="text-center" id="periodo">periodo</p>
         </div>
@@ -47,7 +47,7 @@
         const periodo = document.getElementById("periodo");
         titulo.innerHTML = data.title;
         fechaEmision.innerHTML = `Emitido: ${data.fechaEmision}`;
-        periodo.innerHTML = `Desde: ${data.fechaInicio} <br> Hasta: ${data.fechaFin}`;
+        periodo.innerHTML = `<strong>Desde:</strong> ${data.fechaInicio} <br> <strong>Hasta:</strong> ${data.fechaFin}`;
         reporte.innerHTML = data.html;
     });
     setTimeout(() => { window.print() }, 1000);

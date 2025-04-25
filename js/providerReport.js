@@ -2,13 +2,16 @@ const inputCodigoProveedor = document.getElementById("inputCodigoProveedor");
 const inputDocument = document.getElementById("inputDocument");
 const labelNombreProveedor = document.getElementById("nombreProveedor");
 const fechaActual = new Date().toISOString().split("T")[0];
+
 let fechaInicio;
 let fechaFin;
 let providers = [];
+let totalCompras = 0;
+let totalPagos = 0;
 
-const parseDateLocal = (str) => {
-  const [year, month, day] = str.split("-");
-  return new Date(Number(year), Number(month) - 1, Number(day));
+const formatearFecha = (fechaISO) => {
+  const [anio, mes, dia] = fechaISO.split("-");
+  return `${dia}/${mes}/${anio}`;
 };
 const loadProviders = async () => {
   try {
@@ -62,10 +65,10 @@ const makeReport = async () => {
   await loadProviders();
 
   fechaInicio = document.getElementById("fechaInicio").value
-    ? parseDateLocal(document.getElementById("fechaInicio").value)
+    ? new Date(document.getElementById("fechaInicio").value)
     : null;
   fechaFin = document.getElementById("fechaFin").value
-    ? parseDateLocal(document.getElementById("fechaFin").value)
+    ? new Date(document.getElementById("fechaFin").value)
     : null;
 
   const movimientos = [];
@@ -75,10 +78,11 @@ const makeReport = async () => {
     if (Array.isArray(provider.purchase)) {
       provider.purchase.forEach((compra) => {
         if (
-          (!fechaInicio || fecha >= fechaInicio) &&
-          (!fechaFin || fecha <= fechaFin)
+          (!fechaInicio || compra.fecha >= fechaInicio) &&
+          (!fechaFin || compra.fecha <= fechaFin)
         ) {
           if (inputCodigoProveedor.value == provider.id) {
+            totalCompras += compra.total
             movimientos.push({
               fecha: compra.fecha,
               tipo_comprobante: compra.tipo_comprobante,
@@ -99,6 +103,7 @@ const makeReport = async () => {
           (!fechaFin || fecha <= fechaFin)
         ) {
           if (inputCodigoProveedor == provider.codigo) {
+            totalPagos += pago.total;
             movimientos.push({
               fecha: pago.fecha,
               tipo_comprobante: pago.tipo_comprobante,
@@ -115,51 +120,65 @@ const makeReport = async () => {
   printReport(datosFiltrados);
 };
 const printReport = async (report) => {
-  console.log(report);
-  
   const tiposDebe = ['FA', 'FB', 'FC', 'F', 'T', 'TA', 'TB', 'TC', 'NDA', 'NDB', 'NDC', 'VEN'];
   const tiposHaber = ['OP', 'NCA', 'NCB', 'NCC'];
 
-  
   if (fechaInicio) fechaInicio.setDate(fechaInicio.getDate() + 1);
   if (fechaFin) fechaFin.setDate(fechaFin.getDate() + 1);
-  const totalCompras = report.reduce((acc, compra) => acc + compra.total, 0);
+
   let saldo = 0;
-  
-  const html=`<table class="table table-striped" id="informe">
-            <colgroup>
-                <col style="width: 10%">
-                <col style="width: 15%">
-                <col style="width: 30%">
-                <col style="width: 35%">
-                <col style="width: 10%">
-            </colgroup>
-            <thead class="text-center">
-                <tr>
-                    <th class="text-start">Fecha</th>
-                    <th class="text-start">Comprobante</th>
-                    <th class="text-start">Debe</th>
-                    <th class="text-start">Haber</th>
-                    <th class="text-end">Saldo</th>
-                </tr>
-            </thead>
-            <tbody>`
-   const tbody = document.querySelector("#informe tbody");
-   report.forEach(rep => {
-    const tr = document.createElement("tr");
+
+  let rowsHtml = '';
+  report.forEach(rep => {
     const debe = tiposDebe.includes(rep.tipo_comprobante) ? rep.total : 0;
     const haber = tiposHaber.includes(rep.tipo_comprobante) ? rep.total : 0;
     saldo += debe - haber;
 
-    tr.innerHTML = `
-      <td>${rep.fecha}</td>
-      <td>${rep.tipo_comprobante + rep.numero_comprobante}</td>
-      <td>${debe ? debe.toFixed(2) : ''}</td>
-      <td>${haber ? haber.toFixed(2) : ''}</td>
-      <td>${saldo.toFixed(2)}</td>
+    rowsHtml += `
+      <tr>
+        <td>${rep.fecha}</td>
+        <td>${rep.tipo_comprobante}${rep.numero_comprobante}</td>
+        <td>${debe ? debe.toFixed(2) : ''}</td>
+        <td>${haber ? haber.toFixed(2) : ''}</td>
+        <td class="text-end">${saldo.toFixed(2)}</td>
+      </tr>
     `;
-    tbody.appendChild(tr);
   });
+
+  const html = `
+    <html>
+    <head>
+      <style>
+        body { font-family: sans-serif; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+        th { background-color: #f4f4f4; }
+        td.text-end { text-align: right; }
+      </style>
+    </head>
+    <body>
+      <h4><strong>Razón Social:</strong> ${providers.find(pr => pr.codigo == inputCodigoProveedor.value).razon_social || 'N/A'}</h4>
+      <table class="table table-striped" id="informe">
+        <thead class="text-center">
+          <tr>
+            <th class="text-start">Fecha</th>
+            <th class="text-start">Comprobante</th>
+            <th class="text-start">Debe</th>
+            <th class="text-start">Haber</th>
+            <th class="text-end">Saldo</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHtml}
+        </tbody>
+      </table>
+      <div class="text-end"><strong>Total: </strong> $ ${(totalCompras - totalPagos).toLocaleString("es-AR", { 
+        minimumFractionDigits: 2, 
+        maximumFractionDigits: 2 
+      })}</div>
+    </body>
+    </html>
+  `;
 
   await window.prismaFunctions.openWindow({
     windowName: "printReport",
@@ -169,12 +188,12 @@ const printReport = async (report) => {
     modal: false,
     data: {
       html,
-      title: report.razon_social,
-      fechaEmision: parseDateLocal(fechaActual),
+      title: "Resumen de cuenta",
+      fechaEmision: formatearFecha(fechaActual),
       fechaInicio: fechaInicio ? fechaInicio.toLocaleDateString("es-AR") : "Sin fecha",
       fechaFin: fechaFin ? fechaFin.toLocaleDateString("es-AR") : "Sin fecha",
     }
-  })
+  });
 };
 inputCodigoProveedor.addEventListener("focusout", async (event) => {
   seleccionarProveedor()
