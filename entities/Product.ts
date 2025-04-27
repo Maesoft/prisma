@@ -29,16 +29,16 @@ export class Product {
     @Column({default: 0})
     stock: number
 
-    @Column({ type: "real", default: 0 })
+    @Column({ type: "decimal", default: 0 })
     costo: number;
     
-    @Column({ type: "real", default: 0 })
+    @Column({ type: "decimal", default: 0 })
     precio1: number;
     
-    @Column({ type: "real", default: 0 })
+    @Column({ type: "decimal", default: 0 })
     precio2: number;
     
-    @Column({ type: "real", default: 0 })
+    @Column({ type: "decimal", default: 0 })
     iva: number;
 
     @OneToMany(() => Stock, (stock) => stock.producto)

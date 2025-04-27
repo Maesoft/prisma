@@ -9,50 +9,44 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Purchase = void 0;
+exports.CashManagement = void 0;
 const typeorm_1 = require("typeorm");
-const Provider_1 = require("./Provider");
-const DetailsPurchase_1 = require("./DetailsPurchase");
 const Payment_1 = require("./Payment");
-let Purchase = class Purchase {
+let CashManagement = class CashManagement {
 };
-exports.Purchase = Purchase;
+exports.CashManagement = CashManagement;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Purchase.prototype, "id", void 0);
+], CashManagement.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'date' }),
+    (0, typeorm_1.Column)({ unique: true }),
+    __metadata("design:type", String)
+], CashManagement.prototype, "codigo", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
-], Purchase.prototype, "fecha", void 0);
+], CashManagement.prototype, "fecha_apertura", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Date)
+], CashManagement.prototype, "fecha_cierre", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Purchase.prototype, "tipo_comprobante", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Purchase.prototype, "numero_comprobante", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => Provider_1.Provider, (provider) => provider.purchase, { onDelete: "CASCADE" }),
-    __metadata("design:type", Provider_1.Provider)
-], Purchase.prototype, "provider", void 0);
+], CashManagement.prototype, "name", void 0);
 __decorate([
     (0, typeorm_1.Column)({ type: 'decimal', precision: 15, scale: 2 }),
     __metadata("design:type", Number)
-], Purchase.prototype, "total", void 0);
+], CashManagement.prototype, "saldo", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Purchase.prototype, "observacion", void 0);
+    __metadata("design:type", Boolean)
+], CashManagement.prototype, "activa", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => DetailsPurchase_1.DetailsPurchase, (details) => details.purchase),
+    (0, typeorm_1.OneToMany)(() => Payment_1.Payment, (pay) => pay.cashManagement),
     __metadata("design:type", Array)
-], Purchase.prototype, "details", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => Payment_1.Payment, (pay) => pay.purchase),
-    __metadata("design:type", Payment_1.Payment)
-], Purchase.prototype, "op", void 0);
-exports.Purchase = Purchase = __decorate([
+], CashManagement.prototype, "pay", void 0);
+exports.CashManagement = CashManagement = __decorate([
     (0, typeorm_1.Entity)()
-], Purchase);
+], CashManagement);

@@ -49,19 +49,19 @@ __decorate([
     __metadata("design:type", Number)
 ], Product.prototype, "stock", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "real", default: 0 }),
+    (0, typeorm_1.Column)({ type: "decimal", default: 0 }),
     __metadata("design:type", Number)
 ], Product.prototype, "costo", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "real", default: 0 }),
+    (0, typeorm_1.Column)({ type: "decimal", default: 0 }),
     __metadata("design:type", Number)
 ], Product.prototype, "precio1", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "real", default: 0 }),
+    (0, typeorm_1.Column)({ type: "decimal", default: 0 }),
     __metadata("design:type", Number)
 ], Product.prototype, "precio2", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "real", default: 0 }),
+    (0, typeorm_1.Column)({ type: "decimal", default: 0 }),
     __metadata("design:type", Number)
 ], Product.prototype, "iva", void 0);
 __decorate([

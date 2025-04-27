@@ -11,8 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Payment = void 0;
 const typeorm_1 = require("typeorm");
-const MethodPayment_1 = require("./MethodPayment");
 const Provider_1 = require("./Provider");
+const Purchase_1 = require("./Purchase");
+const CashManagement_1 = require("./CashManagement");
 let Payment = class Payment {
 };
 exports.Payment = Payment;
@@ -29,17 +30,21 @@ __decorate([
     __metadata("design:type", String)
 ], Payment.prototype, "nro_comprobante", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false }),
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 10, scale: 2, nullable: false }),
     __metadata("design:type", Number)
 ], Payment.prototype, "monto", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => MethodPayment_1.MethodPayment, (methodPayment) => methodPayment.payment),
-    __metadata("design:type", MethodPayment_1.MethodPayment)
-], Payment.prototype, "methodPayment", void 0);
+    (0, typeorm_1.OneToMany)(() => Purchase_1.Purchase, (purchase) => purchase.op),
+    __metadata("design:type", Purchase_1.Purchase)
+], Payment.prototype, "purchase", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Provider_1.Provider, (provider) => provider.payment),
     __metadata("design:type", Provider_1.Provider)
 ], Payment.prototype, "provider", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => CashManagement_1.CashManagement, (cash) => cash.pay),
+    __metadata("design:type", CashManagement_1.CashManagement)
+], Payment.prototype, "cashManagement", void 0);
 exports.Payment = Payment = __decorate([
     (0, typeorm_1.Entity)()
 ], Payment);

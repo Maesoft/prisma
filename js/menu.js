@@ -82,13 +82,15 @@ const menuTemplate = [
   {
     label: 'Caja',
     submenu: [
+      { label: 'Nueva Caja', click: () => { windowManager.createWindow("newCash", 540, 360, true, false) } },
+      { label: 'Modificar Caja', click: () => { windowManager.createWindow("openCash", 400, 300, false, true) } },
+      { label: 'Eliminar Caja', click: () => { windowManager.createWindow("openCash", 400, 300, false, true) } },
+      { type: 'separator' },
       { label: 'Apertura de Caja', click: () => { windowManager.createWindow("openCash", 400, 300, false, true) } },
       { label: 'Cierre de Caja', click: () => { } },
       { type: 'separator' },
       { label: 'Orden de Pago', click: () => { windowManager.createWindow("newPayment", 640,480,true,false) } },
       { label: 'Recibo', click: () => { } },
-      { type: 'separator' },
-      { label: 'Medios de Pagos', click: () => { } },
       { type: 'separator' },
       { label: 'Resumen de Caja', click: () => { } },
       { label: 'Consulta de Saldo', click: () => { } },

@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { MethodPayment } from "./MethodPayment";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Provider } from "./Provider";
+import { Purchase } from "./Purchase";
+import { CashManagement } from "./CashManagement";
 
 @Entity()
 export class Payment {
@@ -13,12 +14,16 @@ export class Payment {
     @Column({ unique: true, nullable: false })
     nro_comprobante: string;
 
-    @Column({ nullable: false })
+    @Column({ type: 'decimal', precision: 10, scale: 2 , nullable: false})
     monto: number;
 
-    @ManyToOne(() => MethodPayment, (methodPayment) => methodPayment.payment)
-    methodPayment: MethodPayment;
+    @OneToMany(() => Purchase, (purchase) => purchase.op)
+    purchase: Purchase;
 
     @ManyToOne(() => Provider, (provider) => provider.payment)
     provider: Provider;
-}   
+
+    @ManyToOne(()=> CashManagement, (cash)=> cash.pay)
+    cashManagement:CashManagement;
+
+}

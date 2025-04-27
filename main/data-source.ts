@@ -10,14 +10,15 @@ import { Option } from "../entities/Options";
 import { DetailsPurchase } from "../entities/DetailsPurchase";
 import { Purchase } from "../entities/Purchase";
 import { Payment } from "../entities/Payment";
-import { MethodPayment } from "../entities/MethodPayment";
+import { CashManagement } from "../entities/CashManagement";
+
 
 export const AppDataSource = new DataSource({
     type: "sqlite",
     database: "./db/prisma_contable.sqlite",
     synchronize: true,
     logging: true,
-    entities: [Provider, Category, Product, Stock, Client, DetailsSale, DetailsPurchase, Sale, Purchase, Option, Payment, MethodPayment],
+    entities: [Provider, Category, Product, Stock, Client, DetailsSale, DetailsPurchase, Sale, Purchase, Option, Payment, CashManagement],
 });
 
 AppDataSource.initialize()
