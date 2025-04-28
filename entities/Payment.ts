@@ -1,29 +1,28 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { PaymentMethodUsed } from "./PaymentMethodUsed";
 import { Provider } from "./Provider";
 import { Purchase } from "./Purchase";
-import { CashManagement } from "./CashManagement";
 
 @Entity()
 export class Payment {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ nullable: false })
+    @Column()
     fecha: Date;
 
-    @Column({ unique: true, nullable: false })
+    @Column({ unique: true })
     nro_comprobante: string;
 
-    @Column({ type: 'decimal', precision: 10, scale: 2 , nullable: false})
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
     monto: number;
 
-    @OneToMany(() => Purchase, (purchase) => purchase.op)
-    purchase: Purchase;
+    @OneToMany(() => Purchase, (purchase) => purchase.payment)
+    purchase: Purchase[];
 
     @ManyToOne(() => Provider, (provider) => provider.payment)
     provider: Provider;
 
-    @ManyToOne(()=> CashManagement, (cash)=> cash.pay)
-    cashManagement:CashManagement;
-
+    @OneToMany(() => PaymentMethodUsed, (pmu) => pmu.payment)
+    paymentMethodsUsed: PaymentMethodUsed[];
 }

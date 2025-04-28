@@ -9,42 +9,42 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Payment = void 0;
+exports.Receipt = void 0;
 const typeorm_1 = require("typeorm");
-const PaymentMethodUsed_1 = require("./PaymentMethodUsed");
-const Provider_1 = require("./Provider");
-const Purchase_1 = require("./Purchase");
-let Payment = class Payment {
+const Client_1 = require("./Client");
+const Sale_1 = require("./Sale");
+const ReceiptMethodUsed_1 = require("./ReceiptMethodUsed");
+let Receipt = class Receipt {
 };
-exports.Payment = Payment;
+exports.Receipt = Receipt;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Payment.prototype, "id", void 0);
+], Receipt.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ nullable: false }),
     __metadata("design:type", Date)
-], Payment.prototype, "fecha", void 0);
+], Receipt.prototype, "fecha", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, typeorm_1.Column)({ unique: true, nullable: false }),
     __metadata("design:type", String)
-], Payment.prototype, "nro_comprobante", void 0);
+], Receipt.prototype, "nro_comprobante", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'decimal', precision: 10, scale: 2 }),
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 10, scale: 2, nullable: false }),
     __metadata("design:type", Number)
-], Payment.prototype, "monto", void 0);
+], Receipt.prototype, "monto", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Purchase_1.Purchase, (purchase) => purchase.payment),
+    (0, typeorm_1.OneToMany)(() => Sale_1.Sale, (sale) => sale.receipt),
     __metadata("design:type", Array)
-], Payment.prototype, "purchase", void 0);
+], Receipt.prototype, "sale", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Provider_1.Provider, (provider) => provider.payment),
-    __metadata("design:type", Provider_1.Provider)
-], Payment.prototype, "provider", void 0);
+    (0, typeorm_1.ManyToOne)(() => Client_1.Client, (client) => client.sales),
+    __metadata("design:type", Client_1.Client)
+], Receipt.prototype, "client", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => PaymentMethodUsed_1.PaymentMethodUsed, (pmu) => pmu.payment),
+    (0, typeorm_1.OneToMany)(() => ReceiptMethodUsed_1.ReceiptMethodUsed, (rmu) => rmu.receipt),
     __metadata("design:type", Array)
-], Payment.prototype, "paymentMethodsUsed", void 0);
-exports.Payment = Payment = __decorate([
+], Receipt.prototype, "receiptMethodsUsed", void 0);
+exports.Receipt = Receipt = __decorate([
     (0, typeorm_1.Entity)()
-], Payment);
+], Receipt);

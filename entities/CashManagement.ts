@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Payment } from "./Payment";
+import { PaymentMethodUsed } from "./PaymentMethodUsed";
+import { ReceiptMethodUsed } from "./ReceiptMethodUsed";
 
 @Entity()
 export class CashManagement {
@@ -7,28 +8,30 @@ export class CashManagement {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({unique:true})
-    codigo:string
-    
-    @CreateDateColumn()
+    @Column({ unique: true })
+    codigo: string;
+
+    @Column({ unique: true })
+    nombre: string;
+
+    @Column({ type: 'datetime', nullable: true })
     fecha_apertura: Date;
 
-    @Column()
+    @Column({ type: 'datetime', nullable: true })
     fecha_cierre: Date;
 
-    @Column()
-    name: string;
+    @Column({ type: 'decimal', precision: 15, scale: 2, nullable: true })
+    saldo_inicial: number;
 
-    @Column({ type: 'decimal', precision: 15, scale: 2 })
-    saldo: number;
+    @Column({ type: 'decimal', precision: 15, scale: 2, nullable: true })
+    saldo_final: number;
 
-    @Column()
+    @Column({default: false})
     activa: boolean;
 
-    @OneToMany(() => Payment, (pay) => pay.cashManagement)
-    pay: Payment[];
+    @OneToMany(() => PaymentMethodUsed, (pmu) => pmu.cashManagement)
+    paymentMethodsUsed: PaymentMethodUsed[];
 
-    //Aqui iran los cobros
-
-
+    @OneToMany(() => ReceiptMethodUsed, (rmu) => rmu.cashManagement)
+    receiptMethodsUsed: ReceiptMethodUsed[];
 }

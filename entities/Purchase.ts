@@ -29,6 +29,6 @@ export class Purchase {
   @OneToMany(() => DetailsPurchase, (details) => details.purchase)
   details: DetailsPurchase[];
 
-  @ManyToOne(()=> Payment, (pay) => pay.purchase)
-  op:Payment
+  @ManyToOne(()=> Payment, (payment) => payment.purchase)
+  payment:Payment;
 }

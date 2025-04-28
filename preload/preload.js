@@ -4,6 +4,8 @@ contextBridge.exposeInMainWorld("prismaFunctions", {
   openWindow: (windowData) => ipcRenderer.invoke("open-window", windowData),
   onReporteDatos: (callback) =>
     ipcRenderer.on("reporte-datos", (event, data) => callback(data)),
+  addCash: (cashData) =>
+    ipcRenderer.invoke("add-cash", cashData),
   addProvider: (providerData) =>
     ipcRenderer.invoke("add-provider", providerData),
   getPayments: () => ipcRenderer.invoke("get-payments"),

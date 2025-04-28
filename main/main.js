@@ -13,6 +13,7 @@ const { DetailsSale } = require("../entities/DetailsSale");
 const { DetailsPurchase } = require("../entities/DetailsPurchase");
 const { Purchase } = require("../entities/Purchase");
 const { Payment } = require("../entities/Payment");
+const { CashManagement } = require("../entities/CashManagement");
 
 //Manejo de la App
 app.on("ready", async () => {
@@ -52,13 +53,28 @@ ipcMain.handle("open-window", async (event, windowData) => {
   }
 });
 
-
 //Funciones que interactuan con la BD
+ipcMain.handle("add-cash", async (event, cashData) => {
+  try {
+    const cashRepository = AppDataSource.getRepository(CashManagement);
+    const newCash = cashRepository.create(cashData);
+    await cashRepository.save(newCash);
+    return {
+      success: true,
+      message: "Caja creada exitosamente.",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+});
 ipcMain.handle("get-payments", async () => {
   try {
     const paymentRepository = AppDataSource.getRepository(Payment);
     const payments = await paymentRepository.find({
-      relations: ["provider", "methodProvider"],
+      relations: ["provider", "purchase"],
       order: { fecha: "ASC" },
     });
     return { success: true, payments };
