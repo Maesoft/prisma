@@ -6,8 +6,6 @@ const fechaActual = new Date().toISOString().split("T")[0];
 let fechaInicio;
 let fechaFin;
 let providers = [];
-let totalCompras = 0;
-let totalPagos = 0;
 
 const formatearFecha = (fechaISO) => {
   const [anio, mes, dia] = fechaISO.split("-");
@@ -82,7 +80,6 @@ const makeReport = async () => {
           (!fechaFin || compra.fecha <= fechaFin)
         ) {
           if (inputCodigoProveedor.value == provider.id) {
-            totalCompras += compra.total
             movimientos.push({
               fecha: compra.fecha,
               tipo_comprobante: compra.tipo_comprobante,
@@ -103,7 +100,6 @@ const makeReport = async () => {
           (!fechaFin || fecha <= fechaFin)
         ) {
           if (inputCodigoProveedor == provider.codigo) {
-            totalPagos += pago.total;
             movimientos.push({
               fecha: pago.fecha,
               tipo_comprobante: pago.tipo_comprobante,
@@ -172,7 +168,7 @@ const printReport = async (report) => {
           ${rowsHtml}
         </tbody>
       </table>
-      <div class="text-end"><strong>Total: </strong> $ ${(totalCompras - totalPagos).toLocaleString("es-AR", { 
+      <div class="text-end"><strong>Total: </strong> $ ${(saldo).toLocaleString("es-AR", { 
         minimumFractionDigits: 2, 
         maximumFractionDigits: 2 
       })}</div>
