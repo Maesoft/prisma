@@ -83,7 +83,7 @@ const menuTemplate = [
     label: 'Caja',
     submenu: [
       { label: 'Nueva Caja', click: () => { windowManager.createWindow("newCash", 540, 360, true, false) } },
-      { label: 'Modificar Caja', click: () => { windowManager.createWindow("openCash", 400, 300, false, true) } },
+      { label: 'Modificar Caja', click: () => { windowManager.createWindow("modifyCash", 400, 300, false, true) } },
       { label: 'Eliminar Caja', click: () => { windowManager.createWindow("openCash", 400, 300, false, true) } },
       { type: 'separator' },
       { label: 'Apertura de Caja', click: () => { windowManager.createWindow("openCash", 400, 300, false, true) } },

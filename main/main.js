@@ -36,11 +36,16 @@ app.on("activate", () => {
 ipcMain.handle("open-window", async (event, windowData) => {
   const { windowName, width, height, frame, modal, data } = windowData;
   try {
-    const win = WindowManager.createWindow(windowName, width, height, frame, modal);
-    
+    const win = WindowManager.createWindow(
+      windowName,
+      width,
+      height,
+      frame,
+      modal
+    );
+
     if (win) {
       win.once("ready-to-show", () => {
-
         if (data) {
           win.webContents.send("reporte-datos", data);
         }
@@ -70,6 +75,52 @@ ipcMain.handle("add-cash", async (event, cashData) => {
     };
   }
 });
+ipcMain.handle("edit-cash", async (event, id, cashData) => {
+  try {
+    const cashRepository = AppDataSource.getRepository(CashManagement);
+
+    const editCash = await cashRepository.findOneBy({ id });
+
+    editCash.codigo = cashData.codigo;
+    editCash.nombre = cashData.nombre;
+    editCash.fecha_apertura = cashData.fecha_apertura;
+    editCash.fecha_cierre = cashData.fecha_cierre;
+    editCash.saldo_inicial = cashData.saldo_inicial;
+    editCash.saldo_final = cashData.saldo_final;
+    editCash.activa = cashData.activa;
+
+    await cashRepository.save(editCash);
+    return {
+      success: true,
+      message: "Caja editada exitosamente",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+});
+ipcMain.handle("get-cashes", async () => {
+  try {
+    const cashRepository = AppDataSource.getRepository(CashManagement);
+    const cashes = await cashRepository.find({
+      relations: ["paymentMethodsUsed", "receiptMethodsUsed"],
+    });
+    return { success: true, cashes };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("delete-cash", async (event, id) => {
+  try {
+    const cashRepository = AppDataSource.getRepository(CashManagement);
+    await cashRepository.delete(id);
+    return { success: true, message: "Caja eliminada exitosamente" };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
 ipcMain.handle("get-payments", async () => {
   try {
     const paymentRepository = AppDataSource.getRepository(Payment);
@@ -93,8 +144,7 @@ ipcMain.handle("get-purchases", async () => {
   } catch (error) {
     return { success: false, message: error.message };
   }
-}
-);
+});
 ipcMain.handle("add-provider", async (event, providerData) => {
   try {
     const providerRepository = AppDataSource.getRepository(Provider);
@@ -114,8 +164,8 @@ ipcMain.handle("add-provider", async (event, providerData) => {
 ipcMain.handle("get-providers", async () => {
   try {
     const providerRepository = AppDataSource.getRepository(Provider);
-    const providers = await providerRepository.find({ 
-      relations: ["payment","purchase"],
+    const providers = await providerRepository.find({
+      relations: ["payment", "purchase"],
     });
     return { success: true, providers };
   } catch (error) {
@@ -128,19 +178,19 @@ ipcMain.handle("edit-provider", async (event, id, providerData) => {
 
     const editProvider = await providerRepository.findOneBy({ id });
 
-    editProvider.codigo=providerData.codigo
-    editProvider.razon_social=providerData.razon_social
-    editProvider.cuit=providerData.cuit
-    editProvider.direccion=providerData.direccion
-    editProvider.telefono=providerData.telefono
-    editProvider.email=providerData.email
-    editProvider.regimen=providerData.regimen
+    editProvider.codigo = providerData.codigo;
+    editProvider.razon_social = providerData.razon_social;
+    editProvider.cuit = providerData.cuit;
+    editProvider.direccion = providerData.direccion;
+    editProvider.telefono = providerData.telefono;
+    editProvider.email = providerData.email;
+    editProvider.regimen = providerData.regimen;
 
     await providerRepository.save(editProvider);
 
     return {
       success: true,
-      message: "Proveedor editado exitosamente",
+      message: "Caja editada exitosamente",
       productId: editProvider.id,
     };
   } catch (error) {
@@ -199,13 +249,13 @@ ipcMain.handle("edit-client", async (event, id, clientData) => {
 
     const editClient = await clientRepository.findOneBy({ id });
 
-    editClient.codigo=clientData.codigo
-    editClient.razon_social=clientData.razon_social
-    editClient.cuit=clientData.cuit
-    editClient.direccion=clientData.direccion
-    editClient.telefono=clientData.telefono
-    editClient.email=clientData.email
-    editClient.regimen=clientData.regimen
+    editClient.codigo = clientData.codigo;
+    editClient.razon_social = clientData.razon_social;
+    editClient.cuit = clientData.cuit;
+    editClient.direccion = clientData.direccion;
+    editClient.telefono = clientData.telefono;
+    editClient.email = clientData.email;
+    editClient.regimen = clientData.regimen;
 
     await clientRepository.save(editClient);
 
@@ -305,7 +355,9 @@ ipcMain.handle("delete-product", async (event, id) => {
 ipcMain.handle("get-products", async () => {
   try {
     const productRepository = AppDataSource.getRepository(Product);
-    const products = await productRepository.find({ relations: ["categoria","stockMovements"] });
+    const products = await productRepository.find({
+      relations: ["categoria", "stockMovements"],
+    });
     return { success: true, products };
   } catch (error) {
     return { success: false, message: error.message };
@@ -352,10 +404,10 @@ ipcMain.handle("add-purchase", async (event, purchaseData) => {
 ipcMain.handle("get-sales", async () => {
   try {
     const salesRepository = AppDataSource.getRepository(Sale);
-    const sales = await salesRepository.find({ 
-      relations: ["client", "details"], 
-      order:{fecha:"ASC"}
-     });
+    const sales = await salesRepository.find({
+      relations: ["client", "details"],
+      order: { fecha: "ASC" },
+    });
     return { success: true, sales };
   } catch (error) {
     return { success: false, message: error.message };
