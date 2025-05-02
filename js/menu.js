@@ -89,7 +89,7 @@ const menuTemplate = [
       { label: 'Apertura de Caja', click: () => { windowManager.createWindow("openCash", 400, 300, false, true) } },
       { label: 'Cierre de Caja', click: () => { } },
       { type: 'separator' },
-      { label: 'Orden de Pago', click: () => { windowManager.createWindow("newPayment", 640,480,true,false) } },
+      { label: 'Orden de Pago', click: () => { windowManager.createWindow("newPayment", 640,640,true,false) } },
       { label: 'Recibo', click: () => { } },
       { type: 'separator' },
       { label: 'Resumen de Caja', click: () => { } },

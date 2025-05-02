@@ -30,6 +30,7 @@
                 <div class="input-container text-center">
                     <label for="customerName" class="form-label">Proveedor</label>
                     <input type="text" id="customerName" class="form-control text-center" placeholder="F3 para buscar." />
+                    <p id="labelProveedor"></p>
                 </div>
             </div>
         </div>
@@ -45,7 +46,7 @@
             <div class="col-4">
                 <div class="input-container text-center">
                     <label for="amount" class="form-label">Monto</label>
-                    <input type="number" id="amount" class="form-control text-center" placeholder="Ingrese el monto" />
+                    <input type="text" id="amount" class="form-control text-center" placeholder="Ingrese el monto" />
                 </div>
             </div>
             <div class="col-4">
@@ -71,5 +72,34 @@
         </div>
     </div>
 </body>
+<div class="modal fade" id="modalProviders" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="providerSearchModalLabel">
+                    Buscar Proveedor
+                </h5>
+                <button type="button" class="btn-close bg-secondary w-2" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="form-group p-4">
+                <input type="text" class="form-control bg-secondary" id="inputModalProviders" tabindex="1" />
+            </div>
 
+            <table class="table text-center" style="cursor: default;">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Razon Social</th>
+                        <th>CUIT</th>
+                        <th>Regimen</th>
+                    </tr>
+                </thead>
+                <tbody id="listProviders" style="cursor: pointer;">
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
 </html>
