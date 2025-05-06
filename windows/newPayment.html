@@ -23,13 +23,14 @@
             <div class="col-4">
                 <div class="input-container text-center">
                     <label for="orderNumber" class="form-label">Número de Orden</label>
-                    <input type="text" id="orderNumber" class="form-control text-center"/>
+                    <input type="text" id="orderNumber" class="form-control text-center" />
                 </div>
             </div>
             <div class="col-4">
                 <div class="input-container text-center">
                     <label for="customerName" class="form-label">Proveedor</label>
-                    <input type="text" id="customerName" class="form-control text-center" placeholder="F3 para buscar." />
+                    <input type="text" id="customerName" class="form-control text-center"
+                        placeholder="F3 para buscar." />
                     <p id="labelProveedor"></p>
                 </div>
             </div>
@@ -58,11 +59,13 @@
                 </div>
             </div>
         </div>
-        <div class="form-group mt-3 p-2 bg-dark text-white rounded">
-            <p class="form-label">Observaciones</p>
-            <textarea class="form-control bg-secondary" id="observations"></textarea>
+        <div class="row mt-3">
+            <div class="form-group mt-5 p-2 bg-dark text-white rounded">
+                <p class="form-label">Observaciones</p>
+                <textarea class="form-control bg-secondary" id="observations"></textarea>
+            </div>
         </div>
-        <div class="text-center mt-3 mb-3">
+        <div class="text-center mt-3 mb-1">
             <button class="btn btn-dark btn-custom" onclick="window.close()">
                 Cancelar
             </button>
@@ -102,4 +105,5 @@
         </div>
     </div>
 </div>
+
 </html>

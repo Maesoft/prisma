@@ -2,6 +2,7 @@ const dateNow = new Date().toISOString().split("T")[0];
 const orderNumber = document.querySelector("#orderNumber");
 const orderDate = document.querySelector("#paymentDate");
 const orderSupply = document.querySelector("#customerName");
+const invoiceList = document.querySelector("#invoiceList");
 const labelNombreProveedor = document.querySelector("#labelProveedor");
 const amount = document.getElementById("amount");
 orderDate.value = dateNow;
@@ -62,7 +63,6 @@ const getPayMethods = async () => {
   const resMethods = await window.prismaFunctions.getCashes();
   const paymentMethods = resMethods.cashes;
   const paymentMethodSelect = document.querySelector("#paymentMethod");
-  console.log(resMethods);
   if (!paymentMethods || paymentMethods.length === 0) {
     return;
   }
@@ -95,7 +95,19 @@ const selectProvider = async () => {
   } else {
     idProvider = codeToSearch.id;
     labelNombreProveedor.textContent = codeToSearch.razon_social;
-    ptoVta.focus();
+    amount.focus();
+  }
+}
+const getInvoices = async () => {
+  const res = await window.prismaFunctions.getPurchases()
+  if(res.success) {
+    const invoices = res.purchases
+    invoices.forEach((inv)=>{
+      const row = document.createElement("option")
+      row.value=inv.id;
+      row.textContent=inv.tipo_comprobante + inv.numero_comprobante
+      invoiceList.appendChild(row)
+    })
   }
 }
 orderSupply.addEventListener("focusout", async () => {
@@ -118,7 +130,9 @@ orderSupply.addEventListener("keyup", async (e) => {
 document.addEventListener("DOMContentLoaded", async () => {
   await getLastPayment();
   await getPayMethods();
+  await getInvoices();
   orderSupply.focus();
+
 });
 amount.addEventListener("input", () => {
   amount.value = amount.value.replace(/\./g, ',');
