@@ -2,7 +2,6 @@ const getCashes = async () => {
     const res = await window.prismaFunctions.getCashes();
     return res.cashes;
 }
-
 const renderCashesModal = async () => {
     const cashes = await getCashes();
     const cashTable = document.querySelector("#cashTable tbody");

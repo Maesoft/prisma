@@ -1,66 +1,66 @@
-const inputCodigoProveedor = document.getElementById("inputCodigoProveedor");
+const inputCodigoCliente = document.getElementById("inputCodigoCliente");
 const inputDocument = document.getElementById("inputDocument");
-const labelNombreProveedor = document.getElementById("nombreProveedor");
+const labelNombreCliente = document.getElementById("nombreCliente");
 const fechaActual = new Date().toISOString().split("T")[0];
 
 let fechaInicio;
 let fechaFin;
-let providers = [];
+let clients = [];
 
 const formatearFecha = (fechaISO) => {
   const [anio, mes, dia] = fechaISO.split("-");
   return `${dia}/${mes}/${anio}`;
 };
-const loadProviders = async () => {
+const loadClients = async () => {
   try {
-    const res = await window.prismaFunctions.getProviders();
+    const res = await window.prismaFunctions.getClients();
     if (!res.success) {
       window.prismaFunctions.showMSG("error", "Prisma", res.message);
       return;
     }
-    providers = res.providers;
+    clients = res.clients;
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
 };
-const renderProviders = (arrProviders) => {
-  const listProviders = document.getElementById("listProviders");
-  listProviders.innerHTML = "";
-  if (arrProviders.length === 0) {
-    listProviders.innerHTML = `
+const renderClients = (arrClients) => {
+  const listClient = document.getElementById("listClient");
+  listClient.innerHTML = "";
+  if (arrClients.length === 0) {
+    listClient.innerHTML = `
     <tr>
-      <td colspan="4">No se encontraron proveedores.</td>
+      <td colspan="4">No se encontraron clientes.</td>
     </tr>`;
     return;
   }
-  arrProviders.forEach((provider) => {
+  arrClients.forEach((client) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${provider.codigo}</td>
-      <td>${provider.razon_social}</td>
-      <td>${provider.cuit}</td>
-      <td>${provider.regimen}</td>`;
+      <td>${client.codigo}</td>
+      <td>${client.razon_social}</td>
+      <td>${client.cuit}</td>
+      <td>${client.regimen}</td>`;
     row.addEventListener("click", () => {
-      inputCodigoProveedor.value = provider.codigo;
-      labelNombreProveedor.textContent = provider.razon_social;
-      const modalProviders = bootstrap.Modal.getInstance(
-        document.getElementById("modalProviders")
+      inputCodigoCliente.value = client.codigo;
+      labelNombreCliente.textContent = client.razon_social;
+      const modalClients = bootstrap.Modal.getInstance(
+        document.getElementById("modalClients")
       );
-      modalProviders.hide();
+      modalClients.hide();
     });
-    listProviders.appendChild(row);
+    listClient.appendChild(row);
   });
 };
 const makeReport = async () => {
-  if (!inputCodigoProveedor.value) {
+  if (!inputCodigoCliente.value) {
     window.prismaFunctions.showMSG(
       "error",
       "Error",
-      "Verifique si ingresó un proveedor existente"
+      "Verifique si ingresó un cliente existente"
     );
     return;
   }
-  await loadProviders();
+  await loadClients();
 
   fechaInicio = document.getElementById("fechaInicio").value
     ? new Date(document.getElementById("fechaInicio").value)
@@ -70,37 +70,37 @@ const makeReport = async () => {
     : null;
 
   const movimientos = [];
-
-  providers.forEach((provider) => {
-    // Procesar compras
-    if (Array.isArray(provider.purchase)) {
-      provider.purchase.forEach((compra) => {
-        const fechaCompra = new Date(compra.fecha);
+  
+  clients.forEach((client) => {
+    // Procesar ventas
+    if (Array.isArray(client.sales)) {
+      client.sales.forEach((venta) => {   
+        const fechaVenta = new Date(venta.fecha);     
         if (
-          (!fechaInicio || fechaCompra >= fechaInicio) &&
-          (!fechaFin || fechaCompra <= fechaFin)
-        ) {          
-          if (inputCodigoProveedor.value == provider.codigo) {
+          (!fechaInicio || fechaVenta >= fechaInicio) &&
+          (!fechaFin || fechaVenta <= fechaFin)
+        ) {
+          if (inputCodigoCliente.value == client.codigo) {
             movimientos.push({
-              fecha: formatearFecha(compra.fecha),
-              tipo_comprobante: compra.tipo_comprobante,
-              numero_comprobante: compra.numero_comprobante,
-              observacion: compra.observacion,
-              total: Number(compra.total)
+              fecha: formatearFecha(venta.fecha),
+              tipo_comprobante: venta.tipo_comprobante,
+              numero_comprobante: venta.numero_comprobante,
+              observacion: venta.observacion,
+              total: Number(venta.total)
             });
           }
         }
       });
     }
     // Procesar pagos
-    if (Array.isArray(provider.payment)) {
-      provider.payment.forEach((pago) => {
+    if (Array.isArray(client.payment)) {
+      client.payment.forEach((pago) => {
         const fecha = new Date(pago.fecha);
         if (
           (!fechaInicio || fecha >= fechaInicio) &&
           (!fechaFin || fecha <= fechaFin)
         ) {
-          if (inputCodigoProveedor == provider.codigo) {
+          if (inputCodigoCliente == client.codigo) {
             movimientos.push({
               fecha: formatearFecha(pago.fecha),
               tipo_comprobante: pago.tipo_comprobante,
@@ -154,7 +154,7 @@ const printReport = async (report) => {
       </style>
     </head>
     <body>
-      <h4><strong>Razón Social:</strong> ${providers.find(pr => pr.codigo == inputCodigoProveedor.value).razon_social || 'N/A'}</h4>
+      <h4><strong>Razón Social:</strong> ${clients.find(pr => pr.codigo == inputCodigoCliente.value).razon_social || 'N/A'}</h4>
       <table class="table table-striped" id="informe">
         <thead class="text-center">
           <tr>
@@ -192,35 +192,35 @@ const printReport = async (report) => {
     }
   });
 };
-inputCodigoProveedor.addEventListener("focusout", async (event) => {
-  seleccionarProveedor()
+inputCodigoCliente.addEventListener("focusout", async (event) => {
+  seleccionarCliente()
 });
-inputCodigoProveedor.addEventListener("keyup", async (event) => {
+inputCodigoCliente.addEventListener("keyup", async (event) => {
   if (event.key === "F3") {
-    const providerSearchModal = new bootstrap.Modal(
-      document.getElementById("modalProviders")
+    const clientSearchModal = new bootstrap.Modal(
+      document.getElementById("modalClients")
     );
-    providerSearchModal.show();
-    await loadProviders();
-    renderProviders(providers);
-    setTimeout(() => inputModalProviders.focus(), 200);
+    clientSearchModal.show();
+    await loadClients();
+    renderClients(clients);
+    setTimeout(() => inputModalClients.focus(), 200);
   }
   if (event.key === "Enter") {
-    seleccionarProveedor()
+    seleccionarCliente()
   }
 });
-const seleccionarProveedor = async () => {
-  await loadProviders();
-  const codeToSearch = providers.find(
-    (provider) => provider.codigo == inputCodigoProveedor.value
+const seleccionarCliente = async () => {
+  await loadClients();
+  const codeToSearch = clients.find(
+    (client) => client.codigo == inputCodigoCliente.value
   );
   if (!codeToSearch) {
-    inputCodigoProveedor.value = "";
-    inputCodigoProveedor.focus();
-    labelNombreProveedor.textContent = "Proveedor no encotrado.";
+    inputCodigoCliente.value = "";
+    inputCodigoCliente.focus();
+    labelNombreCliente.textContent = "Cliente no encotrado.";
   } else {
-    // idProvider = codeToSearch.id;
-    labelNombreProveedor.textContent = codeToSearch.razon_social;
+    // idclient = codeToSearch.id;
+    labelNombreCliente.textContent = codeToSearch.razon_social;
     inputDocument.focus()
   }
 }

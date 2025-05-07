@@ -12,33 +12,33 @@
 
 <body>
     <div class="p-3">
-        <h1>Orden de Pago</h1>
+        <h1 class="mb-0">Orden de Pago</h1>
         <div class="row">
             <div class="col-4">
                 <div class="input-container text-center">
-                    <label for="paymentDate" class="form-label">Fecha de Pago</label>
+                    <label for="paymentDate" class="form-label mb-0">Fecha de Pago</label>
                     <input type="date" id="paymentDate" class="form-control text-center">
                 </div>
             </div>
             <div class="col-4">
                 <div class="input-container text-center">
-                    <label for="orderNumber" class="form-label">Número de Orden</label>
+                    <label for="orderNumber" class="form-label mb-0">Número de Orden</label>
                     <input type="text" id="orderNumber" class="form-control text-center" />
                 </div>
             </div>
             <div class="col-4">
                 <div class="input-container text-center">
-                    <label for="customerName" class="form-label">Proveedor</label>
+                    <label for="customerName" class="form-label mb-0">Proveedor</label>
                     <input type="text" id="customerName" class="form-control text-center"
                         placeholder="F3 para buscar." />
-                    <p id="labelProveedor"></p>
+                    <p class="mb-0 text-dark" id="labelProveedor"></p>
                 </div>
             </div>
         </div>
-        <div class="row mt-3">
+        <div class="row mt-0">
             <div class="col-4">
                 <div class="input-container text-center">
-                    <label for="paymentMethod" class="form-label">Método de Pago</label>
+                    <label for="paymentMethod" class="form-label mb-0">Método de Pago</label>
                     <select class="form-select text-center" id="paymentMethod">
 
                     </select>
@@ -46,26 +46,33 @@
             </div>
             <div class="col-4">
                 <div class="input-container text-center">
-                    <label for="amount" class="form-label">Monto</label>
+                    <label for="amount" class="form-label mb-0">Monto</label>
                     <input type="text" id="amount" class="form-control text-center" placeholder="Ingrese el monto" />
                 </div>
             </div>
             <div class="col-4">
                 <div class="input-container text-center">
-                    <label for="invoice" class="form-label">Comprobante</label>
+                    <label for="invoice" class="form-label mb-0">Comprobante</label>
                     <select class="form-select text-center" id="invoiceList">
-
                     </select>
                 </div>
             </div>
         </div>
-        <div class="row mt-3">
-            <div class="form-group mt-5 p-2 bg-dark text-white rounded">
-                <p class="form-label">Observaciones</p>
-                <textarea class="form-control bg-secondary" id="observations"></textarea>
+        <div class="row mt-0">
+            <div class="col-12">
+                <div class="form-group mb-1">
+                    <label for="selectItems" class="form-label mb-0">Comprobantes Relacionados</label>
+                    <select multiple size="3" class="w-100 form-select text-center" id="invoiceApply">
+
+                    </select>
+                </div>
+                <div class="form-group bg-dark text-white rounded p-2"> 
+                    <label for="observations" class="form-label">Observaciones</label>
+                    <textarea class="form-control bg-secondary" id="observations" rows="3"></textarea>
+                </div>
             </div>
         </div>
-        <div class="text-center mt-3 mb-1">
+        <div class="text-center mt-1 mb-0">
             <button class="btn btn-dark btn-custom" onclick="window.close()">
                 Cancelar
             </button>

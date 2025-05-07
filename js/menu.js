@@ -28,7 +28,7 @@ const menuTemplate = [
       { label: 'Modificar Cliente', click: () => { windowManager.createWindow("modifyClient", 800, 600, true, false) } },
       { label: 'Eliminar Cliente', click: () => { windowManager.createWindow("deleteClient", 600, 400, false, true) } },
       { type: 'separator' },
-      { label: 'Resumen de cuenta', click: () => { /* Función para resumen de cuenta de clientes */ } },
+      { label: 'Resumen de cuenta', click: () => {  windowManager.createWindow("clientReport", 700, 423, false, false) } },
       { label: 'Lista de Clientes', click: () => { /* Función para lista de clientes */ } }
     ]
   },
@@ -83,10 +83,10 @@ const menuTemplate = [
     label: 'Caja',
     submenu: [
       { label: 'Nueva Caja', click: () => { windowManager.createWindow("newCash", 540, 360, true, false) } },
-      { label: 'Modificar Caja', click: () => { windowManager.createWindow("modifyCash", 400, 300, false, true) } },
-      { label: 'Eliminar Caja', click: () => { windowManager.createWindow("openCash", 400, 300, false, true) } },
+      { label: 'Modificar Caja', click: () => { windowManager.createWindow("modifyCash", 540, 360, true, false) } },
+      { label: 'Eliminar Caja', click: () => { windowManager.createWindow("openCash", 540, 360, true, false) } },
       { type: 'separator' },
-      { label: 'Apertura de Caja', click: () => { windowManager.createWindow("openCash", 400, 300, false, true) } },
+      { label: 'Apertura de Caja', click: () => { windowManager.createWindow("openCash", 540, 360, true, false) } },
       { label: 'Cierre de Caja', click: () => { } },
       { type: 'separator' },
       { label: 'Orden de Pago', click: () => { windowManager.createWindow("newPayment", 640,550,true,false) } },
