@@ -38,7 +38,6 @@ const renderProviders = (arrProviders) => {
       <td>${provider.cuit}</td>
       <td>${provider.regimen}</td>`;
     row.addEventListener("click", () => {
-      idProvider = provider.id;
       orderSupply.value = provider.codigo;
       labelNombreProveedor.textContent = provider.razon_social;
       const modalProviders = bootstrap.Modal.getInstance(
@@ -64,10 +63,9 @@ const getPayMethods = async () => {
   const resMethods = await window.prismaFunctions.getCashes();
   const paymentMethods = resMethods.cashes;
   const paymentMethodSelect = document.querySelector("#paymentMethod");
-  if (!paymentMethods || paymentMethods.length === 0) {
+  if (!paymentMethods || paymentMethods.length === 0){
     return;
   }
-
   paymentMethods.forEach((method) => {
     if (method.activa) {
       const option = document.createElement("option");
@@ -122,6 +120,12 @@ const moveSelected = (fromSelect, toSelect) => {
     toSelect.appendChild(option);
   });
 }
+const validateFields = () => {
+  
+  }
+const newPayment = async () => {
+ 
+};
 
 invoiceList.addEventListener('mouseup', () => moveSelected(invoiceList, invoiceApply));
 invoiceApply.addEventListener('change', () => moveSelected(invoiceApply, invoiceList));
