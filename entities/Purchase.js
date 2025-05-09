@@ -50,7 +50,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Purchase.prototype, "details", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Payment_1.Payment, (payment) => payment.purchase),
+    (0, typeorm_1.ManyToOne)(() => Payment_1.Payment, (payment) => payment.facturas),
     __metadata("design:type", Payment_1.Payment)
 ], Purchase.prototype, "payment", void 0);
 exports.Purchase = Purchase = __decorate([

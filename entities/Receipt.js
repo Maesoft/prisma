@@ -13,7 +13,7 @@ exports.Receipt = void 0;
 const typeorm_1 = require("typeorm");
 const Client_1 = require("./Client");
 const Sale_1 = require("./Sale");
-const ReceiptMethodUsed_1 = require("./ReceiptMethodUsed");
+const CashManagement_1 = require("./CashManagement");
 let Receipt = class Receipt {
 };
 exports.Receipt = Receipt;
@@ -42,9 +42,9 @@ __decorate([
     __metadata("design:type", Client_1.Client)
 ], Receipt.prototype, "client", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => ReceiptMethodUsed_1.ReceiptMethodUsed, (rmu) => rmu.receipt),
+    (0, typeorm_1.ManyToOne)(() => CashManagement_1.CashManagement, (cash) => cash.receipt),
     __metadata("design:type", Array)
-], Receipt.prototype, "receiptMethodsUsed", void 0);
+], Receipt.prototype, "caja", void 0);
 exports.Receipt = Receipt = __decorate([
     (0, typeorm_1.Entity)()
 ], Receipt);

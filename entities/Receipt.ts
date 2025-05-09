@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Client } from "./Client";
 import { Sale } from "./Sale";
-import { ReceiptMethodUsed } from "./ReceiptMethodUsed";
+import { CashManagement } from "./CashManagement";
 
 @Entity()
 export class Receipt {
@@ -23,6 +23,6 @@ export class Receipt {
     @ManyToOne(() => Client, (client) => client.sales)
     client: Client;
 
-    @OneToMany(() => ReceiptMethodUsed, (rmu) => rmu.receipt)
-    receiptMethodsUsed: ReceiptMethodUsed[];
+    @ManyToOne(() => CashManagement, (cash) => cash.receipt)
+    caja: CashManagement[];
 }

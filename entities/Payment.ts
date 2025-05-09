@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { PaymentMethodUsed } from "./PaymentMethodUsed";
 import { Provider } from "./Provider";
 import { Purchase } from "./Purchase";
+import { CashManagement } from "./CashManagement";
 
 @Entity()
 export class Payment {
@@ -18,11 +18,11 @@ export class Payment {
     monto: number;
 
     @OneToMany(() => Purchase, (purchase) => purchase.payment)
-    purchase: Purchase[];
+    facturas: Purchase[];
 
     @ManyToOne(() => Provider, (provider) => provider.payment)
-    provider: Provider;
+    proveedor: Provider;
 
-    @OneToMany(() => PaymentMethodUsed, (pmu) => pmu.payment)
-    paymentMethodsUsed: PaymentMethodUsed[];
+    @ManyToOne(() => CashManagement, (cash) => cash.payment)
+    caja: CashManagement
 }

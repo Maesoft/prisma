@@ -104,9 +104,7 @@ ipcMain.handle("edit-cash", async (event, id, cashData) => {
 ipcMain.handle("get-cashes", async () => {
   try {
     const cashRepository = AppDataSource.getRepository(CashManagement);
-    const cashes = await cashRepository.find({
-      relations: ["paymentMethodsUsed", "receiptMethodsUsed"],
-    });
+    const cashes = await cashRepository.find();
     return { success: true, cashes };
   } catch (error) {
     return { success: false, message: error.message };
@@ -125,10 +123,35 @@ ipcMain.handle("get-payments", async () => {
   try {
     const paymentRepository = AppDataSource.getRepository(Payment);
     const payments = await paymentRepository.find({
-      relations: ["provider", "purchase"],
+      relations: ["proveedor", "facturas", "caja"],
       order: { fecha: "ASC" },
-    });
-    return { success: true, payments };
+    });  
+    return { success: true, payments};
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("add-payment", async (event, paymentData) => {
+  try {
+    const paymentRepository = AppDataSource.getRepository(Payment);
+    const newPayment = paymentRepository.create(paymentData);
+    await paymentRepository.save(newPayment);
+    return {
+      success: true,
+      message: "Pago guardado exitosamente.",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+});
+ipcMain.handle("delete-payment", async (event, id) => {
+  try {
+    const paymentRepository = AppDataSource.getRepository(Payment);
+    await paymentRepository.delete(id);
+    return { success: true, message: "Pago eliminado exitosamente" };
   } catch (error) {
     return { success: false, message: error.message };
   }
