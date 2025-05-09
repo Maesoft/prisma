@@ -53,7 +53,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Provider.prototype, "purchase", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Payment_1.Payment, (payment) => payment.provider),
+    (0, typeorm_1.OneToMany)(() => Payment_1.Payment, (payment) => payment.proveedor),
     __metadata("design:type", Array)
 ], Provider.prototype, "payment", void 0);
 exports.Provider = Provider = __decorate([

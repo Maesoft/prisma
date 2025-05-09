@@ -11,8 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CashManagement = void 0;
 const typeorm_1 = require("typeorm");
-const PaymentMethodUsed_1 = require("./PaymentMethodUsed");
-const ReceiptMethodUsed_1 = require("./ReceiptMethodUsed");
+const Payment_1 = require("./Payment");
+const Receipt_1 = require("./Receipt");
 let CashManagement = class CashManagement {
 };
 exports.CashManagement = CashManagement;
@@ -49,13 +49,13 @@ __decorate([
     __metadata("design:type", Boolean)
 ], CashManagement.prototype, "activa", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => PaymentMethodUsed_1.PaymentMethodUsed, (pmu) => pmu.cashManagement),
+    (0, typeorm_1.OneToMany)(() => Payment_1.Payment, (pay) => pay.caja),
     __metadata("design:type", Array)
-], CashManagement.prototype, "paymentMethodsUsed", void 0);
+], CashManagement.prototype, "payment", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => ReceiptMethodUsed_1.ReceiptMethodUsed, (rmu) => rmu.cashManagement),
+    (0, typeorm_1.OneToMany)(() => Receipt_1.Receipt, (rec) => rec.caja),
     __metadata("design:type", Array)
-], CashManagement.prototype, "receiptMethodsUsed", void 0);
+], CashManagement.prototype, "receipt", void 0);
 exports.CashManagement = CashManagement = __decorate([
     (0, typeorm_1.Entity)()
 ], CashManagement);

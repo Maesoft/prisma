@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { PaymentMethodUsed } from "./PaymentMethodUsed";
-import { ReceiptMethodUsed } from "./ReceiptMethodUsed";
+import { Payment } from "./Payment";
+import { Receipt } from "./Receipt";
 
 @Entity()
 export class CashManagement {
@@ -29,9 +29,9 @@ export class CashManagement {
     @Column({default: false})
     activa: boolean;
 
-    @OneToMany(() => PaymentMethodUsed, (pmu) => pmu.cashManagement)
-    paymentMethodsUsed: PaymentMethodUsed[];
+    @OneToMany(() => Payment, (pay) => pay.caja)
+    payment: Payment[];
 
-    @OneToMany(() => ReceiptMethodUsed, (rmu) => rmu.cashManagement)
-    receiptMethodsUsed: ReceiptMethodUsed[];
+    @OneToMany(() => Receipt, (rec) => rec.caja)
+    receipt: Receipt[];
 }

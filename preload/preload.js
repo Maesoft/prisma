@@ -10,7 +10,7 @@ contextBridge.exposeInMainWorld("prismaFunctions", {
   addProvider: (providerData) => ipcRenderer.invoke("add-provider", providerData),
   getPayments: () => ipcRenderer.invoke("get-payments"),
   addPayment: (paymentData) => ipcRenderer.invoke("add-payment", paymentData),
-  addPaymentMethod: (paymentMethodData) => ipcRenderer.invoke("add-payment-method", paymentMethodData),
+  deletePayment: (id) => ipcRenderer.invoke("delete-payment", id),
   getPurchases: () => ipcRenderer.invoke("get-purchases"),
   getProviders: () => ipcRenderer.invoke("get-providers"),
   editProvider: (id, providerData) => ipcRenderer.invoke("edit-provider", id, providerData),

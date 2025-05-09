@@ -29,6 +29,6 @@ export class Purchase {
   @OneToMany(() => DetailsPurchase, (details) => details.purchase)
   details: DetailsPurchase[];
 
-  @ManyToOne(() => Payment, (payment) => payment.purchase, { onDelete: 'SET NULL', nullable: true })
-  payment: Payment;
+  @ManyToOne(()=> Payment, (payment) => payment.facturas, {onDelete:'SET NULL', nullable:true})
+  payment:Payment;
 }

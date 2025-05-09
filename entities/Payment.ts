@@ -1,14 +1,14 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { PaymentMethodUsed } from "./PaymentMethodUsed";
 import { Provider } from "./Provider";
 import { Purchase } from "./Purchase";
+import { CashManagement } from "./CashManagement";
 
 @Entity()
 export class Payment {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({type: 'date'})
     fecha: Date;
 
     @Column({ unique: true })
@@ -17,12 +17,12 @@ export class Payment {
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     monto: number;
 
-    @OneToMany(() => Purchase, (purchase) => purchase.payment)
-    purchase: Purchase[];
+    @OneToMany(() => Purchase, (purchase) => purchase.payment, { onDelete: 'SET NULL', nullable: true })
+    facturas: Purchase[];
 
-    @ManyToOne(() => Provider, (provider) => provider.payment)
-    provider: Provider;
+    @ManyToOne(() => Provider, (provider) => provider.payment, { onDelete: 'CASCADE' })
+    proveedor: Provider;
 
-    @OneToMany(() => PaymentMethodUsed, (pmu) => pmu.payment)
-    paymentMethodsUsed: PaymentMethodUsed[];
+    @ManyToOne(() => CashManagement, (cash) => cash.payment)
+    caja: CashManagement
 }

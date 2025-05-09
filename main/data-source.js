@@ -14,15 +14,13 @@ const DetailsPurchase_1 = require("../entities/DetailsPurchase");
 const Purchase_1 = require("../entities/Purchase");
 const Payment_1 = require("../entities/Payment");
 const CashManagement_1 = require("../entities/CashManagement");
-const PaymentMethodUsed_1 = require("../entities/PaymentMethodUsed");
-const ReceiptMethodUsed_1 = require("../entities/ReceiptMethodUsed");
 const Receipt_1 = require("../entities/Receipt");
 exports.AppDataSource = new typeorm_1.DataSource({
     type: "sqlite",
     database: "./db/prisma_contable.sqlite",
     synchronize: true,
     logging: true,
-    entities: [Provider_1.Provider, Category_1.Category, Product_1.Product, Stock_1.Stock, Client_1.Client, DetailsSale_1.DetailsSale, DetailsPurchase_1.DetailsPurchase, Sale_1.Sale, Purchase_1.Purchase, Options_1.Option, Payment_1.Payment, CashManagement_1.CashManagement, PaymentMethodUsed_1.PaymentMethodUsed, ReceiptMethodUsed_1.ReceiptMethodUsed, Receipt_1.Receipt],
+    entities: [Provider_1.Provider, Category_1.Category, Product_1.Product, Stock_1.Stock, Client_1.Client, DetailsSale_1.DetailsSale, DetailsPurchase_1.DetailsPurchase, Sale_1.Sale, Purchase_1.Purchase, Options_1.Option, Payment_1.Payment, CashManagement_1.CashManagement, Receipt_1.Receipt],
 });
 exports.AppDataSource.initialize()
     .then(() => {

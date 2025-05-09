@@ -31,6 +31,6 @@ export class Provider {
     @OneToMany(() => Purchase, (purchase) => purchase.provider)
     purchase: Purchase[];
 
-    @OneToMany(() => Payment, (payment) => payment.provider)
+    @OneToMany(() => Payment, (payment) => payment.proveedor)
     payment: Payment[];
 }

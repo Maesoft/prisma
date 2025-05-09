@@ -19,6 +19,8 @@ const loadProviders = async () => {
       return;
     }
     providers = res.providers;
+    console.log(providers);
+    
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
@@ -95,26 +97,32 @@ const makeReport = async () => {
     // Procesar pagos
     if (Array.isArray(provider.payment)) {
       provider.payment.forEach((pago) => {
-        const fecha = new Date(pago.fecha);
+        const fechaPago = new Date(pago.fecha);
         if (
-          (!fechaInicio || fecha >= fechaInicio) &&
-          (!fechaFin || fecha <= fechaFin)
+          (!fechaInicio || fechaPago >= fechaInicio) &&
+          (!fechaFin || fechaPago <= fechaFin)
         ) {
-          if (inputCodigoProveedor == provider.codigo) {
+          if (inputCodigoProveedor.value == provider.codigo) {
             movimientos.push({
               fecha: formatearFecha(pago.fecha),
-              tipo_comprobante: pago.tipo_comprobante,
-              numero_comprobante: pago.numero_comprobante,
+              tipo_comprobante: "OP",
+              numero_comprobante: pago.nro_comprobante,
               observacion: pago.observacion,
-              total: Number(pago.total)
+              total: Number(pago.monto)
             });
           }
         }
       });
     }
   });
-  const datosFiltrados = movimientos.sort((a, b) => a.fecha - b.fecha);
-  printReport(datosFiltrados);
+  const datosFiltrados = movimientos.sort((a, b) => {
+    const [diaA, mesA, anioA] = a.fecha.split('/');
+    const [diaB, mesB, anioB] = b.fecha.split('/');
+    const dateA = new Date(`${anioA}-${mesA}-${diaA}`);
+    const dateB = new Date(`${anioB}-${mesB}-${diaB}`);
+    return dateA - dateB;
+  });
+    printReport(datosFiltrados);
 };
 const printReport = async (report) => {
   const tiposDebe = ['FA', 'FB', 'FC', 'F', 'T', 'TA', 'TB', 'TC', 'NDA', 'NDB', 'NDC', 'VEN'];
