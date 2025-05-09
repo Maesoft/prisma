@@ -1,12 +1,16 @@
 const dateNow = new Date().toISOString().split("T")[0];
 const orderNumber = document.querySelector("#orderNumber");
 const orderDate = document.querySelector("#paymentDate");
+const paymentMethod = document.querySelector("#paymentMethod");
 const orderSupply = document.querySelector("#customerName");
 const invoiceList = document.querySelector("#invoiceList");
 const invoiceApply = document.querySelector("#invoiceApply");
 const labelNombreProveedor = document.querySelector("#labelProveedor");
 const amount = document.getElementById("amount");
+const btnGenerate = document.querySelector("#btnGenerate");
 orderDate.value = dateNow;
+let idProvider = null;
+let providers = [];
 
 const loadProviders = async () => {
   try {
@@ -63,7 +67,7 @@ const getPayMethods = async () => {
   const resMethods = await window.prismaFunctions.getCashes();
   const paymentMethods = resMethods.cashes;
   const paymentMethodSelect = document.querySelector("#paymentMethod");
-  if (!paymentMethods || paymentMethods.length === 0){
+  if (!paymentMethods || paymentMethods.length === 0) {
     return;
   }
   paymentMethods.forEach((method) => {
@@ -115,20 +119,73 @@ const getInvoices = async (idProvider) => {
 };
 const moveSelected = (fromSelect, toSelect) => {
   const selectedOptions = Array.from(fromSelect.selectedOptions);
-  selectedOptions.forEach(option => {
+  selectedOptions.forEach((option) => {
     fromSelect.removeChild(option);
     toSelect.appendChild(option);
   });
-}
+};
 const validateFields = () => {
-  
+  const fecha = new Date(orderDate.value);
+  if (isNaN(fecha.getTime())) {
+    window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      "Fecha de pago no válida."
+    );
+    return false;
   }
+  if (orderSupply.value === "") {
+    window.prismaFunctions.showMSG("error", "Prisma", "Proveedor no válido.");
+    return false;
+  }
+  if (amount.value === "") {
+    window.prismaFunctions.showMSG("error", "Prisma", "Monto no válido.");
+    return false;
+  }
+  if (isNaN(parseFloat(amount.value.replace(/\./g, "").replace(",", ".")))) {
+    window.prismaFunctions.showMSG("error", "Prisma", "Monto no válido.");
+    return false;
+  }
+  if (paymentMethod.value === "No hay cajas activas.") {
+    window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      "No hay cajas activas. Diríjase a 'Caja > Apertura de Caja' para habilitar una caja antes de continuar."
+    );
+    return false;
+  }
+  return true;
+};
 const newPayment = async () => {
- 
+  if (validateFields()) {
+    const selectedInvoices = Array.from(invoiceApply.selectedOptions);
+    const idInvoices = selectedInvoices.map((option) => {
+      return { id: Number(option.value) };
+    });
+    const payment = {
+      fecha: orderDate.value,
+      nro_comprobante: Number(orderNumber.value),
+      monto: parseFloat(amount.value.replace(/\./g, "").replace(",", ".")),
+      purchase: idInvoices,
+      paymentMethodsUsed: { id: Number(paymentMethod.value) },
+      provider: { id: idProvider },
+    };
+    console.log(payment);
+    const res = await window.prismaFunctions.addPayment(payment);
+    if (res.success) {
+      window.prismaFunctions.showMSG("success", "Éxito", "Pago registrado.");
+    } else {
+      window.prismaFunctions.showMSG("error", "Error", res.message);
+    }
+  }
 };
 
-invoiceList.addEventListener('mouseup', () => moveSelected(invoiceList, invoiceApply));
-invoiceApply.addEventListener('change', () => moveSelected(invoiceApply, invoiceList));
+invoiceList.addEventListener("mouseup", () =>
+  moveSelected(invoiceList, invoiceApply)
+);
+invoiceApply.addEventListener("change", () =>
+  moveSelected(invoiceApply, invoiceList)
+);
 
 orderSupply.addEventListener("focusout", async () => {
   selectProvider();
@@ -164,4 +221,7 @@ amount.addEventListener("blur", () => {
       maximumFractionDigits: 2,
     });
   }
+});
+btnGenerate.addEventListener("click", () => {
+  newPayment();
 });
