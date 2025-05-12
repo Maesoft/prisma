@@ -7,7 +7,7 @@ const inputImage = document.getElementById("productImage");
 const inputDesc = document.getElementById("productDescription");
 const selectPrices = document.getElementById("productPrices");
 const productControlStock = document.getElementById("productControlStock");
-const productTax = document.getElementById("productTax");
+const productTax = document.getElementById("productTaxes");
 
 let products = [];
 let idProduct=0;
@@ -88,7 +88,6 @@ const loadProductIntoForm = (product) => {
   document.getElementById("productSearchModal").style.display = "none";
 };
 const clearFields = () => {
-  inputId.value = "";
   inputCode.value = "";
   inputName.value = "";
   selectCategory.value = "";
