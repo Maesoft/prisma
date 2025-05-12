@@ -50,7 +50,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Sale.prototype, "details", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Receipt_1.Receipt, (rec) => rec.sale),
+    (0, typeorm_1.ManyToOne)(() => Receipt_1.Receipt, (rec) => rec.facturas),
     __metadata("design:type", Receipt_1.Receipt)
 ], Sale.prototype, "receipt", void 0);
 exports.Sale = Sale = __decorate([

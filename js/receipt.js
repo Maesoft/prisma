@@ -2,63 +2,64 @@ const dateNow = new Date().toISOString().split("T")[0];
 
 const orderNumber = document.querySelector("#orderNumber");
 const orderDate = document.querySelector("#paymentDate");
-const orderSupply = document.querySelector("#customerName");
+const inputClient = document.querySelector("#clientName");
 const invoiceList = document.querySelector("#invoiceList");
 const invoiceApply = document.querySelector("#invoiceApply");
-const labelNombreProveedor = document.querySelector("#labelProveedor");
+const labelNombreCliente = document.querySelector("#labelCliente");
 const btnGenerate = document.querySelector("#btnGenerate");
 const paymentMethodSelect = document.querySelector("#paymentMethod");
 const amount = document.getElementById("amount");
 orderDate.value = dateNow;
 
-let providers = [];
-let idProvider = null;
+let clients = [];
+let idClient = null;
 
-const loadProviders = async () => {
+const loadClients = async () => {
   try {
-    const res = await window.prismaFunctions.getProviders();
+    const res = await window.prismaFunctions.getClients();
     if (!res.success) {
       window.prismaFunctions.showMSG("error", "Error", res.message);
       return;
     }
-    providers = res.providers;
+    clients = res.clients;
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Error", error.message);
   }
 };
-const renderProviders = (arrProviders) => {
-  const listProviders = document.getElementById("listProviders");
-  listProviders.innerHTML = "";
+const renderClients = (arrClients) => {
+  const listClients = document.getElementById("listClients");
+  listClients.innerHTML = "";
 
-  if (arrProviders.length === 0) {
-    listProviders.innerHTML = `<tr><td colspan="4">No se encontraron proveedores.</td></tr>`;
+  if (arrClients.length === 0) {
+    listClients.innerHTML = `<tr><td colspan="4">No se encontraron clientes.</td></tr>`;
     return;
   }
 
-  arrProviders.forEach((provider) => {
+  arrClients.forEach((client) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${provider.codigo}</td>
-      <td>${provider.razon_social}</td>
-      <td>${provider.cuit}</td>
-      <td>${provider.regimen}</td>`;
+      <td>${client.codigo}</td>
+      <td>${client.razon_social}</td>
+      <td>${client.cuit}</td>
+      <td>${client.regimen}</td>`;
     row.addEventListener("click", () => {
-      orderSupply.value = provider.codigo;
-      labelNombreProveedor.textContent = provider.razon_social;
-      const modalProviders = bootstrap.Modal.getInstance(document.getElementById("modalProviders"));
-      modalProviders.hide();
+      inputClient.value = client.codigo;
+      labelNombreCliente.textContent = client.razon_social;
+      const modalClients = bootstrap.Modal.getInstance(document.getElementById("modalClients"));
+      modalClients.hide();
     });
-    listProviders.appendChild(row);
+    listClients.appendChild(row);
   });
 };
-const getLastPayment = async () => {
-  const resPayments = await window.prismaFunctions.getPayments();
+const getLastReceipt = async () => {
+  const resReceipts = await window.prismaFunctions.getReceipts();
+  console.log(resReceipts);
   
-  if (!resPayments.payments || resPayments.payments.length === 0) {
+  if (!resReceipts.receipts || resReceipts.receipts.length === 0) {
     orderNumber.value = "00000001";
     return;
   }
-  const lastOrder = resPayments.payments.at(-1);
+  const lastOrder = resReceipts.receipts.at(-1);
   const nextNumber = (Number(lastOrder.nro_comprobante) + 1).toString().padStart(8, "0");
   orderNumber.value = nextNumber;
 };
@@ -86,28 +87,28 @@ const getPayMethods = async () => {
     paymentMethodSelect.appendChild(option);
   }
 };
-const selectProvider = async () => {
-  await loadProviders();
-  const selected = providers.find((p) => p.codigo == orderSupply.value);
+const selectClient = async () => {
+  await loadClients();
+  const selected = clients.find((p) => p.codigo == inputClient.value);
 
   if (!selected) {
-    orderSupply.value = "";
-    orderSupply.focus();
-    labelNombreProveedor.textContent = "Proveedor no encontrado.";
+    inputClient.value = "";
+    inputClient.focus();
+    labelNombreCliente.textContent = "Cliente no encontrado.";
   } else {
-    idProvider = selected.id;
-    labelNombreProveedor.textContent = selected.razon_social;
-    await getInvoices(idProvider);
+    idClient = selected.id;
+    labelNombreCliente.textContent = selected.razon_social;
+    await getInvoices(idClient);
     amount.focus();
   }
 }
-const getInvoices = async (idProvider) => {
+const getInvoices = async (idClient) => {
   invoiceList.innerHTML = "";
-  const res = await window.prismaFunctions.getPurchases();
+  const res = await window.prismaFunctions.getSales();
 
   if (res.success) {
-    res.purchases.forEach((inv) => {
-      if (inv.provider.id === idProvider) {
+    res.sales.forEach((inv) => {
+      if (inv.client.id === idClient) {
         const option = document.createElement("option");
         option.value = inv.id;
         option.textContent = inv.tipo_comprobante + inv.numero_comprobante;
@@ -132,8 +133,8 @@ const validateFields = () => {
     );
     return false;
   }
-  if (orderSupply.value === "") {
-    window.prismaFunctions.showMSG("error", "Prisma", "Proveedor no válido.");
+  if (inputClient.value === "") {
+    window.prismaFunctions.showMSG("error", "Prisma", "Cliente no válido.");
     return false;
   }
   if (amount.value === "") {
@@ -155,31 +156,31 @@ const validateFields = () => {
   return true;
 };
 const resetForm = () => {
-  orderSupply.value = "";
+  inputClient.value = "";
   amount.value = "";
   invoiceList.innerHTML = "";
   invoiceApply.innerHTML = "";
-  labelNombreProveedor.textContent = "Seleccione un proveedor.";
-  getLastPayment();
+  labelNombreCliente.textContent = "Seleccione un cliente.";
+  getLastReceipt();
 };
-const newPayment = async () => {
+const newReceipt = async () => {
   if (!validateFields()) return;
 
   const selectedInvoices = Array.from(invoiceApply.options).map((opt) => ({ id: Number(opt.value) }));
 
-  const paymentData = {
+  const receiptData = {
     fecha: orderDate.value,
     nro_comprobante: orderNumber.value,
     monto: amount.value.replace(/\./g, "").replace(",", "."),
     facturas: selectedInvoices,
-    proveedor: { id: idProvider },
+    cliente: { id: idClient },
     caja: { id: Number(paymentMethodSelect.value) },
   };
 
-  const res = await window.prismaFunctions.addPayment(paymentData);
+  const res = await window.prismaFunctions.addReceipt(receiptData);
 
   if (res.success) {
-    window.prismaFunctions.showMSG("info", "Éxito", "Pago registrado.");
+    window.prismaFunctions.showMSG("info", "Éxito", "Cobro registrado.");
     window.print();
     resetForm();
   } else {
@@ -190,16 +191,16 @@ const newPayment = async () => {
 // Event listeners
 invoiceList.addEventListener("dblclick", () => moveSelected(invoiceList, invoiceApply));
 invoiceApply.addEventListener("dblclick", () => moveSelected(invoiceApply, invoiceList));
-orderSupply.addEventListener("focusout", selectProvider);
-orderSupply.addEventListener("keyup", async (e) => {
+inputClient.addEventListener("focusout", selectClient);
+inputClient.addEventListener("keyup", async (e) => {
   if (e.key === "F3") {
-    const providerSearchModal = new bootstrap.Modal(document.getElementById("modalProviders"));
-    providerSearchModal.show();
-    await loadProviders();
-    renderProviders(providers);
-    setTimeout(() => inputModalProviders.focus(), 200);
+    const clientSearchModal = new bootstrap.Modal(document.getElementById("modalClients"));
+    clientSearchModal.show();
+    await loadClients();
+    renderClients(clients);
+    setTimeout(() => inputModalClients.focus(), 200);
   }
-  if (e.key === "Enter") selectProvider();
+  if (e.key === "Enter") selectClient();
 });
 amount.addEventListener("input", () => {
   amount.value = amount.value.replace(/[^0-9,]/g, "");
@@ -214,9 +215,9 @@ amount.addEventListener("blur", () => {
     });
   }
 });
-btnGenerate.addEventListener("click", newPayment);
+btnGenerate.addEventListener("click", newReceipt);
 document.addEventListener("DOMContentLoaded", async () => {
-  await getLastPayment();
+  await getLastReceipt();
   await getPayMethods();
-  orderSupply.focus();
+  inputClient.focus();
 });

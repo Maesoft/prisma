@@ -31,6 +31,6 @@ export class Client {
     @OneToMany(() => Sale, (sale) => sale.client)
     sales: Sale[];
 
-    @OneToMany(() => Receipt, (rec) => rec.client)
+    @OneToMany(() => Receipt, (rec) => rec.cliente)
     receipt: Receipt[];
 }
