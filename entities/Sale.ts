@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Client } from "./Client";
 import { DetailsSale } from "./DetailsSale";
+import { Receipt } from "./Receipt";
 
 @Entity()
 export class Sale {
@@ -27,4 +28,7 @@ export class Sale {
 
   @OneToMany(() => DetailsSale, (details) => details.sale)
   details: DetailsSale[];
+
+  @ManyToOne(()=> Receipt, (rec) => rec.sale)
+  receipt:Receipt;
 }

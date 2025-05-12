@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Provider } from "./Provider";
 import { DetailsPurchase } from "./DetailsPurchase";
+import { Payment } from "./Payment";
 
 @Entity()
 export class Purchase {
@@ -27,4 +28,7 @@ export class Purchase {
 
   @OneToMany(() => DetailsPurchase, (details) => details.purchase)
   details: DetailsPurchase[];
+
+  @ManyToOne(()=> Payment, (payment) => payment.facturas, {onDelete:'SET NULL', nullable:true})
+  payment:Payment;
 }

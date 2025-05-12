@@ -26,9 +26,7 @@ const loadCategories = async () => {
   }
 };
 const addCategory = async () => {
-  const newCategoryName = document
-    .getElementById("newCategoryName")
-    .value.trim();
+  const newCategoryName = document.getElementById("newCategoryName").value.trim();
   if (!newCategoryName) {
     window.prismaFunctions.showMSG(
       "info",

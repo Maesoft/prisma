@@ -45,10 +45,10 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label for="initialStock">Stock Inicial</label>
-                            <input type="number" class="form-control" id="initialStock" min="0" value="0" required>
+                            <input type="number" class="form-control" id="initialStock" min="0" value="0" disabled>
                         </div>
                         <div class="form-check mt-1">
-                            <input class="form-check-input bg-dark" type="checkbox" id="productControlStock" checked>
+                            <input class="form-check-input bg-dark" type="checkbox" id="productControlStock" disabled>
                             <label class="form-check-label" for="productControlStock">Controla Stock</label>
                         </div>
                     </div>
@@ -77,8 +77,8 @@
                 </div>
             </div>
             <div class="form-group mt-4 text-center">
-                <button type="button" class="btn btn-dark" onclick="window.close()">Cancelar</button>
-                <button type="button" class="btn btn-secondary" onclick="newProduct()">Guardar</button>
+                <button type="button" class="btn btn-secondary" onclick="window.close()">Cancelar</button>
+                <button type="button" class="btn btn-dark" onclick="saveProduct()">Guardar</button>
             </div>
         </form>
     </div>

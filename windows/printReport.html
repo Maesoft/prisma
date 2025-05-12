@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reporte de Ventas</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <script defer src="../js/bootstrap.min.js"></script>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+        }
+
+        .full-width-container {
+            width: 100%;
+            max-width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="full-width-container">
+        <div class="d-flex justify-content-between mt-2 mb-2">
+            <h1 class="text-center" id="titulo"><strong>Titulo</h1></strong>
+            <p class="text-center mt-1" id="fechaEmision">fechaEmision</p>
+            <p class="text-center" id="periodo">periodo</p>
+        </div>
+        <div class="full-width-container" id="reporte">
+
+
+        </div>
+    </div>
+</body>
+
+<script>
+    window.prismaFunctions.onReporteDatos((data) => {
+        const reporte = document.getElementById("reporte");
+        const titulo = document.getElementById("titulo");
+        const fechaEmision = document.getElementById("fechaEmision");
+        const periodo = document.getElementById("periodo");
+        titulo.innerHTML = data.title;
+        fechaEmision.innerHTML = `Emitido: ${data.fechaEmision}`;
+        periodo.innerHTML = `<strong>Desde:</strong> ${data.fechaInicio} <br> <strong>Hasta:</strong> ${data.fechaFin}`;
+        reporte.innerHTML = data.html;
+    });
+    setTimeout(() => { window.print() }, 1000);
+</script>
+
+</html>

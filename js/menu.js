@@ -5,7 +5,7 @@ const menuTemplate = [
     label: 'Archivo',
     submenu: [
       { label: 'Backup', click: () => { /* Función de backup */ } },
-      { label: 'Opciones', click: () => { windowManager.createWindow("option", 700, 630, false, true) } },
+      { label: 'Opciones', click: () => { windowManager.createWindow("option", 700, 585, false, true) } },
       { type: 'separator' },
       { label: 'Salir', role: 'quit' }
     ]
@@ -14,10 +14,10 @@ const menuTemplate = [
     label: 'Proveedores',
     submenu: [
       { label: 'Nuevo Proveedor', click: () => { windowManager.createWindow("newProvider", 800, 600, true, false) } },
-      { label: 'Eliminar Proveedor', click: () => { windowManager.createWindow("deleteProvider", 600, 400, false, true) } },
       { label: 'Modificar Proveedor', click: () => { windowManager.createWindow("modifyProvider", 800, 600, true, false) } },
+      { label: 'Eliminar Proveedor', click: () => { windowManager.createWindow("deleteProvider", 600, 400, false, true) } },
       { type: 'separator' },
-      { label: 'Resumen de Cuenta', click: () => { /* Función para resumen de cuenta de proveedores */ } },
+      { label: 'Resumen de Cuenta', click: () => { windowManager.createWindow("providerReport", 700, 423, false, false) } },
       { label: 'Lista de Proveedores', click: () => { /* Función para lista de proveedores */ } }
     ]
   },
@@ -25,10 +25,10 @@ const menuTemplate = [
     label: 'Clientes',
     submenu: [
       { label: 'Nuevo Cliente', click: () => { windowManager.createWindow("newClient", 800, 600, true, false) } },
-      { label: 'Eliminar Cliente', click: () => { windowManager.createWindow("deleteClient", 600, 400, false, true) } },
       { label: 'Modificar Cliente', click: () => { windowManager.createWindow("modifyClient", 800, 600, true, false) } },
+      { label: 'Eliminar Cliente', click: () => { windowManager.createWindow("deleteClient", 600, 400, false, true) } },
       { type: 'separator' },
-      { label: 'Resumen de cuenta', click: () => { /* Función para resumen de cuenta de clientes */ } },
+      { label: 'Resumen de cuenta', click: () => {  windowManager.createWindow("clientReport", 700, 423, false, false) } },
       { label: 'Lista de Clientes', click: () => { /* Función para lista de clientes */ } }
     ]
   },
@@ -82,13 +82,15 @@ const menuTemplate = [
   {
     label: 'Caja',
     submenu: [
-      { label: 'Apertura de Caja', click: () => { windowManager.createWindow("openCash", 400, 300, false, true) } },
+      { label: 'Nueva Caja', click: () => { windowManager.createWindow("newCash", 540, 360, true, false) } },
+      { label: 'Modificar Caja', click: () => { windowManager.createWindow("modifyCash", 540, 360, true, false) } },
+      { label: 'Eliminar Caja', click: () => { windowManager.createWindow("openCash", 540, 360, true, false) } },
+      { type: 'separator' },
+      { label: 'Apertura de Caja', click: () => { windowManager.createWindow("openCash", 540, 360, true, false) } },
       { label: 'Cierre de Caja', click: () => { } },
       { type: 'separator' },
-      { label: 'Ingresos', click: () => { } },
-      { label: 'Egresos', click: () => { } },
-      { type: 'separator' },
-      { label: 'Medios de Pagos', click: () => { } },
+      { label: 'Orden de Pago', click: () => { windowManager.createWindow("newPayment", 640,550,true,false) } },
+      { label: 'Recibo', click: () => { } },
       { type: 'separator' },
       { label: 'Resumen de Caja', click: () => { } },
       { label: 'Consulta de Saldo', click: () => { } },

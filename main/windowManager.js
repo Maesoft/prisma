@@ -25,9 +25,9 @@ class WindowManager {
   createWindow(name, width, height, frame, modal) {
     if (this.windows[name]) {
       this.windows[name].show();
-      return;
+      return this.windows[name]; 
     }
-
+  
     this.windows[name] = new BrowserWindow({
       parent: this.mainWindow,
       width,
@@ -46,15 +46,17 @@ class WindowManager {
         preload: path.join(__dirname, '../preload/preload.js')
       }
     });
-
+  
     this.windows[name].webContents.openDevTools();
-
+  
     this.windows[name].setMenu(null);
     this.windows[name].loadFile(path.join(__dirname, `../windows/${name}.html`));
-
+  
     this.windows[name].on('closed', () => {
       delete this.windows[name];
     });
+  
+    return this.windows[name]; 
   }
 }
 

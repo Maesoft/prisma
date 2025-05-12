@@ -13,6 +13,8 @@ const { Price } = require("../entities/Price");
 const { DetailsSale } = require("../entities/DetailsSale");
 const { DetailsPurchase } = require("../entities/DetailsPurchase");
 const { Purchase } = require("../entities/Purchase");
+const { Payment } = require("../entities/Payment");
+const { CashManagement } = require("../entities/CashManagement");
 
 //Manejo de la App
 app.on("ready", async () => {
@@ -20,20 +22,177 @@ app.on("ready", async () => {
   const menu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(menu);
 });
-
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
 });
-
 app.on("activate", () => {
   if (WindowManager.mainWindow === null) {
     WindowManager.createMainWindow();
   }
 });
 
+//Funciones Genearales
+ipcMain.handle("open-window", async (event, windowData) => {
+  const { windowName, width, height, frame, modal, data } = windowData;
+  try {
+    const win = WindowManager.createWindow(
+      windowName,
+      width,
+      height,
+      frame,
+      modal
+    );
+
+    if (win) {
+      win.once("ready-to-show", () => {
+        if (data) {
+          win.webContents.send("reporte-datos", data);
+        }
+        win.show();
+        win.focus();
+      });
+    }
+  } catch (error) {
+    console.error("Error al abrir la ventana:", error);
+  }
+});
+
 //Funciones que interactuan con la BD
+ipcMain.handle("add-cash", async (event, cashData) => {
+  try {
+    const cashRepository = AppDataSource.getRepository(CashManagement);
+    const newCash = cashRepository.create(cashData);
+    await cashRepository.save(newCash);
+    return {
+      success: true,
+      message: "Caja creada exitosamente.",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+});
+ipcMain.handle("edit-cash", async (event, id, cashData) => {
+  try {
+    const cashRepository = AppDataSource.getRepository(CashManagement);
+
+    const editCash = await cashRepository.findOneBy({ id });
+
+    editCash.codigo = cashData.codigo;
+    editCash.nombre = cashData.nombre;
+    editCash.fecha_apertura = cashData.fecha_apertura;
+    editCash.fecha_cierre = cashData.fecha_cierre;
+    editCash.saldo_inicial = cashData.saldo_inicial;
+    editCash.saldo_final = cashData.saldo_final;
+    editCash.activa = cashData.activa;
+
+    await cashRepository.save(editCash);
+    return {
+      success: true,
+      message: "Caja editada exitosamente",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+});
+ipcMain.handle("get-cashes", async () => {
+  try {
+    const cashRepository = AppDataSource.getRepository(CashManagement);
+    const cashes = await cashRepository.find();
+    return { success: true, cashes };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("delete-cash", async (event, id) => {
+  try {
+    const cashRepository = AppDataSource.getRepository(CashManagement);
+    await cashRepository.delete(id);
+    return { success: true, message: "Caja eliminada exitosamente" };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("get-payments", async () => {
+  try {
+    const paymentRepository = AppDataSource.getRepository(Payment);
+    const payments = await paymentRepository.find({
+      relations: ["proveedor", "facturas", "caja"],
+      order: { fecha: "ASC" },
+    });  
+    return { success: true, payments};
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("delete-payment", async (event, id) => {
+  try {
+    const paymentRepository = AppDataSource.getRepository(Payment);
+    await paymentRepository.delete(id);
+    return { success: true, message: "Pago eliminado exitosamente" };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("add-payment", async (event, paymentData) => {
+  try {
+    const paymentRepository = AppDataSource.getRepository(Payment);
+    const newPayment = paymentRepository.create(paymentData);
+    await paymentRepository.save(newPayment);
+    return {
+      success: true,
+      message: "Pago registrado exitosamente.",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+});
+ipcMain.handle("add-purchase", async (event, purchaseData) => {
+  try {
+    const purchaseRepository = AppDataSource.getRepository(Purchase);
+    const newPurchase = purchaseRepository.create(purchaseData);
+    await purchaseRepository.save(newPurchase);
+    return {
+      success: true,
+      message: "Se guardo el comprobante exitosamente",
+      purchaseId: newPurchase.id,
+    };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("get-purchases", async () => {
+  try {
+    const purchaseRepository = AppDataSource.getRepository(Purchase);
+    const purchases = await purchaseRepository.find({
+      relations: ["provider", "details"],
+      order: { fecha: "ASC" },
+    });
+    return { success: true, purchases };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("add-detail-purchase", async (event, detailData) => {
+  try {
+    const detailRepository = AppDataSource.getRepository(DetailsPurchase);
+    const newDetail = detailRepository.create(detailData);
+    await detailRepository.save(newDetail);
+    return { success: true, message: "Detalle cargado exitosamente." };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
 ipcMain.handle("add-provider", async (event, providerData) => {
   try {
     const providerRepository = AppDataSource.getRepository(Provider);
@@ -53,7 +212,9 @@ ipcMain.handle("add-provider", async (event, providerData) => {
 ipcMain.handle("get-providers", async () => {
   try {
     const providerRepository = AppDataSource.getRepository(Provider);
-    const providers = await providerRepository.find();
+    const providers = await providerRepository.find({
+      relations: ["payment", "purchase"],
+    });
     return { success: true, providers };
   } catch (error) {
     return { success: false, message: error.message };
@@ -65,19 +226,19 @@ ipcMain.handle("edit-provider", async (event, id, providerData) => {
 
     const editProvider = await providerRepository.findOneBy({ id });
 
-    editProvider.codigo=providerData.codigo
-    editProvider.razon_social=providerData.razon_social
-    editProvider.cuit=providerData.cuit
-    editProvider.direccion=providerData.direccion
-    editProvider.telefono=providerData.telefono
-    editProvider.email=providerData.email
-    editProvider.regimen=providerData.regimen
+    editProvider.codigo = providerData.codigo;
+    editProvider.razon_social = providerData.razon_social;
+    editProvider.cuit = providerData.cuit;
+    editProvider.direccion = providerData.direccion;
+    editProvider.telefono = providerData.telefono;
+    editProvider.email = providerData.email;
+    editProvider.regimen = providerData.regimen;
 
     await providerRepository.save(editProvider);
 
     return {
       success: true,
-      message: "Proveedor editado exitosamente",
+      message: "Caja editada exitosamente",
       productId: editProvider.id,
     };
   } catch (error) {
@@ -122,7 +283,9 @@ ipcMain.handle("delete-client", async (event, id) => {
 ipcMain.handle("get-clients", async () => {
   try {
     const clientRepository = AppDataSource.getRepository(Client);
-    const clients = await clientRepository.find();
+    const clients = await clientRepository.find({
+      relations: ["sales"],
+    });
     return { success: true, clients };
   } catch (error) {
     return { success: false, message: error.message };
@@ -134,13 +297,13 @@ ipcMain.handle("edit-client", async (event, id, clientData) => {
 
     const editClient = await clientRepository.findOneBy({ id });
 
-    editClient.codigo=clientData.codigo
-    editClient.razon_social=clientData.razon_social
-    editClient.cuit=clientData.cuit
-    editClient.direccion=clientData.direccion
-    editClient.telefono=clientData.telefono
-    editClient.email=clientData.email
-    editClient.regimen=clientData.regimen
+    editClient.codigo = clientData.codigo;
+    editClient.razon_social = clientData.razon_social;
+    editClient.cuit = clientData.cuit;
+    editClient.direccion = clientData.direccion;
+    editClient.telefono = clientData.telefono;
+    editClient.email = clientData.email;
+    editClient.regimen = clientData.regimen;
 
     await clientRepository.save(editClient);
 
@@ -280,24 +443,13 @@ ipcMain.handle("add-sale", async (event, saleData) => {
     return { success: false, message: error.message };
   }
 });
-ipcMain.handle("add-purchase", async (event, purchaseData) => {
-  try {
-    const purchaseRepository = AppDataSource.getRepository(Purchase);
-    const newPurchase = purchaseRepository.create(purchaseData);
-    await purchaseRepository.save(newPurchase);
-    return {
-      success: true,
-      message: "Se guardo el comprobante exitosamente",
-      purchaseId: newPurchase.id,
-    };
-  } catch (error) {
-    return { success: false, message: error.message };
-  }
-});
 ipcMain.handle("get-sales", async () => {
   try {
     const salesRepository = AppDataSource.getRepository(Sale);
-    const sales = await salesRepository.find({ relations: ["client", "details"], order:{fecha:"ASC"} });
+    const sales = await salesRepository.find({
+      relations: ["client", "details"],
+      order: { fecha: "ASC" },
+    });
     return { success: true, sales };
   } catch (error) {
     return { success: false, message: error.message };
@@ -313,19 +465,7 @@ ipcMain.handle("add-detail-sale", async (event, detailData) => {
     return { success: false, message: error.message };
   }
 });
-ipcMain.handle("add-detail-purchase", async (event, detailData) => {
-  try {
-    const detailRepository = AppDataSource.getRepository(DetailsPurchase);
-    const newDetail = detailRepository.create(detailData);
-    await detailRepository.save(newDetail);
-    return { success: true, message: "Detalle cargado exitosamente." };
-  } catch (error) {
-    return { success: false, message: error.message };
-  }
-});
-ipcMain.handle(
-  "show-message",
-  async (event, icono, titulo, mensaje, botones, defaultID) => {
+ipcMain.handle("show-message", async (event, icono, titulo, mensaje, botones, defaultID) => {
     const res = await dialog.showMessageBox({
       type: icono,
       title: titulo,
