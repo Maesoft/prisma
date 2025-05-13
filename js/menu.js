@@ -90,7 +90,7 @@ const menuTemplate = [
       { label: 'Cierre de Caja', click: () => { } },
       { type: 'separator' },
       { label: 'Orden de Pago', click: () => { windowManager.createWindow("newPayment", 640,550,true,false) } },
-      { label: 'Recibo', click: () => { } },
+      { label: 'Recibo', click: () => { windowManager.createWindow("newReceipt", 640,550,true,false) } },
       { type: 'separator' },
       { label: 'Resumen de Caja', click: () => { } },
       { label: 'Consulta de Saldo', click: () => { } },

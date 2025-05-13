@@ -15,6 +15,7 @@ const { DetailsPurchase } = require("../entities/DetailsPurchase");
 const { Purchase } = require("../entities/Purchase");
 const { Payment } = require("../entities/Payment");
 const { CashManagement } = require("../entities/CashManagement");
+const { Receipt } = require("../entities/Receipt");
 
 //Manejo de la App
 app.on("ready", async () => {
@@ -132,6 +133,18 @@ ipcMain.handle("get-payments", async () => {
     return { success: false, message: error.message };
   }
 });
+ipcMain.handle("get-receipts", async () => {
+  try {
+    const receiptRepository = AppDataSource.getRepository(Receipt);
+    const receipts = await receiptRepository.find({
+      relations: ["cliente", "facturas", "caja"],
+      order: { fecha: "ASC" },
+    });  
+    return { success: true, receipts};
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
 ipcMain.handle("delete-payment", async (event, id) => {
   try {
     const paymentRepository = AppDataSource.getRepository(Payment);
@@ -139,6 +152,22 @@ ipcMain.handle("delete-payment", async (event, id) => {
     return { success: true, message: "Pago eliminado exitosamente" };
   } catch (error) {
     return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("add-receipt", async (event, receiptData) => {
+  try {
+    const receiptRepository = AppDataSource.getRepository(Receipt);
+    const newReceipt = receiptRepository.create(receiptData);
+    await receiptRepository.save(newReceipt);
+    return {
+      success: true,
+      message: "Cobro registrado exitosamente.",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
+    };
   }
 });
 ipcMain.handle("add-payment", async (event, paymentData) => {
@@ -284,7 +313,7 @@ ipcMain.handle("get-clients", async () => {
   try {
     const clientRepository = AppDataSource.getRepository(Client);
     const clients = await clientRepository.find({
-      relations: ["sales"],
+      relations: ["receipt","sales"],
     });
     return { success: true, clients };
   } catch (error) {

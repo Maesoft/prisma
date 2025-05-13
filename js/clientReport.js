@@ -70,6 +70,7 @@ const makeReport = async () => {
     : null;
 
   const movimientos = [];
+  console.log(clients);
   
   clients.forEach((client) => {
     // Procesar ventas
@@ -92,33 +93,39 @@ const makeReport = async () => {
         }
       });
     }
-    // Procesar pagos
-    if (Array.isArray(client.payment)) {
-      client.payment.forEach((pago) => {
-        const fecha = new Date(pago.fecha);
+    // Procesar cobros
+    if (Array.isArray(client.receipt)) {
+      client.receipt.forEach((recibo) => {
+        const fechaCobro = new Date(recibo.fecha);
         if (
-          (!fechaInicio || fecha >= fechaInicio) &&
-          (!fechaFin || fecha <= fechaFin)
+          (!fechaInicio || fechaCobro >= fechaInicio) &&
+          (!fechaFin || fechaCobro <= fechaFin)
         ) {
-          if (inputCodigoCliente == client.codigo) {
+          if (inputCodigoCliente.value == client.codigo) {
             movimientos.push({
-              fecha: formatearFecha(pago.fecha),
-              tipo_comprobante: pago.tipo_comprobante,
-              numero_comprobante: pago.numero_comprobante,
-              observacion: pago.observacion,
-              total: Number(pago.total)
+              fecha: formatearFecha(recibo.fecha),
+              tipo_comprobante: "REC",
+              numero_comprobante: recibo.nro_comprobante,
+              observacion: recibo.observacion,
+              total: Number(recibo.monto)
             });
           }
         }
       });
     }
   });
-  const datosFiltrados = movimientos.sort((a, b) => a.fecha - b.fecha);
+   const datosFiltrados = movimientos.sort((a, b) => {
+    const [diaA, mesA, anioA] = a.fecha.split('/');
+    const [diaB, mesB, anioB] = b.fecha.split('/');
+    const dateA = new Date(`${anioA}-${mesA}-${diaA}`);
+    const dateB = new Date(`${anioB}-${mesB}-${diaB}`);
+    return dateA - dateB;
+  });
   printReport(datosFiltrados);
 };
 const printReport = async (report) => {
   const tiposDebe = ['FA', 'FB', 'FC', 'F', 'T', 'TA', 'TB', 'TC', 'NDA', 'NDB', 'NDC', 'VEN'];
-  const tiposHaber = ['OP', 'NCA', 'NCB', 'NCC'];
+  const tiposHaber = ['REC', 'NCA', 'NCB', 'NCC'];
 
   if (fechaInicio) fechaInicio.setDate(fechaInicio.getDate() + 1);
   if (fechaFin) fechaFin.setDate(fechaFin.getDate() + 1);
