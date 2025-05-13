@@ -1,3 +1,4 @@
+const modal = document.getElementById("categoryModal");
 const productImage = document.getElementById("productImage");
 const productImageInput = document.getElementById("productImageInput");
 const selectPrices = document.getElementById("productPrices");
@@ -51,9 +52,7 @@ const addCategory = async () => {
   }
 };
 const showModal = () => {
-  const modal = document.getElementById("categoryModal");
-  modal.classList.toggle("show");
-  modal.style.display = modal.classList.contains("show") ? "block" : "none";
+  modal.style.display = "block";
 };
 const newProduct = async () => {
   const productData = {
@@ -127,7 +126,7 @@ const newProduct = async () => {
       window.prismaFunctions.showMSG("info", "Prisma", productRes.message);
       document.getElementById("productForm").reset();
       productImage.src = "../assets/sin_imagen.png";
-      selectPrices.innerHTML="";
+      selectPrices.innerHTML = "";
     } else {
       window.prismaFunctions.showMSG(
         "error",
@@ -145,18 +144,24 @@ const newProduct = async () => {
 };
 function addPrice() {
   const title = document.getElementById("priceTitle").value.trim();
-  const value = document.getElementById("priceValue").value.trim();
+  const value = Number(document.getElementById("priceValue").value).toLocaleString("es-AR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   if (title && value) {
     const option = document.createElement("option");
-    option.textContent = `${title} : ${value}`;
+    option.textContent = `${title} : $${value}`;
     option.value = value;
+    option.style.fontSize = "0.7em";
+    option.style.overflowX = "hidden";
+    option.style.padding = "0";
     document.getElementById("productPrices").appendChild(option);
 
     // Cerrar modal y limpiar inputs
     document.getElementById("priceTitle").value = "";
     document.getElementById("priceValue").value = "";
-    new bootstrap.Modal(document.getElementById("priceModal")).hide();
+    modal.style.display = "none";
   }
 }
 function addTax() {
@@ -188,12 +193,12 @@ productImageInput.addEventListener("change", (event) => {
     reader.readAsDataURL(file);
   }
 });
-productControlStock.addEventListener("change", ()=>{
-  if(!productControlStock.checked){
-    initialStock.disabled=true;
-    initialStock.value=0;
-  }else{
-    initialStock.disabled=false;
+productControlStock.addEventListener("change", () => {
+  if (!productControlStock.checked) {
+    initialStock.disabled = true;
+    initialStock.value = 0;
+  } else {
+    initialStock.disabled = false;
   }
 
 })

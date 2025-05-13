@@ -22,7 +22,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Receipt.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false }),
+    (0, typeorm_1.Column)({ type: "date", nullable: false }),
     __metadata("design:type", Date)
 ], Receipt.prototype, "fecha", void 0);
 __decorate([
@@ -36,11 +36,11 @@ __decorate([
 __decorate([
     (0, typeorm_1.OneToMany)(() => Sale_1.Sale, (sale) => sale.receipt),
     __metadata("design:type", Array)
-], Receipt.prototype, "sale", void 0);
+], Receipt.prototype, "facturas", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Client_1.Client, (client) => client.sales),
     __metadata("design:type", Client_1.Client)
-], Receipt.prototype, "client", void 0);
+], Receipt.prototype, "cliente", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => CashManagement_1.CashManagement, (cash) => cash.receipt),
     __metadata("design:type", Array)

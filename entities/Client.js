@@ -53,7 +53,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Client.prototype, "sales", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Receipt_1.Receipt, (rec) => rec.client),
+    (0, typeorm_1.OneToMany)(() => Receipt_1.Receipt, (rec) => rec.cliente),
     __metadata("design:type", Array)
 ], Client.prototype, "receipt", void 0);
 exports.Client = Client = __decorate([

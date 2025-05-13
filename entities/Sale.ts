@@ -29,6 +29,6 @@ export class Sale {
   @OneToMany(() => DetailsSale, (details) => details.sale)
   details: DetailsSale[];
 
-  @ManyToOne(()=> Receipt, (rec) => rec.sale)
+  @ManyToOne(()=> Receipt, (rec) => rec.facturas)
   receipt:Receipt;
 }

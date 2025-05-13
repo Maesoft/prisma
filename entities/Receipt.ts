@@ -8,7 +8,7 @@ export class Receipt {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ nullable: false })
+    @Column({ type: "date", nullable: false })
     fecha: Date;
 
     @Column({ unique: true, nullable: false })
@@ -18,10 +18,10 @@ export class Receipt {
     monto: number;
 
     @OneToMany(() => Sale, (sale) => sale.receipt)
-    sale: Sale[];
+    facturas: Sale[];
 
     @ManyToOne(() => Client, (client) => client.sales)
-    client: Client;
+    cliente: Client;
 
     @ManyToOne(() => CashManagement, (cash) => cash.receipt)
     caja: CashManagement[];

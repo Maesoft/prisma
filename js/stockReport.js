@@ -14,7 +14,13 @@ const loadProducts = async () => {
       window.prismaFunctions.showMSG("error", "Prisma", res.message);
       return;
     }
-    products = res.products;
+
+    const allProducts = res.products;
+    allProducts.forEach((product) => {
+      if (product.controla_stock) {
+        products.push(product)
+      }
+    })
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
@@ -41,7 +47,7 @@ const makeReport = async () => {
           <td class="text-center">${product.stock}</td>
           <td class="text-center">${product.costo}</td>
           <td class="text-center">${(product.costo * product.stock).toFixed(2)}</td>
-          <td class="text-center">${ultMovimiento?.fecha.toLocaleDateString("es-AR") || 'Sin movimientos'}</td>
+          <td class="text-center">${ultMovimiento?.fecha.toLocaleDateString("es-AR") || 'Ninguno.'}</td>
         </tr>`;
       })
       .join("")}
