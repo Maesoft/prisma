@@ -6,6 +6,16 @@ const newCash = async () => {
         window.prismaFunctions.showMSG("error","Prisma","Por favor, complete todos los campos.");
         return;
     }
+    const cashExists = await window.prismaFunctions.getCashes();
+
+    if(cashExists.cashes.find(cash => cash.codigo.toLowerCase() === inputCodigo.value.toLowerCase())) {
+        window.prismaFunctions.showMSG("error","Prisma","Ya existe una caja con ese código.");
+        return;
+    }
+    if (cashExists.cashes.find(cash => cash.nombre.toLowerCase() === inputNombre.value.toLowerCase())) {
+        window.prismaFunctions.showMSG("error", "Prisma", "Ya existe una caja con ese nombre.");
+        return;        
+    }
     const cashData = {
         codigo: inputCodigo.value,
         nombre: inputNombre.value,

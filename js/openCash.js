@@ -1,19 +1,62 @@
+const labelNombreCaja = document.querySelector("#nombreCaja");
+const inputCash = document.querySelector("#searchInput");
+const inputMontoInicial = document.querySelector("#montoInicial");
+const inputFechaHora = document.querySelector("#fechaHora");
+const modal = document.querySelector("#cashSearchModal");
+
 const getCashes = async () => {
+  try {
     const res = await window.prismaFunctions.getCashes();
-    return res.cashes;
-}
+    if (res.success) {
+      return res.cashes;
+    } else {
+      window.prismaFunctions.showMSG("error", "Prisma", res.message);
+    }
+  } catch (error) {
+    window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      "Error al obtener las cajas."
+    );
+    console.error("Error al obtener las cajas:", error);
+  }
+};
+const openCash = async () => {
+  const cashId = cash.id;
+  const cashData = {
+    fechaApertura: inputFechaHora.value,
+    saldo_inicial: inputMontoInicial.value,
+    activa: true,
+  };
+  const res = await window.prismaFunctions.editCash(cashId, cashData);
+  if (res.success) {
+  } else {
+  }
+};
+const loadForm = (cash) => {
+  console.log(cash);
+
+  labelNombreCaja.innerText = cash.nombre;
+  modal.style.display = "none";
+  modal.classList.remove("show", "d-flex", "justify-content-center");
+  inputCash.focus();
+};
 const renderCashesModal = async () => {
-    const cashes = await getCashes();
-    const cashTable = document.querySelector("#cashTable tbody");
-    cashTable.innerHTML = "";
-    cashes.forEach(cash => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${cash.id}</td>
+  const cashes = await getCashes();
+  const cashTable = document.querySelector("#cashTable tbody");
+  cashTable.innerHTML = "";
+  cashes.forEach((cash) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+            <td>${cash.codigo}</td>
             <td>${cash.nombre}</td>
             `;
-        cashTable.appendChild(row);
-    })
-}
+    row.addEventListener("click", () => loadForm(cash));
 
-renderCashesModal();
+    cashTable.appendChild(row);
+  });
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderCashesModal();
+});
