@@ -140,31 +140,34 @@ const renderProductSales = () => {
 
     tablaProductos.appendChild(row);
     const selectPrecio = row.querySelector(".precio-select");
-    console.log(product.precios);
-    console.log(product);
-    
+
     product.precios.sort((a, b) => {
       const strA = String(a.titulo); // Convertimos en string
       const strB = String(b.titulo);
-    
+
       const isANumber = /^\d/.test(strA);
       const isBNumber = /^\d/.test(strB);
-    
-      if (isANumber && !isBNumber) return 1;  // Números van después de letras
+
+      if (isANumber && !isBNumber) return 1; // Números van después de letras
       if (!isANumber && isBNumber) return -1; // Letras van primero
-    
+
       return strA.localeCompare(strB, "es", { numeric: true });
     });
-    
+
     product.precios.forEach((price) => {
       const option = document.createElement("option");
       option.value = price.precio;
-      option.textContent = `${price.titulo} - $ ${price.precio}`;
+      option.textContent = `${price.titulo} - $ ${price.precio.toLocaleString(
+        "es-AR",
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }
+      )}`;
       selectPrecio.appendChild(option);
     });
-    
+
     updateSubTotal({ target: selectPrecio });
-    
   });
 
   // Actualizar totales cuando cambie la cantidad o el precio seleccionado
@@ -396,7 +399,7 @@ const collect = async () => {
         precio_unitario: parseFloat(precioUnitarioSelect.value),
         subtotal: parseFloat(
           row.cells[4].innerText.replace(/\./g, "").replace(",", ".")
-        )
+        ),
       });
     }
     await printSale();
@@ -463,7 +466,9 @@ const printSale = async () => {
   const clientSelect = clients.find((client) => client.id == idClient);
 
   // Aseguramos que el logo tenga el prefijo base64 si es necesario.
-  const logoSrc = logo.startsWith("data:image/") ? logo : `data:image/png;base64,${logo}`;
+  const logoSrc = logo.startsWith("data:image/")
+    ? logo
+    : `data:image/png;base64,${logo}`;
 
   // Función para insertar los detalles de la factura
   const insertSaleDetailRows = (win, isTicket = false) => {
@@ -554,7 +559,9 @@ const printSale = async () => {
         <p>${domicilio}</p>
         <p>Tel: ${telefono}</p>
         <hr>
-        <p class="fw-bold">${tipoComprobante.options[tipoComprobante.selectedIndex].text}</p>
+        <p class="fw-bold">${
+          tipoComprobante.options[tipoComprobante.selectedIndex].text
+        }</p>
         <p>Fecha: ${formatearFecha(fechaVenta.value)}</p>
         <p>No. Comp: ${ptoVta.value}-${nroComp.value}</p>
         <hr>
@@ -574,9 +581,9 @@ const printSale = async () => {
             </tbody>
         </table>
         <hr>
-        <p class="fs-6 fw-bold">Total: $ ${total.toLocaleString("es-AR", { 
-          minimumFractionDigits: 2, 
-          maximumFractionDigits: 2 
+        <p class="fs-6 fw-bold">Total: $ ${total.toLocaleString("es-AR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
         })}</p>
         <hr>
         <p class="mb-1">${observacion.value}</p>
@@ -584,7 +591,7 @@ const printSale = async () => {
     </div>
 </body>
 </html>
-`
+`;
     openAndPrint(htmlContent, 200, 500, true);
   } else {
     htmlContent = `
@@ -617,18 +624,25 @@ const printSale = async () => {
               </div>
               <div class="col-4 text-center">
                   <h1 class="display-6" id="tipo-comprobante">
-                    ${tipoComprobante.options[tipoComprobante.selectedIndex].text}
+                    ${
+                      tipoComprobante.options[tipoComprobante.selectedIndex]
+                        .text
+                    }
                   </h1>
               </div>
               <div class="col-4 text-center">
-                  <p><strong>Fecha:</strong> <span id="fecha-comprobante">${formatearFecha(fechaVenta.value)}</span></p>
+                  <p><strong>Fecha:</strong> <span id="fecha-comprobante">${formatearFecha(
+                    fechaVenta.value
+                  )}</span></p>
                   <p class="mb-0"><strong>No. Comprobante:</strong></p>
                   <p class="mt-0">${ptoVta.value}-${nroComp.value}</p>
               </div>
           </div>
           <div class="row mt-4 border-bottom">
               <div class="col-6">
-                  <p><strong>Razón Social: </strong>${clientSelect.razon_social}</p>
+                  <p><strong>Razón Social: </strong>${
+                    clientSelect.razon_social
+                  }</p>
                   <p><strong>CUIT: </strong>${clientSelect.cuit}</p>
               </div>
               <div class="col-6">
@@ -661,10 +675,13 @@ const printSale = async () => {
           </div>
           <div class="row mt-4">
               <div class="col-12 text-end">
-                  <p class="fs-5"><strong>Total:</strong> <span>$ ${total.toLocaleString("es-AR", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}</span></p>
+                  <p class="fs-5"><strong>Total:</strong> <span>$ ${total.toLocaleString(
+                    "es-AR",
+                    {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }
+                  )}</span></p>
               </div>
           </div>
           <p>${observacion.value}</p>
@@ -798,15 +815,15 @@ inputModalProduct.addEventListener("input", (e) => {
   );
   renderProducts(filteredProducts);
 });
-ptoVta.addEventListener("focusout",()=> {
-  if(ptoVta.value.length < 4){
-      ptoVta.value = ptoVta.value.padStart(4, "0");
+ptoVta.addEventListener("focusout", () => {
+  if (ptoVta.value.length < 4) {
+    ptoVta.value = ptoVta.value.padStart(4, "0");
   }
   nroComp.focus();
 });
-nroComp.addEventListener("focusout",()=> {
-  if(nroComp.value.length < 8){
-      nroComp.value = nroComp.value.padStart(8, "0");
+nroComp.addEventListener("focusout", () => {
+  if (nroComp.value.length < 8) {
+    nroComp.value = nroComp.value.padStart(8, "0");
   }
 });
 btnCobrar.addEventListener("click", collect);

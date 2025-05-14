@@ -62,13 +62,17 @@
                     <div class="row mt-1">
                         <div class="text-center mt-1 col-6">
                             <label for="productPrices">Precios</label>
-                            <select class="form-select w-100 overflow-auto" size="3" id="productPrices"></select>
+                            <select class="form-select w-100" size="3" id="productPrices"
+                                style="height: 96px; overflow: hidden; font-size: 0.7em;" multiple>
+                            </select>
                             <button type="button" class="btn btn-secondary fuente-pequeña mt-1" data-bs-toggle="modal"
                                 data-bs-target="#priceModal">➕ Precio</button>
                         </div>
                         <div class="text-center mt-1 col-6">
                             <label for="productTaxes">Impuestos</label>
-                            <select class="form-select w-100 overflow-auto" size="3" id="productTaxes"></select>
+                            <select class="form-select w-100" size="3" id="productTaxes"
+                                style="height: 96px; overflow: hidden; font-size: 0.7em;">
+                            </select>
                             <button type="button" class="btn btn-secondary fuente-pequeña mt-1" data-bs-toggle="modal"
                                 data-bs-target="#taxModal">➕ Impuesto</button>
                         </div>
@@ -101,8 +105,8 @@
         </div>
     </div>
 </div>
-<div class="modal show" id="productSearchModal" tabindex="-1" aria-labelledby="productSearchModalLabel"
-    aria-hidden="false" style="display: block">
+<div class="modal fade" id="productSearchModal" tabindex="-1" aria-labelledby="productSearchModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-black text-white">
@@ -128,6 +132,42 @@
                         <tbody style="cursor: pointer;"></tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="priceModal" tabindex="-1" aria-labelledby="priceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="priceModalLabel">Agregar Nuevo Precio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-2" id="priceTitle" placeholder="Título del precio">
+                <input type="number" class="form-control" id="priceValue" placeholder="Valor del precio">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-dark" onclick="addPrice()">Agregar Precio</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="taxModal" tabindex="-1" aria-labelledby="taxModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taxModalLabel">Agregar Nuevo Impuesto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-2" id="taxTitle" placeholder="Título del impuesto">
+                <input type="number" class="form-control" id="taxValue" placeholder="Valor del impuesto">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="addTax()">Agregar Impuesto</button>
             </div>
         </div>
     </div>

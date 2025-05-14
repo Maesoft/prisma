@@ -3,6 +3,7 @@ const reportTable = document.querySelector("tbody");
 const total = document.querySelector("#totalStock");
 const fechaEmision = document.querySelector(".fechaEmision");
 let products = [];
+
 const formatearFecha = (fechaISO) => {
   const [anio, mes, dia] = fechaISO.split("-");
   return `${dia}/${mes}/${anio}`;
@@ -14,22 +15,24 @@ const loadProducts = async () => {
       window.prismaFunctions.showMSG("error", "Prisma", res.message);
       return;
     }
-
-    const allProducts = res.products;
-    allProducts.forEach((product) => {
-      if (product.controla_stock) {
-        products.push(product)
-      }
-    })
+    const allProducts = res.products
+      .filter((product) => product.controla_stock) 
+      .map((product) => ({
+        ...product,
+        precios: product.precios?.sort((a, b) => a.precio - b.precio) || [], 
+      }))
+      .sort((a, b) => a.nombre.localeCompare(b.nombre)); 
+    products.push(...allProducts);
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
 };
+
 const makeReport = async () => {
   await loadProducts();
   const totalStock = products.reduce(
     (acumulador, productoActual) =>
-      acumulador + productoActual.costo * productoActual.stock,
+      acumulador + (productoActual.precios[0]?.precio || 0) * productoActual.stock,
     0
   );
 
@@ -45,8 +48,8 @@ const makeReport = async () => {
           <td>${product.codigo}</td>
           <td>${product.nombre}</td>
           <td class="text-center">${product.stock}</td>
-          <td class="text-center">${product.costo}</td>
-          <td class="text-center">${(product.costo * product.stock).toFixed(2)}</td>
+          <td class="text-center">${(product.precios[0]?.precio || 0).toFixed(2)}</td>
+          <td class="text-center">${((product.precios[0]?.precio || 0) * (product.stock)).toFixed(2) || 0}</td>
           <td class="text-center">${ultMovimiento?.fecha.toLocaleDateString("es-AR") || 'Ninguno.'}</td>
         </tr>`;
       })

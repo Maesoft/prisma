@@ -127,8 +127,8 @@ ipcMain.handle("get-payments", async () => {
     const payments = await paymentRepository.find({
       relations: ["proveedor", "facturas", "caja"],
       order: { fecha: "ASC" },
-    });  
-    return { success: true, payments};
+    });
+    return { success: true, payments };
   } catch (error) {
     return { success: false, message: error.message };
   }
@@ -139,8 +139,8 @@ ipcMain.handle("get-receipts", async () => {
     const receipts = await receiptRepository.find({
       relations: ["cliente", "facturas", "caja"],
       order: { fecha: "ASC" },
-    });  
-    return { success: true, receipts};
+    });
+    return { success: true, receipts };
   } catch (error) {
     return { success: false, message: error.message };
   }
@@ -313,7 +313,7 @@ ipcMain.handle("get-clients", async () => {
   try {
     const clientRepository = AppDataSource.getRepository(Client);
     const clients = await clientRepository.find({
-      relations: ["receipt","sales"],
+      relations: ["receipt", "sales"],
     });
     return { success: true, clients };
   } catch (error) {
@@ -432,7 +432,9 @@ ipcMain.handle("delete-product", async (event, id) => {
 ipcMain.handle("get-products", async () => {
   try {
     const productRepository = AppDataSource.getRepository(Product);
-    const products = await productRepository.find({ relations: ["categoria", "precios","stockMovements"] });
+    const products = await productRepository.find({
+      relations: ["categoria", "precios", "stockMovements"],
+    });
     return { success: true, products };
   } catch (error) {
     return { success: false, message: error.message };
@@ -444,6 +446,15 @@ ipcMain.handle("add-price", async (event, priceData) => {
     const newPrice = priceRepository.create(priceData);
     await priceRepository.save(newPrice);
     return { success: true };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("delete-price", async (event, idProduct) => {
+  try {
+    const priceRepository = AppDataSource.getRepository(Price);
+    await priceRepository.delete({ producto: { id: idProduct } });
+    return { success: true, message: "Precio eliminado exitosamente" };
   } catch (error) {
     return { success: false, message: error.message };
   }
@@ -494,7 +505,9 @@ ipcMain.handle("add-detail-sale", async (event, detailData) => {
     return { success: false, message: error.message };
   }
 });
-ipcMain.handle("show-message", async (event, icono, titulo, mensaje, botones, defaultID) => {
+ipcMain.handle(
+  "show-message",
+  async (event, icono, titulo, mensaje, botones, defaultID) => {
     const res = await dialog.showMessageBox({
       type: icono,
       title: titulo,

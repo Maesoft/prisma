@@ -70,16 +70,21 @@ const renderProviders = (arrProviders) => {
     });
 };
 const loadProducts = async () => {
-    try {
-        const res = await window.prismaFunctions.getProducts();
-        if (!res.success) {
-            window.prismaFunctions.showMSG("error", "Error", res.message);
-            return;
-        }
-        products = res.products;
-    } catch (error) {
-        window.prismaFunctions.showMSG("error", "Error", error);
+  try {
+    const res = await window.prismaFunctions.getProducts();
+    if (!res.success) {
+      window.prismaFunctions.showMSG("error", "Error", res.message);
+      return;
     }
+
+    products = res.products.map(product => ({
+      ...product,
+      precios: product.precios?.sort((a, b) => a.precio - b.precio) || [],
+    }));
+    
+  } catch (error) {
+    window.prismaFunctions.showMSG("error", "Error", error);
+  }
 };
 const renderProducts = (arrProducts) => {
     const listProducts = document.getElementById("listProducts");

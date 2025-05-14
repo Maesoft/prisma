@@ -24,7 +24,7 @@ __decorate([
     __metadata("design:type", String)
 ], Price.prototype, "titulo", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)('decimal', { precision: 10, scale: 2 }),
     __metadata("design:type", Number)
 ], Price.prototype, "precio", void 0);
 __decorate([

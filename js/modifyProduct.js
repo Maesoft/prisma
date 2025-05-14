@@ -8,9 +8,10 @@ const inputDesc = document.getElementById("productDescription");
 const selectPrices = document.getElementById("productPrices");
 const productControlStock = document.getElementById("productControlStock");
 const productTax = document.getElementById("productTaxes");
+let productSearchModal;
 
 let products = [];
-let idProduct=0;
+let idProduct = 0;
 
 const renderProducts = (productList) => {
   productsTableBody.innerHTML = "";
@@ -76,18 +77,23 @@ const loadProductIntoForm = (product) => {
   inputStock.value = product.stock;
   inputImage.src = product.imagen;
   inputDesc.innerText = product.descripcion;
+
+  selectPrices.innerHTML = "";
   product.precios.forEach((price) => {
     const option = document.createElement("option");
     option.value = price.precio;
-    option.textContent = `${price.titulo} - $ ${price.precio}`;
+    option.textContent = `${price.titulo} : $${price.precio.toLocaleString(
+      "es-AR",
+      { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+    )} ❌`;
     selectPrices.appendChild(option);
   });
-  productControlStock.checked= product.controla_stock;
-  
 
-  document.getElementById("productSearchModal").style.display = "none";
+  productControlStock.checked = product.controla_stock;
+  productSearchModal.hide();
 };
 const clearFields = () => {
+  loadProducts();
   inputCode.value = "";
   inputName.value = "";
   selectCategory.value = "";
@@ -95,8 +101,9 @@ const clearFields = () => {
   inputImage.src = "../assets/sin_imagen.png";
   inputDesc.innerText = "";
   document.getElementById("productSearchModal").style.display = "block";
-  selectPrices.innerHTML="";
-  productTax.innerHTML="";
+  selectPrices.innerHTML = "";
+  productTax.innerHTML = "";
+  productSearchModal.show();
 };
 const addCategory = async () => {
   const newCategoryName = document
@@ -148,20 +155,21 @@ const saveProduct = async () => {
       descripcion: inputDesc.value,
       categoria: selectCategory.value,
       imagen: inputImage.src,
-      
     };
+
     const res = await window.prismaFunctions.editProduct(
       idProduct,
       productData
     );
+
     if (res.success) {
+      await savePrices();
+      clearFields();
       window.prismaFunctions.showMSG(
         "info",
         "Prisma",
         "Producto modificado correctamente."
       );
-      loadProducts();
-      clearFields();
     } else {
       window.prismaFunctions.showMSG("error", "Prisma", res.message);
     }
@@ -169,23 +177,38 @@ const saveProduct = async () => {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
 };
-function addPrice() {
-  const title = document.getElementById("priceTitle").value.trim();
-  const value = document.getElementById("priceValue").value.trim();
+const savePrices = async () => {
+  const resDel = await window.prismaFunctions.deletePrice(idProduct);
 
+  if (resDel.success) {
+    const prices = Array.from(selectPrices.options).map((option) => ({
+      producto: {id: idProduct},
+      titulo: option.textContent.split(" : ")[0],
+      precio: parseFloat(option.value),
+    }));
+    const resAdd = await window.prismaFunctions.addPrice(prices);
+    if (!resAdd.success)window.prismaFunctions.showMSG("error", "Prisma", res.message);
+} else {
+    window.prismaFunctions.showMSG("error", "Prisma", res.message);
+  }
+};
+const addPrice = () => {
+  const title = document.getElementById("priceTitle").value.trim();
+  const valueNumber = Number(document.getElementById("priceValue").value);
+  const value = valueNumber.toLocaleString("es-AR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
   if (title && value) {
     const option = document.createElement("option");
-    option.textContent = `${title} : ${value}`;
-    option.value = value;
-    document.getElementById("productPrices").appendChild(option);
-
-    // Cerrar modal y limpiar inputs
+    option.textContent = `${title} : $${value}`;
+    option.value = valueNumber;
+    selectPrices.appendChild(option);
     document.getElementById("priceTitle").value = "";
     document.getElementById("priceValue").value = "";
-    new bootstrap.Modal(document.getElementById("priceModal")).hide();
   }
-}
-function addTax() {
+};
+const addTax = () => {
   const title = document.getElementById("taxTitle").value.trim();
   const value = document.getElementById("taxValue").value.trim();
 
@@ -193,22 +216,21 @@ function addTax() {
     const option = document.createElement("option");
     option.textContent = `${title} : ${value}`;
     option.value = value;
-    document.getElementById("productTaxes").appendChild(option);
-
-    // Cerrar modal y limpiar inputs
+    productTax.appendChild(option);
     document.getElementById("taxTitle").value = "";
     document.getElementById("taxValue").value = "";
-    new bootstrap.Modal(document.getElementById("taxModal")).hide();
   }
-}
-loadProducts();
-loadCategories();
-
-document
-  .querySelector('[data-bs-target="#categoryModal"]')
-  .addEventListener("click", function () {
-    const categoryModal = new bootstrap.Modal(
-      document.getElementById("categoryModal")
-    );
-    categoryModal.show();
-  });
+};
+document.addEventListener("DOMContentLoaded", function () {
+  productSearchModal = new bootstrap.Modal(
+    document.getElementById("productSearchModal")
+  );
+  productSearchModal.show();
+  loadProducts();
+  loadCategories();
+});
+selectPrices.addEventListener("click", (e) => {
+  if (e.target.tagName === "OPTION") {
+    e.target.remove();
+  }
+});

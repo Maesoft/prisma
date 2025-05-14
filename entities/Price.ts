@@ -9,7 +9,7 @@ export class Price{
     @Column()
     titulo:string
 
-    @Column()
+    @Column('decimal', { precision: 10, scale: 2 })
     precio:number
     
     @ManyToOne(()=>Product,(product)=>product.precios,{onDelete: "CASCADE"})

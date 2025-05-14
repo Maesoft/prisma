@@ -27,7 +27,9 @@ const loadCategories = async () => {
   }
 };
 const addCategory = async () => {
-  const newCategoryName = document.getElementById("newCategoryName").value.trim();
+  const newCategoryName = document
+    .getElementById("newCategoryName")
+    .value.trim();
   if (!newCategoryName) {
     window.prismaFunctions.showMSG(
       "info",
@@ -73,14 +75,13 @@ const newProduct = async () => {
     );
     return;
   }
-
   try {
     const productRes = await window.prismaFunctions.addProduct(productData);
     if (productRes.success) {
-      Array.from(selectPrices.options).forEach(async (price, index) => {
+      Array.from(selectPrices.options).forEach(async (price) => {
         const priceData = {
           titulo: price.innerText.split(":")[0].trim(),
-          precio: parseFloat(price.innerText.split(":")[1].trim()),
+          precio: parseFloat(price.value),
           producto: { id: productRes.productId },
         };
         try {
@@ -93,7 +94,6 @@ const newProduct = async () => {
           );
         }
       });
-
       if (productData.stock > 0) {
         const stockData = {
           producto: { id: productRes.productId },
@@ -144,7 +144,10 @@ const newProduct = async () => {
 };
 function addPrice() {
   const title = document.getElementById("priceTitle").value.trim();
-  const value = Number(document.getElementById("priceValue").value).toLocaleString("es-AR", {
+  const valueNumber = Number(document.getElementById("priceValue").value);
+  const value = Number(
+    document.getElementById("priceValue").value
+  ).toLocaleString("es-AR", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
@@ -152,7 +155,7 @@ function addPrice() {
   if (title && value) {
     const option = document.createElement("option");
     option.textContent = `${title} : $${value}`;
-    option.value = value;
+    option.value = valueNumber;
     option.style.fontSize = "0.7em";
     option.style.overflowX = "hidden";
     option.style.padding = "0";
@@ -200,6 +203,5 @@ productControlStock.addEventListener("change", () => {
   } else {
     initialStock.disabled = false;
   }
-
-})
+});
 window.addEventListener("DOMContentLoaded", loadCategories);
