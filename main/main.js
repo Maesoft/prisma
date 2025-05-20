@@ -267,7 +267,7 @@ ipcMain.handle("edit-provider", async (event, id, providerData) => {
 
     return {
       success: true,
-      message: "Caja editada exitosamente",
+      message: "Proveedor editado exitosamente",
       productId: editProvider.id,
     };
   } catch (error) {

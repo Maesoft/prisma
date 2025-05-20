@@ -18,6 +18,13 @@ const loadClients = async () => {
     clients = response.clients;
     renderClients(clients);
   } catch (error) {
+    window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      "Error al cargar los clientes",
+      ["Aceptar"],
+      0
+    );
     console.error("Error al obtener los clientes:", error);
   }
 };

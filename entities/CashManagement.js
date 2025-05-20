@@ -29,11 +29,11 @@ __decorate([
     __metadata("design:type", String)
 ], CashManagement.prototype, "nombre", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'datetime', nullable: true }),
+    (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
     __metadata("design:type", Date)
 ], CashManagement.prototype, "fecha_apertura", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'datetime', nullable: true }),
+    (0, typeorm_1.Column)({ type: 'timestamp', nullable: true }),
     __metadata("design:type", Date)
 ], CashManagement.prototype, "fecha_cierre", void 0);
 __decorate([

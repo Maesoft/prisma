@@ -62,11 +62,8 @@ const menuTemplate = [
       { label: 'Ingresar Compra', click: () => { windowManager.createWindow("newPurchase", 800, 600, true, false) } },
       { label: 'Eliminar Compra', click: () => { } },
       { type: 'separator' },
-      { label: 'Ingresar Gasto', click: () => { } },
-      { label: 'Eliminar Gasto', click: () => { } },
-      { type: 'separator' },
       { label: 'Resumen de Compras', click: () => { } },
-      { label: 'Resumen de Gastos', click: () => { } }
+      { label: 'Facturas', click: () => { } }
     ]
   },
   {
@@ -82,15 +79,14 @@ const menuTemplate = [
   {
     label: 'Caja',
     submenu: [
-      { label: 'Nueva Caja', click: () => { windowManager.createWindow("newCash", 540, 360, true, false) } },
-      { label: 'Modificar Caja', click: () => { windowManager.createWindow("modifyCash", 540, 360, true, false) } },
-      { label: 'Eliminar Caja', click: () => { windowManager.createWindow("openCash", 540, 360, true, false) } },
+      { label: 'Orden de Pago', click: () => { windowManager.createWindow("newPayment", 640,550,true,false) } },
+      { label: 'Recibo', click: () => { windowManager.createWindow("newReceipt", 640,550,true,false) } },
       { type: 'separator' },
       { label: 'Apertura de Caja', click: () => { windowManager.createWindow("openCash", 540, 360, true, false) } },
       { label: 'Cierre de Caja', click: () => { } },
       { type: 'separator' },
-      { label: 'Orden de Pago', click: () => { windowManager.createWindow("newPayment", 640,550,true,false) } },
-      { label: 'Recibo', click: () => { windowManager.createWindow("newReceipt", 640,550,true,false) } },
+      { label: 'Nueva Caja', click: () => { windowManager.createWindow("newCash", 540, 360, true, false) } },
+      { label: 'Eliminar Caja', click: () => { windowManager.createWindow("openCash", 540, 360, true, false) } },
       { type: 'separator' },
       { label: 'Resumen de Caja', click: () => { } },
       { label: 'Consulta de Saldo', click: () => { } },

@@ -11,7 +11,7 @@ const loadClients = async () => {
     allClients = res.clients;
     renderClients(allClients);
   } catch (error) {
-    console.log(error);
+      window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
 };
 const renderClients = (arrClients) => {
@@ -72,9 +72,18 @@ const updateClient = async () => {
       idClient,
       clientData
     );
-    console.log(res);
+    if (!res.success) {
+      window.prismaFunctions.showMSG("error", "Prisma", res.message);
+      return;
+    }else {
+      window.prismaFunctions.showMSG(
+        "success",
+        "Prisma",
+        "Cliente actualizado correctamente."
+      );
+    }
   } catch (error) {
-    console.log(error);
+    window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
 };
 const searchClient = async () => {

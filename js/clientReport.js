@@ -70,7 +70,6 @@ const makeReport = async () => {
     : null;
 
   const movimientos = [];
-  console.log(clients);
   
   clients.forEach((client) => {
     // Procesar ventas

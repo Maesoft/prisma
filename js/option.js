@@ -27,7 +27,6 @@ const loadData = async () => {
       );
       return;
     }
-    console.log(document.getElementById("logoEmpresa"));
 
     const { nombre, cuit, domicilio, telefono, logo, regimen } = res.options;
     document.getElementById("nombreEmpresa").value = nombre;

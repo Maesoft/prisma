@@ -18,6 +18,13 @@ const loadProducts = async () => {
     products = response.products;
     renderProducts(products);
   } catch (error) {
+    window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      "Error al cargar los articulos",
+      ["Aceptar"],
+      0
+    );
     console.error("Error al obtener los articulos:", error);
   }
 };

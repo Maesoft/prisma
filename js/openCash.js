@@ -3,6 +3,7 @@ const inputCash = document.querySelector("#searchInput");
 const inputMontoInicial = document.querySelector("#montoInicial");
 const inputFechaHora = document.querySelector("#fechaHora");
 const modal = document.querySelector("#cashSearchModal");
+let cashId = null;
 
 const getCashes = async () => {
   try {
@@ -22,9 +23,8 @@ const getCashes = async () => {
   }
 };
 const openCash = async () => {
-  const cashId = cash.id;
   const cashData = {
-    fechaApertura: inputFechaHora.value,
+    fecha_apertura: new Date(inputFechaHora.value),
     saldo_inicial: inputMontoInicial.value,
     activa: true,
   };
@@ -34,9 +34,11 @@ const openCash = async () => {
   }
 };
 const loadForm = (cash) => {
-  console.log(cash);
-
+  cashId = cash.id;
   labelNombreCaja.innerText = cash.nombre;
+  inputFechaHora.value = new Date().toLocaleString("es-AR", {
+    timeZone: "America/Argentina/Buenos_Aires",
+  });
   modal.style.display = "none";
   modal.classList.remove("show", "d-flex", "justify-content-center");
   inputCash.focus();
@@ -46,6 +48,9 @@ const renderCashesModal = async () => {
   const cashTable = document.querySelector("#cashTable tbody");
   cashTable.innerHTML = "";
   cashes.forEach((cash) => {
+    if (cash.activa) {
+      return;
+    }
     const row = document.createElement("tr");
     row.innerHTML = `
             <td>${cash.codigo}</td>
@@ -56,7 +61,6 @@ const renderCashesModal = async () => {
     cashTable.appendChild(row);
   });
 };
-
 document.addEventListener("DOMContentLoaded", () => {
   renderCashesModal();
 });
