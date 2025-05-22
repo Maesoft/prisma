@@ -5,6 +5,20 @@ const inputFechaHora = document.querySelector("#fechaHora");
 const modal = document.querySelector("#cashSearchModal");
 let cashId = null;
 
+const formatDateAndTime = () => {
+  const now = new Date();
+
+  const pad = (n) => n.toString().padStart(2, "0");
+
+  const fecha = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
+    now.getDate()
+  )}`;
+  const hora = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(
+    now.getSeconds()
+  )}`;
+
+  return `${fecha} ${hora}`; // formato YYYY-MM-DD HH:mm:ss
+};
 const getCashes = async () => {
   try {
     const res = await window.prismaFunctions.getCashes();
@@ -24,21 +38,37 @@ const getCashes = async () => {
 };
 const openCash = async () => {
   const cashData = {
-    fecha_apertura: new Date(inputFechaHora.value),
-    saldo_inicial: inputMontoInicial.value,
+    fecha_apertura: formatDateAndTime(),
+    saldo_inicial: parseFloat(inputMontoInicial.value) | 0,
     activa: true,
   };
+
   const res = await window.prismaFunctions.editCash(cashId, cashData);
   if (res.success) {
+    window.prismaFunctions.showMSG(
+      "info",
+      "Prisma",
+      `Caja abierta correctamente.`
+    );
+    inputMontoInicial.value = "";
+    inputFechaHora.value = "";
+    labelNombreCaja.innerText = "";
+    modal.style.display = "block";
+    modal.classList.add("show", "d-flex", "justify-content-center");
+    inputCash.focus();
+    renderCashesModal();
   } else {
+    window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      `Error al abrir la caja: ${res.message}`
+    );
   }
 };
 const loadForm = (cash) => {
   cashId = cash.id;
   labelNombreCaja.innerText = cash.nombre;
-  inputFechaHora.value = new Date().toLocaleString("es-AR", {
-    timeZone: "America/Argentina/Buenos_Aires",
-  });
+  inputFechaHora.value = formatDateAndTime();
   modal.style.display = "none";
   modal.classList.remove("show", "d-flex", "justify-content-center");
   inputCash.focus();
