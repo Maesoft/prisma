@@ -26,7 +26,7 @@ export class CashManagement {
     @Column({ type: 'decimal', precision: 15, scale: 2, nullable: true })
     saldo_final: number;
 
-    @Column({default: false})
+    @Column({ default: false })
     activa: boolean;
 
     @OneToMany(() => Payment, (pay) => pay.caja)

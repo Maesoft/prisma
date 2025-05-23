@@ -3,7 +3,22 @@ const inputCash = document.querySelector("#searchInput");
 const inputMontoInicial = document.querySelector("#montoInicial");
 const inputFechaHora = document.querySelector("#fechaHora");
 const modal = document.querySelector("#cashSearchModal");
+let cashId = null;
 
+const formatDateAndTime = () => {
+  const now = new Date();
+
+  const pad = (n) => n.toString().padStart(2, "0");
+
+  const fecha = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
+    now.getDate()
+  )}`;
+  const hora = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(
+    now.getSeconds()
+  )}`;
+
+  return `${fecha} ${hora}`; // formato YYYY-MM-DD HH:mm:ss
+};
 const getCashes = async () => {
   try {
     const res = await window.prismaFunctions.getCashes();
@@ -22,21 +37,38 @@ const getCashes = async () => {
   }
 };
 const openCash = async () => {
-  const cashId = cash.id;
   const cashData = {
-    fechaApertura: inputFechaHora.value,
-    saldo_inicial: inputMontoInicial.value,
+    fecha_apertura: formatDateAndTime(),
+    saldo_inicial: parseFloat(inputMontoInicial.value) | 0,
     activa: true,
   };
+
   const res = await window.prismaFunctions.editCash(cashId, cashData);
   if (res.success) {
+    window.prismaFunctions.showMSG(
+      "info",
+      "Prisma",
+      `Caja abierta correctamente.`
+    );
+    inputMontoInicial.value = "";
+    inputFechaHora.value = "";
+    labelNombreCaja.innerText = "";
+    modal.style.display = "block";
+    modal.classList.add("show", "d-flex", "justify-content-center");
+    inputCash.focus();
+    renderCashesModal();
   } else {
+    window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      `Error al abrir la caja: ${res.message}`
+    );
   }
 };
 const loadForm = (cash) => {
-  console.log(cash);
-
+  cashId = cash.id;
   labelNombreCaja.innerText = cash.nombre;
+  inputFechaHora.value = formatDateAndTime();
   modal.style.display = "none";
   modal.classList.remove("show", "d-flex", "justify-content-center");
   inputCash.focus();
@@ -46,6 +78,9 @@ const renderCashesModal = async () => {
   const cashTable = document.querySelector("#cashTable tbody");
   cashTable.innerHTML = "";
   cashes.forEach((cash) => {
+    if (cash.activa) {
+      return;
+    }
     const row = document.createElement("tr");
     row.innerHTML = `
             <td>${cash.codigo}</td>
@@ -55,7 +90,6 @@ const renderCashesModal = async () => {
     cashTable.appendChild(row);
   });
 };
-
 document.addEventListener("DOMContentLoaded", () => {
   renderCashesModal();
   inputFechaHora.value = new Date().toISOString().slice(0, 16);

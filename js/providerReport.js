@@ -19,7 +19,6 @@ const loadProviders = async () => {
       return;
     }
     providers = res.providers;
-    console.log(providers);
     
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
