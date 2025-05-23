@@ -52,11 +52,11 @@ const renderCashesModal = async () => {
             <td>${cash.nombre}</td>
             `;
     row.addEventListener("click", () => loadForm(cash));
-
     cashTable.appendChild(row);
   });
 };
 
 document.addEventListener("DOMContentLoaded", () => {
   renderCashesModal();
+  inputFechaHora.value = new Date().toISOString().slice(0, 16);
 });
