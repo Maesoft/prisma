@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script defer src="../js/searchInvoice.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="d-flex justify-content-between bg-black text-white">
+        <h5 class="modal-title" id="invoiceSearchModalLabel">
+            Buscar Factura
+        </h5>
+        <button type="button" class="btn-close bg-secondary w-2" onclick="window.close()"></button>
+    </div>
+    <div class="form-group p-4">
+        <input type="text" class="form-control bg-secondary" id="inputModalInvoices" tabindex="1"
+            oninput="searchInvoice()" />
+    </div>
+
+    <table class="table text-center" style="cursor: default;">
+        <thead>
+            <colgroup>
+                <col style="width: 17%">
+                <col style="width: 34%">
+                <col style="width: 29%">
+                <col style="width: 20%">
+            </colgroup>
+            <tr>
+                <th>Fecha</th>
+                <th>Razon Social</th>
+                <th>Comprobante</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody id="listInvoices" style="cursor: pointer;">
+        </tbody>
+    </table>
+    </div>
+</body>
+
+</html>
