@@ -694,7 +694,6 @@ const printSale = async () => {
 };
 const updateStock = () => {
   productsSales.forEach(async (product) => {
-    console.log(product);
 
     if (product.controla_stock) {
       const productData = {

@@ -11,7 +11,7 @@ const loadProviders = async () => {
     allProviders = res.providers;
     renderProviders(allProviders);
   } catch (error) {
-    console.log(error);
+    window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
 };
 const renderProviders = (arrProviders) => {
@@ -72,9 +72,8 @@ const updateProvider = async () => {
       idProvider,
       providerData
     );
-    console.log(res);
   } catch (error) {
-    console.log(error);
+    window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
 };
 const searchProvider = async () => {

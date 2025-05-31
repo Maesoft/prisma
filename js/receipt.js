@@ -53,7 +53,6 @@ const renderClients = (arrClients) => {
 };
 const getLastReceipt = async () => {
   const resReceipts = await window.prismaFunctions.getReceipts();
-  console.log(resReceipts);
   
   if (!resReceipts.receipts || resReceipts.receipts.length === 0) {
     orderNumber.value = "00000001";

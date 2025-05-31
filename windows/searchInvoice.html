@@ -6,19 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <script defer src="../js/searchInvoice.js"></script>
-    <title>Document</title>
+    <title>Buscar Factura</title>
 </head>
 
 <body>
-    <div class="d-flex justify-content-between bg-black text-white">
-        <h5 class="modal-title" id="invoiceSearchModalLabel">
-            Buscar Factura
-        </h5>
-        <button type="button" class="btn-close bg-secondary w-2" onclick="window.close()"></button>
-    </div>
     <div class="form-group p-4">
-        <input type="text" class="form-control bg-secondary" id="inputModalInvoices" tabindex="1"
-            oninput="searchInvoice()" />
+        <input type="text" class="form-control bg-secondary" id="inputModalInvoices" tabindex="1"/>
     </div>
 
     <table class="table text-center" style="cursor: default;">

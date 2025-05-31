@@ -115,7 +115,6 @@ const renderProducts = (arrProducts) => {
 };
 const renderProductPurchase = () => {
   tablaProductos.innerHTML = "";
-  console.log(productsPurchase);
   productsPurchase.forEach((product, index) => {
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -136,10 +135,13 @@ const renderProductPurchase = () => {
     }" min="0"/>
       </td>
       <td class="total-cell">
-      ${((product.precios?.[0]?.precio ?? 0) * product.cantidad).toLocaleString("es-AR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}</td>
+      ${((product.precios?.[0]?.precio ?? 0) * product.cantidad).toLocaleString(
+        "es-AR",
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }
+      )}</td>
       <td><button class="btn btn-remove" data-index="${index}">✖</button></td>
     `;
 
@@ -252,8 +254,6 @@ const addProductToPurchase = (product) => {
     existingProduct.total =
       existingProduct.cantidad * existingProduct.precios[0].precio;
   } else {
-    console.log(product);
-    
     productsPurchase.push({
       id: product.id,
       codigo: product.codigo,
@@ -262,7 +262,7 @@ const addProductToPurchase = (product) => {
       stock: product.stock,
       cantidad: 1,
       precios: product.precios?.[0]?.precio ?? 0,
-      total:  product.precios?.[0]?.precio ?? 0,
+      total: product.precios?.[0]?.precio ?? 0,
     });
   }
   renderProductPurchase();

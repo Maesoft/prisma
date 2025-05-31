@@ -73,7 +73,7 @@ const menuTemplate = [
       { label: 'Eliminar Venta', click: () => {  } },
       { type: 'separator' },
       { label: 'Informe de Ventas', click: () => {windowManager.createWindow("saleReport", 700, 520, false, false) } },
-      { label: 'Facturas', click: () => {windowManager.createWindow("searchInvoice", 640, 480, false, true) } },
+      { label: 'Facturas', click: () => {windowManager.createWindow("searchInvoice", 640, 480, true, true) } },
     ]
   },
   {

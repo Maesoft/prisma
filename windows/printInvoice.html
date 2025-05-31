@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <script defer src="../js/bootstrap.min.js"></script>
+    <script defer src="../js/printInvoice.js"></script>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+        }
+
+        .full-width-container {
+            width: 100%;
+            max-width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container full-width-container my-4">
+        <img alt="Logo de la empresa" class="img-fluid" id="logo-empresa" style="width:50px">
+        <div class="row border-bottom pb-3">
+            <div class="col-4">
+                <h3 class="mb-0 mt-0" id="nombre-empresa"></h3>
+                <p class="mb-0 mt-0" id="cuit-empresa"></p>
+                <p class="mb-0 mt-0" id="domicilio-empresa"></p>
+                <p class="mb-0 mt-0" id="telefono-empresa"></p>
+            </div>
+            <div class="col-4 text-center">
+                <h1 class="display-6" id="tipo-comprobante"></h1>
+            </div>
+            <div class="col-4 text-center">
+                <p><strong>Fecha:</strong> <span id="fecha-comprobante"></span></p>
+                <p class="mb-0"><strong>No. Comprobante:</strong></p>
+                <p class="mt-0" id="numero-comprobante"></p>
+            </div>
+        </div>
+        <div class="row mt-4 border-bottom">
+            <div class="col-6">
+                <p><strong>Razón Social: </strong><span id="nombre-cliente"></span></p>
+                <p><strong>CUIT: </strong><span id="cuit-cliente"></span></p>
+            </div>
+            <div class="col-6">
+                <p><strong>Teléfono: </strong><span id="telefono-cliente"></span></p>
+                <p><strong>Domicilio: </strong><span id="domicilio-cliente"></span></p>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <table class="table text-center table-bordered">
+                    <colgroup>
+                        <col style="width: 5%">
+                        <col style="width: 55%">
+                        <col style="width: 20%">
+                        <col style="width: 20%">
+                    </colgroup>
+                    <thead class="table-light">
+                        <tr>
+                            <th>Cantidad</th>
+                            <th>Descripción</th>
+                            <th>Precio Unitario</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detalle-factura">
+                        <!-- Se insertarán los productos -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12 text-end">
+                <p class="fs-5"><strong>Total:</strong> <span id="total"></span></p>
+            </div>
+        </div>
+        <p id="observacion"></p>
+    </div>
+</body>
+</html>
