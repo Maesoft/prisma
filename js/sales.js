@@ -12,7 +12,9 @@ const fechaVenta = document.getElementById("fechaVenta");
 const fechaActual = new Date().toISOString().split("T")[0];
 const codigoProducto = document.getElementById("codigoProducto");
 const btnCobrar = document.getElementById("btnCobrar");
-const totalDisplay = document.getElementById("total");
+const subtotalDisplay = document.getElementById("subtotal-display");
+const totalDisplay = document.getElementById("total-display");
+const impuestosDisplay = document.getElementById("impuestos-display");
 
 let total = 0;
 let idClient = 0;
@@ -113,78 +115,80 @@ const renderProductSales = () => {
   tablaProductos.innerHTML = "";
 
   productsSales.forEach((product, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td class="codigo">${product.codigo}</td>
-      <td>${product.nombre}</td>
-      <td>
-        <input 
-          type="number" 
-          value="${product.cantidad}" 
-          min="1" 
-          max="${product.stock}"
-          data-index="${index}" 
-          class="cantidad-input h-25 w-50"
-        />
-      </td>
-      <td>
-        <select class="precio-select" data-index="${index}">
-          
-        </select>
-      </td>
-      <td class="total-cell">
-      
-      </td>
-      <td><button class="btn btn-remove" data-index="${index}">✖</button></td>
-    `;
-
+    const row = createProductRow(product, index);
     tablaProductos.appendChild(row);
-    const selectPrecio = row.querySelector(".precio-select");
-
-    product.precios.sort((a, b) => {
-      const strA = String(a.titulo); // Convertimos en string
-      const strB = String(b.titulo);
-
-      const isANumber = /^\d/.test(strA);
-      const isBNumber = /^\d/.test(strB);
-
-      if (isANumber && !isBNumber) return 1; // Números van después de letras
-      if (!isANumber && isBNumber) return -1; // Letras van primero
-
-      return strA.localeCompare(strB, "es", { numeric: true });
-    });
-
-    product.precios.forEach((price) => {
-      const option = document.createElement("option");
-      option.value = price.precio;
-      option.textContent = `${price.titulo} - $ ${price.precio.toLocaleString(
-        "es-AR",
-        {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }
-      )}`;
-      selectPrecio.appendChild(option);
-    });
-
-    updateSubTotal({ target: selectPrecio });
   });
 
-  // Actualizar totales cuando cambie la cantidad o el precio seleccionado
-  const cantidadInputs = document.querySelectorAll(".cantidad-input");
-  const precioSelects = document.querySelectorAll(".precio-select");
+  attachEventListeners();
+  calculateTotal();
+};
+const createProductRow = (product, index) => {
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td class="codigo">${product.codigo}</td>
+    <td>${product.nombre}</td>
+    <td>
+      <input 
+        type="number" 
+        value="${product.cantidad}" 
+        min="1" 
+        max="${product.stock}" 
+        data-index="${index}" 
+        class="cantidad-input h-25 w-50"
+      />
+    </td>
+    <td>
+      <select class="precio-select" data-index="${index}">
+        ${getSortedPriceOptions(product.precios)}
+      </select>
+    </td>
+    <td class="total-cell"></td>
+    <td><button class="btn btn-remove" data-index="${index}">✖</button></td>
+  `;
 
-  cantidadInputs.forEach((input) => {
+  const selectPrecio = row.querySelector(".precio-select");
+  updateSubTotal({ target: selectPrecio });
+
+  return row;
+};
+const getSortedPriceOptions = (precios) => {
+  const sorted = [...precios].sort((a, b) => {
+    const strA = String(a.titulo);
+    const strB = String(b.titulo);
+
+    const isANumber = /^\d/.test(strA);
+    const isBNumber = /^\d/.test(strB);
+
+    if (isANumber && !isBNumber) return 1;
+    if (!isANumber && isBNumber) return -1;
+
+    return strA.localeCompare(strB, "es", { numeric: true });
+  });
+
+  return sorted
+    .map(
+      (price) => `
+      <option value="${price.precio}">
+        ${price.titulo} - $ ${price.precio.toLocaleString("es-AR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}
+      </option>
+    `
+    )
+    .join("");
+};
+const attachEventListeners = () => {
+  document.querySelectorAll(".cantidad-input").forEach((input) => {
     input.addEventListener("input", updateSubTotal);
   });
 
-  precioSelects.forEach((select) => {
+  document.querySelectorAll(".precio-select").forEach((select) => {
     select.addEventListener("change", updateSubTotal);
     select.addEventListener("contextmenu", replaceSelect);
   });
-  // Escuchar eventos en boton eliminar
-  const btnsDelete = document.querySelectorAll(".btn-remove");
-  btnsDelete.forEach((btn) => {
+
+  document.querySelectorAll(".btn-remove").forEach((btn) => {
     btn.addEventListener("click", deleteItem);
   });
 };
@@ -284,90 +288,151 @@ const updateSubTotal = (event) => {
 };
 const calculateTotal = () => {
   const totalCells = document.querySelectorAll(".total-cell");
-  total = 0;
+  let subtotal = 0;
 
   totalCells.forEach((cell) => {
-    const subtotal =
+    const valor =
       parseFloat(cell.textContent.replace(/\./g, "").replace(",", ".")) || 0;
-    total += subtotal;
+    subtotal += valor;
   });
 
-  if (totalDisplay) {
-    totalDisplay.textContent = total.toLocaleString("es-AR", {
+  const impuestos = calculateImpuestos();
+
+  if (subtotalDisplay) {
+    subtotalDisplay.textContent = ` $ ${subtotal.toLocaleString("es-AR", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
+    })}`;
+  }
+
+  total = subtotal + impuestos;
+
+  if (totalDisplay) {
+    totalDisplay.textContent = ` $ ${total.toLocaleString("es-AR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+  })}`;
+  }
+};
+const calculateImpuestos = () => {
+  const impuestosAgrupados = [];
+
+  productsSales.forEach((product, index) => {
+    const cantidad = product.cantidad || 0;
+    const precioUnitario = parseFloat(
+      document.querySelectorAll(".precio-select")[index]?.value || 0
+    );
+    const subtotal = cantidad * precioUnitario;
+
+    if (Array.isArray(product.impuestos)) {
+      product.impuestos.forEach((tax) => {
+        const clave = `${tax.titulo} ${tax.porcentaje}%`;
+
+        if (!impuestosAgrupados[clave]) {
+          impuestosAgrupados[clave] = 0;
+        }
+
+        impuestosAgrupados[clave] += (subtotal * tax.porcentaje) / 100;
+      });
+    }
+  });
+
+  if (impuestosDisplay) {
+    impuestosDisplay.innerHTML = "";
+    Object.entries(impuestosAgrupados).forEach(([nombre, valor]) => {
+      const div = document.createElement("div");
+      div.innerHTML = `<strong>${nombre}:</strong> $ ${valor.toLocaleString("es-AR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`;
+      impuestosDisplay.appendChild(div);
     });
   }
+  return Object.values(impuestosAgrupados).reduce((acc, val) => acc + val, 0);
 };
 const addProductToSale = (product) => {
   const existingProduct = productsSales.find(
-    (item) => item.codigo === product.codigo
+    (p) => p.codigo === product.codigo
   );
+  const price = product.precios?.[0]?.precio || product.precio || 0;
+
   if (product.controla_stock) {
-    if (product.stock > 0) {
-      if (existingProduct) {
-        if (existingProduct.cantidad < existingProduct.stock) {
-          existingProduct.cantidad += 1;
-          existingProduct.total =
-            existingProduct.cantidad * existingProduct.precios[0].precio;
-        } else {
-          window.prismaFunctions.showMSG(
-            "warning",
-            "Stock Insuficiente",
-            `No puedes agregar más de ${product.stock} unidades de ${product.nombre}.`
-          );
-          return;
-        }
-      } else {
-        productsSales.push({
-          id: product.id,
-          codigo: product.codigo,
-          nombre: product.nombre,
-          controla_stock: product.controla_stock,
-          stock: product.stock,
-          cantidad: 1,
-          precios: product.precios,
-          total: product.precios[0].precio,
-        });
-      }
-    } else {
-      window.prismaFunctions.showMSG(
+    if (product.stock <= 0) {
+      return window.prismaFunctions.showMSG(
         "info",
         "Stock Faltante",
         `El producto ${product.nombre} no tiene stock suficiente.`
       );
-      return;
+    }
+
+    if (existingProduct) {
+      if (existingProduct.cantidad >= existingProduct.stock) {
+        return window.prismaFunctions.showMSG(
+          "warning",
+          "Prisma",
+          `Hay solo ${product.stock} unidades de el producto ${product.nombre}.`
+        );
+      }
+      updateExistingProduct(existingProduct, price);
+    } else {
+      addNewProduct(product, price);
     }
   } else {
-    // Si el producto no controla stock, se agrega sin restricciones
+    // Producto sin control de stock
     if (existingProduct) {
-      existingProduct.cantidad += 1;
-      existingProduct.total =
-        existingProduct.cantidad * existingProduct.precios[0].precio;
+      updateExistingProduct(existingProduct, 0);
     } else {
-      productsSales.push({
-        id: product.id,
-        codigo: product.codigo,
-        nombre: product.nombre,
-        controla_stock: product.controla_stock,
-        stock: null,
-        cantidad: 1,
-        precios: product.precios,
-        total: product.precio,
-      });
+      addNewProduct(product, 0);
     }
   }
   renderProductSales();
 };
+const updateExistingProduct = (product, price) => {
+  product.cantidad += 1;
+  product.total = product.cantidad * price;
+};
+const addNewProduct = (product, price) => {
+  productsSales.push({
+    id: product.id,
+    codigo: product.codigo,
+    nombre: product.nombre,
+    controla_stock: product.controla_stock,
+    stock: product.controla_stock ? product.stock : null,
+    cantidad: 1,
+    precios: product.precios,
+    impuestos: product.impuestos,
+    total: price,
+  });
+};
 const collect = async () => {
+  if (!isValidSaleData()) return;
+  if (!hasSufficientStock()) return;
+
+  const saleData = buildSaleData();
+
+  const isBudget =
+    tipoComprobante.selectedOptions[0].innerText === "Presupuesto";
+
+  const detalle = buildSaleDetail();
+
+  if (isBudget) {
+    await handleBudgetSale(detalle);
+  } else {
+    await handleRealSale(saleData, detalle);
+  }
+};
+const isValidSaleData = () => {
   if (!inputCodigoCliente.value || total === 0 || !fechaVenta.value) {
     window.prismaFunctions.showMSG(
       "error",
       "Error",
       "Verifique si ingresó un cliente, productos y una fecha válida."
     );
-    return;
+    return false;
   }
+  return true;
+};
+const hasSufficientStock = () => {
   for (const product of productsSales) {
     if (product.controla_stock && product.stock < product.cantidad) {
       window.prismaFunctions.showMSG(
@@ -375,65 +440,65 @@ const collect = async () => {
         "Stock Faltante",
         `El producto ${product.nombre} no tiene suficiente stock.`
       );
-      return;
+      return false;
     }
   }
-  const saleData = {
-    fecha: fechaVenta.value,
-    tipo_comprobante: tipoComprobante.value,
-    numero_comprobante: `${ptoVta.value}-${nroComp.value}`,
-    client: idClient,
-    total: total,
-    observacion: observacion.value,
-  };
+  return true;
+};
+const buildSaleData = () => ({
+  fecha: fechaVenta.value,
+  tipo_comprobante: tipoComprobante.value,
+  numero_comprobante: `${ptoVta.value}-${nroComp.value}`,
+  client: idClient,
+  total: total,
+  observacion: observacion.value,
+});
+const buildSaleDetail = () => {
+  const detalle = [];
+  for (let i = 0; i < tablaProductos.rows.length; i++) {
+    const row = tablaProductos.rows[i];
+    const precioUnitarioSelect = row.cells[3].querySelector("select");
+    const cantidadInput = row.cells[2].querySelector("input");
 
-  if (tipoComprobante.selectedOptions[0].innerText == "Presupuesto") {
-    for (let i = 0; i < tablaProductos.rows.length; i++) {
-      const row = tablaProductos.rows[i];
-      const precioUnitarioSelect = row.cells[3].querySelector("select");
-      const cantidadInput = row.cells[2].querySelector("input");
+    detalle.push({
+      producto: row.cells[1].innerText,
+      cantidad: parseInt(cantidadInput.value),
+      precio_unitario: parseFloat(precioUnitarioSelect.value),
+      subtotal: parseFloat(
+        row.cells[4].innerText.replace(/\./g, "").replace(",", ".")
+      ),
+    });
+  }
+  return detalle;
+};
+const handleBudgetSale = async (detalle) => {
+  saleDetail.length = 0;
+  saleDetail.push(...detalle);
+  await printSale();
+  cleanFields();
+};
+const handleRealSale = async (saleData, detalle) => {
+  try {
+    const saleResponse = await window.prismaFunctions.addSale(saleData);
+    const saleId = saleResponse.saleId;
 
-      saleDetail.push({
-        producto: row.cells[1].innerText,
-        cantidad: parseInt(cantidadInput.value),
-        precio_unitario: parseFloat(precioUnitarioSelect.value),
-        subtotal: parseFloat(
-          row.cells[4].innerText.replace(/\./g, "").replace(",", ".")
-        ),
-      });
-    }
+    if (!saleId) throw new Error("No se pudo obtener el ID de la venta.");
+
+    const detalleConVenta = detalle.map((item) => ({
+      ...item,
+      sale: saleId,
+    }));
+
+    saleDetail.length = 0;
+    saleDetail.push(...detalleConVenta);
+
+    await window.prismaFunctions.addDetailSale(detalleConVenta);
+    updateStock();
+    updateTax(saleId);
     await printSale();
     cleanFields();
-  } else {
-    try {
-      const saleResponse = await window.prismaFunctions.addSale(saleData);
-      const saleId = saleResponse.saleId;
-      if (!saleId) {
-        throw new Error("No se pudo obtener el ID de la venta.");
-      }
-
-      for (let i = 0; i < tablaProductos.rows.length; i++) {
-        const row = tablaProductos.rows[i];
-        const precioUnitarioSelect = row.cells[3].querySelector("select");
-        const cantidadInput = row.cells[2].querySelector("input");
-
-        saleDetail.push({
-          producto: row.cells[1].innerText,
-          cantidad: parseInt(cantidadInput.value),
-          precio_unitario: parseFloat(precioUnitarioSelect.value),
-          subtotal: parseFloat(
-            row.cells[4].innerText.replace(/\./g, "").replace(",", ".")
-          ),
-          sale: saleId,
-        });
-      }
-      await window.prismaFunctions.addDetailSale(saleDetail);
-      updateStock();
-      await printSale();
-      cleanFields();
-    } catch (error) {
-      window.prismaFunctions.showMSG("error", "Prisma", error.message);
-    }
+  } catch (error) {
+    window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
 };
 const cleanFields = () => {
@@ -447,6 +512,8 @@ const cleanFields = () => {
   total = 0;
   idClient = 0;
   tablaProductos.innerHTML = "";
+  impuestosDisplay.innerHTML = "";
+  subtotalDisplay.textContent = "0.00";
   totalDisplay.textContent = "0.00";
   getLastInvoice();
 };
@@ -528,14 +595,14 @@ const printSale = async () => {
   if (tipoComprobante.selectedOptions[0].innerText.includes("Ticket")) {
     htmlContent = `
       <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket de Venta</title>
-    <link rel="stylesheet" href="../css/bootstrap.min.css" />
-    <script defer src="../js/bootstrap.min.js"></script>
-    <style>
+      <html lang="es">
+      <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Ticket de Venta</title>
+      <link rel="stylesheet" href="../css/bootstrap.min.css" />
+      <script defer src="../js/bootstrap.min.js"></script>
+      <style>
         @page { size: auto; margin: 0; }
         body { font-size: 12px; margin: 0; padding: 0; width: 58mm; }
         .container { width: 58mm; max-width: 100%; padding: 5px; text-align: center; }
@@ -594,107 +661,39 @@ const printSale = async () => {
 `;
     openAndPrint(htmlContent, 200, 500, true);
   } else {
-    htmlContent = `
-      <!DOCTYPE html>
-      <html lang="es">
-      <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Factura</title>
-          <link rel="stylesheet" href="../css/bootstrap.min.css" />
-          <script defer src="../js/bootstrap.min.js"></script>
-          <style>
-              /* Estilos básicos */
-              .container { 
-              margin-top: 20px;
-              width: 100vw !important;
-              max-width: 100% !important;
-              }
-          </style>
-      </head>
-      <body>
-        <div class="container my-4">
-          <img src="${logoSrc}" alt="Logo de la empresa" class="img-fluid" id="logo-empresa" style="width:50px">
-          <div class="row border-bottom pb-3">
-              <div class="col-4">
-                <h3 class="mb-0 mt-0">${nombre}</h3>
-                <p class="mb-0 mt-0">${cuit}</p>
-                <p class="mb-0 mt-0">${domicilio}</p>
-                <p class="mb-0 mt-0">${telefono}</p>
-              </div>
-              <div class="col-4 text-center">
-                  <h1 class="display-6" id="tipo-comprobante">
-                    ${
-                      tipoComprobante.options[tipoComprobante.selectedIndex]
-                        .text
-                    }
-                  </h1>
-              </div>
-              <div class="col-4 text-center">
-                  <p><strong>Fecha:</strong> <span id="fecha-comprobante">${formatearFecha(
-                    fechaVenta.value
-                  )}</span></p>
-                  <p class="mb-0"><strong>No. Comprobante:</strong></p>
-                  <p class="mt-0">${ptoVta.value}-${nroComp.value}</p>
-              </div>
-          </div>
-          <div class="row mt-4 border-bottom">
-              <div class="col-6">
-                  <p><strong>Razón Social: </strong>${
-                    clientSelect.razon_social
-                  }</p>
-                  <p><strong>CUIT: </strong>${clientSelect.cuit}</p>
-              </div>
-              <div class="col-6">
-                  <p><strong>Teléfono: </strong>${clientSelect.telefono}</p>
-                  <p><strong>Domicilio: </strong>${clientSelect.direccion}</p>
-              </div>
-          </div>
-          <div class="row mt-4">
-              <div class="col-12">
-                  <table class="table table-bordered">
-                      <colgroup>
-                          <col style="width: 5%">
-                          <col style="width: 55%">
-                          <col style="width: 20%">
-                          <col style="width: 20%">
-                      </colgroup>
-                      <thead class="table-light">
-                          <tr>
-                              <th>Cantidad</th>
-                              <th>Descripción</th>
-                              <th>Precio Unitario</th>
-                              <th>Subtotal</th>
-                          </tr>
-                      </thead>
-                      <tbody id="detalle-factura">
-                          <!-- Se insertarán los productos -->
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-          <div class="row mt-4">
-              <div class="col-12 text-end">
-                  <p class="fs-5"><strong>Total:</strong> <span>$ ${total.toLocaleString(
-                    "es-AR",
-                    {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    }
-                  )}</span></p>
-              </div>
-          </div>
-          <p>${observacion.value}</p>
-        </div>
-      </body>
-      </html>
-    `;
-    openAndPrint(htmlContent, 800, 1100, false);
+    const invoice = {
+      client: {
+        razon_social: clientSelect.razon_social,
+        cuit: clientSelect.cuit,
+        direccion: clientSelect.direccion,
+        telefono: clientSelect.telefono,
+      },
+      fecha: formatearFecha(fechaVenta.value),
+      tipo_comprobante:
+        tipoComprobante.options[tipoComprobante.selectedIndex].text,
+      numero_comprobante: `${ptoVta.value}-${nroComp.value}`,
+      subtotal: total - calculateImpuestos(),
+      impuestos: impuestosDisplay.innerHTML,
+      total: total,
+      details: saleDetail.map((item) => ({
+        producto: item.producto,
+        cantidad: item.cantidad,
+        precioUnitario: item.precio_unitario,
+        subtotal: item.subtotal,
+      })),
+    };
+    window.prismaFunctions.openWindow({
+      windowName: "printInvoice",
+      width: 800,
+      height: 1100,
+      frame: true,
+      modal: false,
+      data: invoice,
+    });
   }
 };
 const updateStock = () => {
   productsSales.forEach(async (product) => {
-
     if (product.controla_stock) {
       const productData = {
         stock: product.stock - product.cantidad,
@@ -713,6 +712,39 @@ const updateStock = () => {
       await window.prismaFunctions.addStock(stockData);
     }
   });
+};
+const updateTax = async (saleId) => {
+  const divs = impuestosDisplay.querySelectorAll("div");
+
+  for (const div of divs) {
+    const text = div.textContent.trim(); // "Iva 21%: $ 33.600,00"
+    const match = text.match(/^(.+?)\s(\d+)%:\s\$?\s?([\d.,]+)/);
+
+    if (match) {
+      const nombre = match[1].trim();
+      const porcentaje = parseFloat(match[2]);
+      const monto = parseFloat(match[3].replace(/\./g, "").replace(",", "."));
+
+      const taxData = { nombre, porcentaje, monto, sale:saleId}
+      try {
+        const res = await window.prismaFunctions.addTaxSale(taxData);
+        if (!res.success) {
+          window.prismaFunctions.showMSG(
+            "error",
+            "Prisma",
+            `Error al agregar impuesto: ${res.message}`
+          );
+          // Podés hacer `return` acá si querés frenar todo ante el primer error
+        }
+      } catch (error) {
+        window.prismaFunctions.showMSG(
+          "error",
+          "Prisma",
+          `Error inesperado: ${error.message || error}`
+        );
+      }
+    }
+  }
 };
 const getLastInvoice = async () => {
   const resInvoices = await window.prismaFunctions.getSales();
@@ -766,7 +798,6 @@ inputCodigoCliente.addEventListener("focusout", async () => {
   );
   if (!codeToSearch) {
     inputCodigoCliente.value = "";
-    inputCodigoCliente.focus();
     labelNombreCliente.textContent = "Cliente no encotrado.";
   } else {
     idClient = codeToSearch.id;

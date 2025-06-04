@@ -13,7 +13,6 @@ const loadInvoices = async () => {
       return;
     }
     invoices = res.sales;
-
     renderInvoices(invoices);
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
@@ -38,10 +37,22 @@ const renderInvoices = async (arrInvoices) => {
   });
 };
 const printInvoice = (invoice) => {
+  invoice.subtotal = invoice.details.reduce(
+    (acc, item) => acc + item.subtotal,
+    0
+  );
+  const htmlImpuestos = invoice.impuestos.map((imp) => {
+    return `<p class="mb-0"><strong>${imp.nombre} ${imp.porcentaje}%:</strong> $ ${imp.monto.toLocaleString("es-AR", {
+      minimumFractionDigits: 2,
+    })}</p>`;
+  });
+
+  invoice.impuestos = htmlImpuestos.join("");
+
   window.prismaFunctions.openWindow({
     windowName: "printInvoice",
-    width: 1100,
-    height: 800,
+    width: 800,
+    height: 1100,
     frame: true,
     modal: false,
     data: invoice,

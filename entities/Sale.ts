@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGenerate
 import { Client } from "./Client";
 import { DetailsSale } from "./DetailsSale";
 import { Receipt } from "./Receipt";
+import { TaxSales } from "./TaxSales";
 
 @Entity()
 export class Sale {
@@ -29,6 +30,9 @@ export class Sale {
   @OneToMany(() => DetailsSale, (details) => details.sale)
   details: DetailsSale[];
 
-  @ManyToOne(()=> Receipt, (rec) => rec.facturas)
-  receipt:Receipt;
+  @ManyToOne(() => Receipt, (rec) => rec.facturas)
+  receipt: Receipt;
+
+  @OneToMany(() => TaxSales, (taxSale) => taxSale.sale)
+  impuestos: TaxSales[];
 }

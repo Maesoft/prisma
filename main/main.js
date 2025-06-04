@@ -16,6 +16,8 @@ const { Purchase } = require("../entities/Purchase");
 const { Payment } = require("../entities/Payment");
 const { CashManagement } = require("../entities/CashManagement");
 const { Receipt } = require("../entities/Receipt");
+const { Tax } = require("../entities/Tax");
+const { TaxSales } = require("../entities/TaxSales");
 
 //Manejo de la App
 app.on("ready", async () => {
@@ -433,9 +435,29 @@ ipcMain.handle("get-products", async () => {
   try {
     const productRepository = AppDataSource.getRepository(Product);
     const products = await productRepository.find({
-      relations: ["categoria", "precios", "stockMovements"],
+      relations: ["categoria", "precios","impuestos", "stockMovements"],
     });
     return { success: true, products };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("add-tax", async (event, taxData) => {
+  try {
+    const taxRepository = AppDataSource.getRepository(Tax);
+    const newTax = taxRepository.create(taxData);
+    await taxRepository.save(newTax);
+    return { success: true };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("add-tax-sale", async (event, taxData) => {
+  try {
+    const taxSaleRepository = AppDataSource.getRepository(TaxSales);
+    const newTaxSale = taxSaleRepository.create(taxData);
+    await taxSaleRepository.save(newTaxSale);
+    return { success: true };
   } catch (error) {
     return { success: false, message: error.message };
   }
@@ -487,7 +509,7 @@ ipcMain.handle("get-sales", async () => {
   try {
     const salesRepository = AppDataSource.getRepository(Sale);
     const sales = await salesRepository.find({
-      relations: ["client", "details"],
+      relations: ["client", "details", "impuestos"],
       order: { fecha: "ASC" },
     });
     return { success: true, sales };

@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const Client_1 = require("./Client");
 const DetailsSale_1 = require("./DetailsSale");
 const Receipt_1 = require("./Receipt");
+const TaxSales_1 = require("./TaxSales");
 let Sale = class Sale {
 };
 exports.Sale = Sale;
@@ -53,6 +54,10 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => Receipt_1.Receipt, (rec) => rec.facturas),
     __metadata("design:type", Receipt_1.Receipt)
 ], Sale.prototype, "receipt", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => TaxSales_1.TaxSales, (taxSale) => taxSale.sale),
+    __metadata("design:type", Array)
+], Sale.prototype, "impuestos", void 0);
 exports.Sale = Sale = __decorate([
     (0, typeorm_1.Entity)()
 ], Sale);

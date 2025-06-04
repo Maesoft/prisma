@@ -2,6 +2,7 @@ const modal = document.getElementById("categoryModal");
 const productImage = document.getElementById("productImage");
 const productImageInput = document.getElementById("productImageInput");
 const selectPrices = document.getElementById("productPrices");
+const selectTaxes = document.getElementById("productTaxes");
 const productControlStock = document.getElementById("productControlStock");
 const initialStock = document.getElementById("initialStock");
 
@@ -94,6 +95,22 @@ const newProduct = async () => {
           );
         }
       });
+      Array.from(selectTaxes.options).forEach(async (tax) => {
+        const taxData = {
+          titulo: tax.innerText.split(":")[0].trim(),
+          porcentaje: parseFloat(tax.value),
+          producto: { id: productRes.productId },
+        };
+        try {
+          await window.prismaFunctions.addTax(taxData);
+        } catch (error) {
+          window.prismaFunctions.showMSG(
+            "error",
+            "Prisma",
+            "Error al agregar precio:" + error
+          );
+        }
+      });
       if (productData.stock > 0) {
         const stockData = {
           producto: { id: productRes.productId },
@@ -127,6 +144,7 @@ const newProduct = async () => {
       document.getElementById("productForm").reset();
       productImage.src = "../assets/sin_imagen.png";
       selectPrices.innerHTML = "";
+      selectTaxes.innerHTML = "";
     } else {
       window.prismaFunctions.showMSG(
         "error",
