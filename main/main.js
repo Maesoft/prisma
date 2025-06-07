@@ -245,6 +245,7 @@ ipcMain.handle("get-providers", async () => {
     const providerRepository = AppDataSource.getRepository(Provider);
     const providers = await providerRepository.find({
       relations: ["payment", "purchase"],
+      order: { codigo: "ASC" },
     });
     return { success: true, providers };
   } catch (error) {
@@ -316,6 +317,7 @@ ipcMain.handle("get-clients", async () => {
     const clientRepository = AppDataSource.getRepository(Client);
     const clients = await clientRepository.find({
       relations: ["receipt", "sales"],
+      order: { codigo: "ASC" },
     });
     return { success: true, clients };
   } catch (error) {

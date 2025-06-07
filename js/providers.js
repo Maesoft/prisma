@@ -1,3 +1,17 @@
+const lastProvider = async () => {
+  const res = await window.prismaFunctions.getProviders();
+  if (res.success) {
+    const providers = res.providers;
+    if (providers.length > 0) {
+      const lastProvider = providers.pop();
+      const lastCode = Number(lastProvider.codigo) + 1;
+      document.getElementById("companyCode").value = lastCode.toString().padStart(3, "0");
+    } else {
+      document.getElementById("companyCode").value = "001";
+    }
+  }
+};
+
 const newProvider = async () => {
   const providerData = {
     codigo: document.getElementById("companyCode").value,
@@ -8,7 +22,7 @@ const newProvider = async () => {
     email: document.getElementById("email").value,
     regimen: document.getElementById("regimen").value,
   };
-  if (!providerData.codigo.trim() || !providerData.razon_social.trim()){
+  if (!providerData.codigo.trim() || !providerData.razon_social.trim()) {
     window.prismaFunctions.showMSG(
       "info",
       "Prisma",
@@ -24,3 +38,7 @@ const newProvider = async () => {
     }
   }
 };
+
+document.addEventListener("DOMContentLoaded", async () => {
+  await lastProvider();
+});
