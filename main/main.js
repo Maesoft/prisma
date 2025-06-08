@@ -474,6 +474,15 @@ ipcMain.handle("add-price", async (event, priceData) => {
     return { success: false, message: error.message };
   }
 });
+ipcMain.handle("delete-tax", async (event, idProduct) => {
+  try {
+    const taxRepository = AppDataSource.getRepository(Tax);
+    await taxRepository.delete({ producto: { id: idProduct } });
+    return { success: true, message: "Impuesto eliminado exitosamente" };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
 ipcMain.handle("delete-price", async (event, idProduct) => {
   try {
     const priceRepository = AppDataSource.getRepository(Price);

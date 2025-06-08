@@ -30,6 +30,7 @@ contextBridge.exposeInMainWorld("prismaFunctions", {
     ipcRenderer.invoke("edit-product", id, productData),
   deleteProduct: (id) => ipcRenderer.invoke("delete-product",id),
   deletePrice: (idProduct) => ipcRenderer.invoke("delete-price",idProduct),
+  deleteTax: (idProduct) => ipcRenderer.invoke("delete-tax",idProduct),
   addCategory: (categoryData) =>
     ipcRenderer.invoke("add-category", categoryData),
   getCategories: () => ipcRenderer.invoke("get-categories"),

@@ -9,9 +9,9 @@ export class Tax{
     @Column()
     titulo:string
 
-    @Column()
+    @Column({ type: 'decimal', precision: 15, scale: 2 })
     porcentaje:number
 
-    @ManyToOne(()=>Product,(product)=>product.impuestos)
+    @ManyToOne(()=>Product,(product)=>product.impuestos, {onDelete: "CASCADE"})
     producto:Product
 }

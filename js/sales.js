@@ -79,6 +79,8 @@ const loadProducts = async () => {
       return;
     }
     products = res.products;
+    console.log(products);
+    
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Error", error);
   }
@@ -318,6 +320,7 @@ const calculateImpuestos = () => {
   const impuestosAgrupados = [];
 
   productsSales.forEach((product, index) => {
+    
     const cantidad = product.cantidad || 0;
     const precioUnitario = parseFloat(
       document.querySelectorAll(".precio-select")[index]?.value || 0
@@ -326,6 +329,7 @@ const calculateImpuestos = () => {
 
     if (Array.isArray(product.impuestos)) {
       product.impuestos.forEach((tax) => {
+        
         const clave = `${tax.titulo} ${tax.porcentaje}%`;
 
         if (!impuestosAgrupados[clave]) {
@@ -392,6 +396,7 @@ const updateExistingProduct = (product, price) => {
   product.total = product.cantidad * price;
 };
 const addNewProduct = (product, price) => {
+  
   productsSales.push({
     id: product.id,
     codigo: product.codigo,
@@ -734,7 +739,7 @@ const updateTax = async (saleId) => {
             "Prisma",
             `Error al agregar impuesto: ${res.message}`
           );
-          // Podés hacer `return` acá si querés frenar todo ante el primer error
+          return;
         }
       } catch (error) {
         window.prismaFunctions.showMSG(

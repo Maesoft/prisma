@@ -24,11 +24,11 @@ __decorate([
     __metadata("design:type", String)
 ], Tax.prototype, "titulo", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 15, scale: 2 }),
     __metadata("design:type", Number)
 ], Tax.prototype, "porcentaje", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Product_1.Product, (product) => product.impuestos),
+    (0, typeorm_1.ManyToOne)(() => Product_1.Product, (product) => product.impuestos, { onDelete: "CASCADE" }),
     __metadata("design:type", Product_1.Product)
 ], Tax.prototype, "producto", void 0);
 exports.Tax = Tax = __decorate([
