@@ -2,6 +2,7 @@ import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "ty
 import { Provider } from "./Provider";
 import { DetailsPurchase } from "./DetailsPurchase";
 import { Payment } from "./Payment";
+import { TaxPurchases } from "./TaxPurchases";
 
 @Entity()
 export class Purchase {
@@ -31,4 +32,7 @@ export class Purchase {
 
   @ManyToOne(()=> Payment, (payment) => payment.facturas, {onDelete:'SET NULL', nullable:true})
   payment:Payment;
+
+  @OneToMany(() => TaxPurchases, (taxPurchase) => taxPurchase.purchase)
+  impuestos: TaxPurchases[];
 }

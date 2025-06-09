@@ -12,7 +12,9 @@ const fechaCompra = document.getElementById("fechaCompra");
 const fechaActual = new Date().toISOString().split("T")[0];
 const codigoProducto = document.getElementById("codigoProducto");
 const btnCobrar = document.getElementById("btnCobrar");
-const totalDisplay = document.getElementById("total");
+const subTotalDisplay = document.getElementById("subtotal-display");
+const totalDisplay = document.getElementById("total-display");
+const impuestosDisplay = document.getElementById("impuestos-display");
 
 let total = 0;
 let idProvider = 0;
@@ -112,6 +114,46 @@ const renderProducts = (arrProducts) => {
     });
     listProducts.appendChild(row);
   });
+};
+const calculateImpuestos = () => {
+  const impuestosAgrupados = [];
+
+  productsPurchase.forEach((product, index) => {
+    
+    const cantidad = product.cantidad || 0;
+    const precioUnitario = parseFloat(
+      document.querySelectorAll(".precio-select")[index]?.value || 0
+    );
+    const subtotal = cantidad * precioUnitario;
+
+    if (Array.isArray(product.impuestos)) {
+      product.impuestos.forEach((tax) => {
+        
+        const clave = `${tax.titulo} ${tax.porcentaje}%`;
+
+        if (!impuestosAgrupados[clave]) {
+          impuestosAgrupados[clave] = 0;
+        }
+
+        impuestosAgrupados[clave] += (subtotal * tax.porcentaje) / 100;
+      });
+    }
+  });
+
+  if (impuestosDisplay) {
+    impuestosDisplay.innerHTML = "";
+    Object.entries(impuestosAgrupados).forEach(([nombre, valor]) => {
+      console.log(`Impuesto: ${nombre}, Valor: ${valor}`);
+      
+      const div = document.createElement("div");
+      div.innerHTML = `<strong>${nombre}:</strong> $ ${valor.toLocaleString("es-AR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`;
+      impuestosDisplay.appendChild(div);
+    });
+  }
+  return Object.values(impuestosAgrupados).reduce((acc, val) => acc + val, 0);
 };
 const renderProductPurchase = () => {
   tablaProductos.innerHTML = "";
@@ -229,19 +271,30 @@ const updateSubTotal = (event) => {
 };
 const calculateTotal = () => {
   const totalCells = document.querySelectorAll(".total-cell");
-  total = 0;
+  let subtotal = 0;
 
   totalCells.forEach((cell) => {
-    const subtotal =
+    const valor =
       parseFloat(cell.textContent.replace(/\./g, "").replace(",", ".")) || 0;
-    total += subtotal;
+    subtotal += valor;
   });
 
-  if (totalDisplay) {
-    totalDisplay.textContent = total.toLocaleString("es-AR", {
+  const impuestos = calculateImpuestos();
+
+  if (subTotalDisplay) {
+    subTotalDisplay.textContent = ` $ ${subtotal.toLocaleString("es-AR", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    });
+    })}`;
+  }
+
+  total = subtotal + impuestos;
+
+  if (totalDisplay) {
+    totalDisplay.textContent = ` $ ${total.toLocaleString("es-AR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+  })}`;
   }
 };
 const addProductToPurchase = (product) => {
@@ -261,6 +314,7 @@ const addProductToPurchase = (product) => {
       controla_stock: product.controla_stock,
       stock: product.stock,
       cantidad: 1,
+      impuestos: product.impuestos,
       precios: product.precios?.[0]?.precio ?? 0,
       total: product.precios?.[0]?.precio ?? 0,
     });
@@ -340,7 +394,7 @@ const cleanFields = () => {
   total = 0;
   idProvider = 0;
   tablaProductos.innerHTML = "";
-  totalDisplay.textContent = "0.00";
+  subTotalDisplay.textContent = "0.00";
 };
 const updateStock = () => {
   productsPurchase.forEach(async (product) => {

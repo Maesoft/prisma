@@ -364,7 +364,7 @@ const addProductToSale = (product) => {
     if (product.stock <= 0) {
       return window.prismaFunctions.showMSG(
         "info",
-        "Stock Faltante",
+        "Prisma",
         `El producto ${product.nombre} no tiene stock suficiente.`
       );
     }
@@ -372,7 +372,7 @@ const addProductToSale = (product) => {
     if (existingProduct) {
       if (existingProduct.cantidad >= existingProduct.stock) {
         return window.prismaFunctions.showMSG(
-          "warning",
+          "info",
           "Prisma",
           `Hay solo ${product.stock} unidades de el producto ${product.nombre}.`
         );
@@ -396,7 +396,6 @@ const updateExistingProduct = (product, price) => {
   product.total = product.cantidad * price;
 };
 const addNewProduct = (product, price) => {
-  
   productsSales.push({
     id: product.id,
     codigo: product.codigo,

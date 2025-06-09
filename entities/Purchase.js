@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const Provider_1 = require("./Provider");
 const DetailsPurchase_1 = require("./DetailsPurchase");
 const Payment_1 = require("./Payment");
+const TaxPurchases_1 = require("./TaxPurchases");
 let Purchase = class Purchase {
 };
 exports.Purchase = Purchase;
@@ -53,6 +54,10 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => Payment_1.Payment, (payment) => payment.facturas, { onDelete: 'SET NULL', nullable: true }),
     __metadata("design:type", Payment_1.Payment)
 ], Purchase.prototype, "payment", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => TaxPurchases_1.TaxPurchases, (taxPurchase) => taxPurchase.purchase),
+    __metadata("design:type", Array)
+], Purchase.prototype, "impuestos", void 0);
 exports.Purchase = Purchase = __decorate([
     (0, typeorm_1.Entity)()
 ], Purchase);

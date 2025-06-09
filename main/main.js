@@ -18,6 +18,7 @@ const { CashManagement } = require("../entities/CashManagement");
 const { Receipt } = require("../entities/Receipt");
 const { Tax } = require("../entities/Tax");
 const { TaxSales } = require("../entities/TaxSales");
+const { TaxPurchases } = require("../entities/TaxPurchases");
 
 //Manejo de la App
 app.on("ready", async () => {
@@ -449,6 +450,16 @@ ipcMain.handle("add-tax", async (event, taxData) => {
     const taxRepository = AppDataSource.getRepository(Tax);
     const newTax = taxRepository.create(taxData);
     await taxRepository.save(newTax);
+    return { success: true };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("add-tax-purchase", async (event, taxData) => {
+  try {
+    const taxPurchasesRepository = AppDataSource.getRepository(TaxPurchases);
+    const newTaxPurchase = taxPurchasesRepository.create(taxData);
+    await taxPurchasesRepository.save(newTaxPurchase);
     return { success: true };
   } catch (error) {
     return { success: false, message: error.message };
