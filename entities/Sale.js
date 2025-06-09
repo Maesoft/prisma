@@ -35,7 +35,7 @@ __decorate([
     __metadata("design:type", String)
 ], Sale.prototype, "numero_comprobante", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Client_1.Client, (client) => client.sales, { onDelete: "SET NULL" }),
+    (0, typeorm_1.ManyToOne)(() => Client_1.Client, (client) => client.sales, { onDelete: "CASCADE" }),
     __metadata("design:type", Client_1.Client)
 ], Sale.prototype, "client", void 0);
 __decorate([

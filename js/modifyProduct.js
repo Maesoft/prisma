@@ -94,7 +94,7 @@ const loadProductIntoForm = (product) => {
   selectTaxes.innerHTML = "";
   product.impuestos.forEach((tax) => {  
     const option = document.createElement("option");
-    option.value = tax.procentaje;
+    option.value = tax.porcentaje;
     option.textContent = `${tax.titulo} ${tax.porcentaje}% ❌`;
     selectTaxes.appendChild(option);
   });
@@ -194,11 +194,11 @@ const saveTaxes = async () => {
   if (resDel.success) {
     const taxes = Array.from(selectTaxes.options).map((option) => ({
       producto: {id: idProduct},
-      titulo: option.textContent.split(" : ")[0],
+      titulo: option.textContent.split(" ")[0],
       porcentaje: parseFloat(option.value),
     }));
     const resAdd = await window.prismaFunctions.addTax(taxes);
-    if (!resAdd.success)window.prismaFunctions.showMSG("error", "Prisma", res.message);
+    if (!resAdd.success)window.prismaFunctions.showMSG("error", "Prisma", resAdd.message);
 } else {
     window.prismaFunctions.showMSG("error", "Prisma", res.message);
   }
