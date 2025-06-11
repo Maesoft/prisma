@@ -13,7 +13,7 @@
 <body>
     <div class="p-3">
         <h1>Ingresar Venta</h1>
-        <div class="row ">
+        <div class="row">
             <div class="col-3">
                 <div class="input-container text-center ">
                     <label for="codigoCliente" class="form-label">Código del Cliente</label>
@@ -44,9 +44,9 @@
             <div class="col-3">
                 <div class="input-container">
                     <label class="input-container">Numero Comprobante</label>
-                    <div class="d-flex mt-2 gap-3">
-                        <input id="ptoVta" class="form-control w-50">
-                        <input id="nroComp" class="form-control w-75">
+                    <div class="d-flex mt-2 gap-1">
+                        <input maxlength="4" id="ptoVta" class="form-control w-50">
+                        <input maxlength="8" id="nroComp" class="form-control w-75">
                     </div>
                 </div>
             </div>
@@ -57,8 +57,8 @@
                 </div>
             </div>
         </div>
-        <div class="input-container">
-            <div class="mt-2 w-100">
+        <div class="mt-0 input-container">
+            <div class="w-100">
                 <label for="codigoProducto" class="form-label">Código de Barras del Producto</label>
                 <input type="text" id="codigoProducto" class="form-control"
                     placeholder="Ingrese código de barras o presione F3 para buscar" />
@@ -89,7 +89,7 @@
         </table>
         <div id="totales">
             <div class="text-end"><strong>Sub-Total: </strong><span id="subtotal-display">$ 0,00</span></div>
-            <div class="text-end"id="impuestos-display"><strong>Impuestos: </strong>$ 0,00</div>
+            <div class="text-end" id="impuestos-display"><strong>Impuestos: </strong>$ 0,00</div>
             <div class="text-end"><strong>Total: </strong><span id="total-display">$ 0,00</span></div>
         </div>
 

@@ -119,13 +119,11 @@ const calculateImpuestos = () => {
   const impuestosAgrupados = [];
 
   productsPurchase.forEach((product, index) => {
-    
     const cantidad = product.cantidad || 0;
     const precioUnitario = parseFloat(
-      document.querySelectorAll(".precio-select")[index]?.value || 0
+      document.querySelectorAll(".precio-input")[index]?.value
     );
     const subtotal = cantidad * precioUnitario;
-
     if (Array.isArray(product.impuestos)) {
       product.impuestos.forEach((tax) => {
         
@@ -142,9 +140,7 @@ const calculateImpuestos = () => {
 
   if (impuestosDisplay) {
     impuestosDisplay.innerHTML = "";
-    Object.entries(impuestosAgrupados).forEach(([nombre, valor]) => {
-      console.log(`Impuesto: ${nombre}, Valor: ${valor}`);
-      
+    Object.entries(impuestosAgrupados).forEach(([nombre, valor]) => {      
       const div = document.createElement("div");
       div.innerHTML = `<strong>${nombre}:</strong> $ ${valor.toLocaleString("es-AR", {
         minimumFractionDigits: 2,
@@ -280,7 +276,7 @@ const calculateTotal = () => {
   });
 
   const impuestos = calculateImpuestos();
-
+  
   if (subTotalDisplay) {
     subTotalDisplay.textContent = ` $ ${subtotal.toLocaleString("es-AR", {
       minimumFractionDigits: 2,
@@ -373,6 +369,7 @@ const collect = async () => {
     }
     await window.prismaFunctions.addDetailPurchase(purchaseDetail);
     updateStock();
+    updateTax(purchaseId);
     cleanFields();
     window.prismaFunctions.showMSG(
       "info",
@@ -381,6 +378,39 @@ const collect = async () => {
     );
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
+  }
+};
+const updateTax = async (purchaseId) => {
+  const divs = impuestosDisplay.querySelectorAll("div");
+
+  for (const div of divs) {
+    const text = div.textContent.trim(); // "Iva 21%: $ 33.600,00"
+    const match = text.match(/^(.+?)\s(\d+)%:\s\$?\s?([\d.,]+)/);
+
+    if (match) {
+      const nombre = match[1].trim();
+      const porcentaje = parseFloat(match[2]);
+      const monto = parseFloat(match[3].replace(/\./g, "").replace(",", "."));
+
+      const taxData = { nombre, porcentaje, monto, purchase:purchaseId}
+      try {
+        const res = await window.prismaFunctions.addTaxPurchase(taxData);
+        if (!res.success) {
+          window.prismaFunctions.showMSG(
+            "error",
+            "Prisma",
+            `Error al agregar impuesto: ${res.message}`
+          );
+          return;
+        }
+      } catch (error) {
+        window.prismaFunctions.showMSG(
+          "error",
+          "Prisma",
+          `Error inesperado: ${error.message || error}`
+        );
+      }
+    }
   }
 };
 const cleanFields = () => {
@@ -395,6 +425,8 @@ const cleanFields = () => {
   idProvider = 0;
   tablaProductos.innerHTML = "";
   subTotalDisplay.textContent = "0.00";
+  totalDisplay.textContent = "0.00";
+  impuestosDisplay.innerHTML = "";
 };
 const updateStock = () => {
   productsPurchase.forEach(async (product) => {
@@ -435,7 +467,7 @@ inputCodigoProveedor.addEventListener("keyup", async (event) => {
     if (!codeToSearch) {
       inputCodigoProveedor.value = "";
       inputCodigoProveedor.focus();
-      labelNombreProveedor.textContent = "Proveedor no encotrado.";
+      labelNombreProveedor.textContent = "Codigo incorrecto.";
     } else {
       idProvider = codeToSearch.id;
       labelNombreProveedor.textContent = codeToSearch.razon_social;
@@ -451,7 +483,7 @@ inputCodigoProveedor.addEventListener("focusout", async (event) => {
   if (!codeToSearch) {
     inputCodigoProveedor.value = "";
     inputCodigoProveedor.focus();
-    labelNombreProveedor.textContent = "Proveedor no encotrado.";
+    labelNombreProveedor.textContent = "Codigo incorrecto.";
   } else {
     idProvider = codeToSearch.id;
     labelNombreProveedor.textContent = codeToSearch.razon_social;
@@ -479,6 +511,7 @@ inputCodigoProducto.addEventListener("keyup", async (event) => {
       return;
     }
     addProductToPurchase(codeToSearch);
+    
     inputCodigoProducto.value = "";
     inputCodigoProducto.focus();
     calculateTotal();
