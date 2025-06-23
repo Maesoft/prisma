@@ -301,13 +301,13 @@ ipcMain.handle("add-client", async (event, clientData) => {
     if (error.message.includes("UNIQUE") && error.message.includes("codigo")) {
       return {
         success: false,
-        message: "Ya existe un producto con ese código.",
+        message: "Ya existe un cliente con ese código.",
       };
     }
-    if (error.message.includes("UNIQUE") && error.message.includes("nombre")) {
+    if (error.message.includes("UNIQUE") && error.message.includes("razon_social")) {
       return {
         success: false,
-        message: "Ya existe un producto con ese nombre.",
+        message: "Ya existe un cliente con esa razon social.",
       };
     }
     console.error(error);

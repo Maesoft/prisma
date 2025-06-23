@@ -674,7 +674,7 @@ const printSale = async () => {
       },
       fecha: formatearFecha(fechaVenta.value),
       tipo_comprobante:
-        tipoComprobante.options[tipoComprobante.selectedIndex].text,
+        tipoComprobante.value,
       numero_comprobante: `${ptoVta.value}-${nroComp.value}`,
       subtotal: total - calculateImpuestos(),
       impuestos: impuestosDisplay.innerHTML,
@@ -682,7 +682,7 @@ const printSale = async () => {
       details: saleDetail.map((item) => ({
         producto: item.producto,
         cantidad: item.cantidad,
-        precioUnitario: item.precio_unitario,
+        precio_unitario: item.precio_unitario,
         subtotal: item.subtotal,
       })),
     };
