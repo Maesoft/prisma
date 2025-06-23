@@ -9,6 +9,14 @@ const lastClient = async () => {
     } else {
       document.getElementById("companyCode").value = "001";
     }
+  }else {
+    window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      res.message,
+      ["Aceptar"],
+      0
+    );
   }
 };
 const newClient = async () => {

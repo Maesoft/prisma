@@ -298,10 +298,20 @@ ipcMain.handle("add-client", async (event, clientData) => {
       message: "Cliente guardado exitosamente.",
     };
   } catch (error) {
-    return {
-      success: false,
-      message: error.message,
-    };
+    if (error.message.includes("UNIQUE") && error.message.includes("codigo")) {
+      return {
+        success: false,
+        message: "Ya existe un producto con ese código.",
+      };
+    }
+    if (error.message.includes("UNIQUE") && error.message.includes("nombre")) {
+      return {
+        success: false,
+        message: "Ya existe un producto con ese nombre.",
+      };
+    }
+    console.error(error);
+    return { success: false, message: error.message };
   }
 });
 ipcMain.handle("delete-client", async (event, id) => {
@@ -393,6 +403,18 @@ ipcMain.handle("add-product", async (event, productData) => {
       productId: newProduct.id,
     };
   } catch (error) {
+    if (error.message.includes("UNIQUE") && error.message.includes("codigo")) {
+      return {
+        success: false,
+        message: "Ya existe un producto con ese código.",
+      };
+    }
+    if (error.message.includes("UNIQUE") && error.message.includes("nombre")) {
+      return {
+        success: false,
+        message: "Ya existe un producto con ese nombre.",
+      };
+    }
     console.error(error);
     return { success: false, message: error.message };
   }
@@ -438,7 +460,8 @@ ipcMain.handle("get-products", async () => {
   try {
     const productRepository = AppDataSource.getRepository(Product);
     const products = await productRepository.find({
-      relations: ["categoria", "precios","impuestos", "stockMovements"],
+      relations: ["categoria", "precios", "impuestos", "stockMovements"],
+      order: { codigo: "ASC" },
     });
     return { success: true, products };
   } catch (error) {

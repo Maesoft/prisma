@@ -1,4 +1,6 @@
-const modal = document.getElementById("categoryModal");
+const modalCategory = document.getElementById("categoryModal");
+const modalPrice = document.getElementById("priceModal");
+const modalTax = document.getElementById("taxModal");
 const productImage = document.getElementById("productImage");
 const productImageInput = document.getElementById("productImageInput");
 const selectPrices = document.getElementById("productPrices");
@@ -55,7 +57,7 @@ const addCategory = async () => {
   }
 };
 const showModal = () => {
-  modal.style.display = "block";
+  modalCategory.style.display = "block";
 };
 const newProduct = async () => {
   const productData = {
@@ -139,25 +141,16 @@ const newProduct = async () => {
           return;
         }
       }
-
       window.prismaFunctions.showMSG("info", "Prisma", productRes.message);
       document.getElementById("productForm").reset();
       productImage.src = "../assets/sin_imagen.png";
       selectPrices.innerHTML = "";
       selectTaxes.innerHTML = "";
     } else {
-      window.prismaFunctions.showMSG(
-        "error",
-        "Prisma",
-        "Error al agregar el producto: " + productRes.message
-      );
+      window.prismaFunctions.showMSG("error", "Prisma", productRes.message);
     }
   } catch (error) {
-    window.prismaFunctions.showMSG(
-      "error",
-      "Prisma",
-      "Error al agregar el producto:" + error
-    );
+    window.prismaFunctions.showMSG("error", "Prisma", error);
   }
 };
 function addPrice() {
@@ -179,10 +172,8 @@ function addPrice() {
     option.style.padding = "0";
     document.getElementById("productPrices").appendChild(option);
 
-    // Cerrar modal y limpiar inputs
     document.getElementById("priceTitle").value = "";
     document.getElementById("priceValue").value = "";
-    modal.style.display = "none";
   }
 }
 function addTax() {
@@ -195,10 +186,8 @@ function addTax() {
     option.value = value;
     document.getElementById("productTaxes").appendChild(option);
 
-    // Cerrar modal y limpiar inputs
     document.getElementById("taxTitle").value = "";
     document.getElementById("taxValue").value = "";
-    new bootstrap.Modal(document.getElementById("taxModal")).hide();
   }
 }
 productImage.addEventListener("click", () => {
@@ -222,4 +211,6 @@ productControlStock.addEventListener("change", () => {
     initialStock.disabled = false;
   }
 });
-window.addEventListener("DOMContentLoaded", loadCategories);
+window.addEventListener("DOMContentLoaded", () => {
+  loadCategories();
+});

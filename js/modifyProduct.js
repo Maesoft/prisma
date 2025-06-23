@@ -247,6 +247,7 @@ const addTax = () => {
     document.getElementById("taxValue").value = "";
   }
 };
+
 document.addEventListener("DOMContentLoaded", function () {
   productSearchModal = new bootstrap.Modal(
     document.getElementById("productSearchModal")
@@ -263,5 +264,18 @@ selectPrices.addEventListener("click", (e) => {
 selectTaxes.addEventListener("click", (e) => {
   if (e.target.tagName === "OPTION") {
     e.target.remove();
+  }
+});
+productImage.addEventListener("click", () => {
+  document.getElementById("productImageInput").click();
+});
+productImageInput.addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      document.getElementById("productImage").src = e.target.result;
+    };
+    reader.readAsDataURL(file);
   }
 });

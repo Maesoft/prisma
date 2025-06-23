@@ -11,6 +11,7 @@ const renderProducts = (productList) => {
     return;
   }
   productList.forEach((product) => {
+    if(product.controla_stock) {
     const row = document.createElement("tr");
     row.setAttribute("data-id", product.id);
     row.innerHTML = `
@@ -21,6 +22,7 @@ const renderProducts = (productList) => {
     `;
     row.addEventListener("click", () => loadProductIntoForm(product));
     productsTableBody.appendChild(row);
+    }
   });
 };
 const loadProducts = async () => {

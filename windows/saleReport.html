@@ -32,7 +32,7 @@
 
             <div class="mb-3">
                 <label class="form-label">Artículo</label>
-                <input type="text" class="form-control" id="inputItem" placeholder="Si no selecciona ningun artículo se incluiran todos en el informe.">
+                <input type="text" class="form-control" id="inputProduct" placeholder="Si no selecciona ningun artículo se incluiran todos en el informe.">
             </div>
 
             <div class="mb-3">
@@ -48,14 +48,14 @@
             <button type="button" class="btn btn-dark w-100" onclick="window.close()">Cancelar</button>
         </form>
 </body>
-<div class="modal fade" id="modalClients" tabindex="-1">
+<div class="modal" id="modalClients" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-black text-white">
                 <h5 class="modal-title" id="clientSearchModalLabel">
                     Buscar Cliente
                 </h5>
-                <button type="button" class="btn-close bg-secondary w-2" onclick="window.close()"></button>
+                <button type="button" class="btn-close bg-secondary w-2" onclick="closeModal()"></button>
             </div>
             <div class="form-group p-4">
                 <input type="text" class="form-control bg-secondary" id="inputModalClients" tabindex="1" oninput="searchClient()" />

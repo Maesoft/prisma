@@ -13,6 +13,8 @@ const loadInvoices = async () => {
       return;
     }
     invoices = res.sales;
+    console.log("invoices", invoices);
+
     renderInvoices(invoices);
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
@@ -26,7 +28,7 @@ const renderInvoices = async (arrInvoices) => {
     const row = document.createElement("tr");
     row.innerHTML = `
     <td>${formatearFecha(invoice.fecha)}</td>
-    <td>${invoice.client.razon_social}</td>
+    <td>${invoice.client?.razon_social || "Cliente Eliminado"}</td>
     <td>${invoice.tipo_comprobante + invoice.numero_comprobante}</td>
     <td>$ ${invoice.total.toLocaleString("es-AR", {
       minimumFractionDigits: 2,
@@ -42,7 +44,9 @@ const printInvoice = (invoice) => {
     0
   );
   const htmlImpuestos = invoice.impuestos.map((imp) => {
-    return `<p class="mb-0"><strong>${imp.nombre} ${imp.porcentaje}%:</strong> $ ${imp.monto.toLocaleString("es-AR", {
+    return `<p class="mb-0"><strong>${imp.nombre} ${
+      imp.porcentaje
+    }%:</strong> $ ${imp.monto.toLocaleString("es-AR", {
       minimumFractionDigits: 2,
     })}</p>`;
   });
@@ -65,7 +69,7 @@ inputSearch.addEventListener("input", (e) => {
   const query = e.target.value;
   const filtered = invoices.filter(
     (inv) =>
-      inv.client.razon_social.toLowerCase().includes(query.toLowerCase()) ||
+      inv.client?.razon_social.toLowerCase().includes(query.toLowerCase()) ||
       inv.fecha.includes(formatearFecha(query)) ||
       inv.numero_comprobante.toLowerCase().includes(query.toLowerCase())
   );
