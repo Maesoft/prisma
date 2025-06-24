@@ -43,16 +43,16 @@ const printInvoice = (invoice) => {
     (acc, item) => acc + item.subtotal,
     0
   );
-  const htmlImpuestos = invoice.impuestos.map((imp) => {
-    return `<p class="mb-0"><strong>${imp.nombre} ${
-      imp.porcentaje
-    }%:</strong> $ ${imp.monto.toLocaleString("es-AR", {
-      minimumFractionDigits: 2,
-    })}</p>`;
-  });
+  if (Array.isArray(invoice.impuestos)) {
+    const htmlImpuestos = invoice.impuestos.map((imp) => {
+      return `<p class="mb-0"><strong>${imp.nombre} ${imp.porcentaje
+        }%:</strong> $ ${imp.monto.toLocaleString("es-AR", {
+          minimumFractionDigits: 2,
+        })}</p>`;
+    });
 
-  invoice.impuestos = htmlImpuestos.join("");
-
+    invoice.impuestos = htmlImpuestos.join("");
+  }
   window.prismaFunctions.openWindow({
     windowName: "printInvoice",
     width: 800,

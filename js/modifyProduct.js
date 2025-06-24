@@ -70,15 +70,13 @@ const loadCategories = async () => {
     );
   }
 };
-const loadProductIntoForm = (product) => {
-  console.log(product);
-  
+const loadProductIntoForm = (product) => {  
   idProduct = product.id;
   inputCode.value = product.codigo;
   inputName.value = product.nombre;
   selectCategory.value = product.categoria.id;
   inputStock.value = product.stock;
-  inputImage.src = product.imagen;
+  inputImage.src = product.imagen ? product.imagen : "../assets/sin_imagen.png";
   inputDesc.innerText = product.descripcion;
 
   selectPrices.innerHTML = "";
