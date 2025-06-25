@@ -554,7 +554,7 @@ ipcMain.handle("get-sales", async () => {
   try {
     const salesRepository = AppDataSource.getRepository(Sale);
     const sales = await salesRepository.find({
-      relations: ["client", "details", "impuestos"],
+      relations: ["client", "details", "impuestos", "receipt"],
       order: { fecha: "ASC" },
     });
     return { success: true, sales };

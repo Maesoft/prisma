@@ -7,6 +7,7 @@ const selectPrices = document.getElementById("productPrices");
 const selectTaxes = document.getElementById("productTaxes");
 const productControlStock = document.getElementById("productControlStock");
 const initialStock = document.getElementById("initialStock");
+const minStock = document.getElementById("minStock");
 
 const loadCategories = async () => {
   const res = await window.prismaFunctions.getCategories();
@@ -18,6 +19,32 @@ const loadCategories = async () => {
       option.value = category.id;
       option.textContent = category.name;
       categorySelect.appendChild(option);
+    });
+  } else {
+    window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      res.message,
+      ["Aceptar"],
+      0
+    );
+  }
+};
+const loadProviders = async () => {
+  const res = await window.prismaFunctions.getProviders();
+  
+  if (res.success) {
+    const providerSelect = document.getElementById("productSupplier");
+    providerSelect.innerHTML = "";
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "Seleccione un proveedor";
+    providerSelect.appendChild(defaultOption);
+    res.providers.forEach((provider) => {
+      const option = document.createElement("option");
+      option.value = provider.id;
+      option.textContent = provider.razon_social;
+      providerSelect.appendChild(option);
     });
   } else {
     window.prismaFunctions.showMSG(
@@ -207,10 +234,14 @@ productControlStock.addEventListener("change", () => {
   if (!productControlStock.checked) {
     initialStock.disabled = true;
     initialStock.value = 0;
+    minStock.disabled = true;
+    minStock.value = 0;
   } else {
     initialStock.disabled = false;
+    minStock.disabled = false;
   }
 });
 window.addEventListener("DOMContentLoaded", () => {
   loadCategories();
+  loadProviders();
 });

@@ -78,9 +78,7 @@ const loadProducts = async () => {
       window.prismaFunctions.showMSG("error", "Error", res.message);
       return;
     }
-    products = res.products;
-    console.log(products);
-    
+    products = res.products;    
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Error", error);
   }
@@ -260,7 +258,7 @@ const updateSubTotal = (event) => {
   }
 
   const cantidadInput = row.querySelector(".cantidad-input");
-  const precioSelect = row.querySelector(".precio-select");
+  const precioSelect = row.querySelector(".precio-select, .precio-input");
   const totalCell = row.querySelector(".total-cell");
 
   if (!cantidadInput || !precioSelect || !totalCell) {
@@ -624,7 +622,7 @@ const printSale = async () => {
 </head>
 <body class="container">
     <div class="border">
-        <img src="${logoSrc}" alt="Logo" width="40" class="mb-1">
+        <img src="${logoSrc}" alt="Logo" width="40" class="mb-1 d-block mx-auto">
         <h3 class="fw-bold">${nombre}</h3>
         <p>CUIT: ${cuit}</p>
         <p>${domicilio}</p>

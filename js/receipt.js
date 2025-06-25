@@ -105,7 +105,9 @@ const getInvoices = async (idClient) => {
 
   if (res.success) {
     res.sales.forEach((inv) => {
-      if (inv.client.id === idClient) {
+      console.log(inv);
+      
+      if (inv.client.id === idClient && inv.receipt === null) {
         const option = document.createElement("option");
         option.value = inv.id;
         option.textContent = inv.tipo_comprobante + inv.numero_comprobante;
