@@ -98,8 +98,10 @@ const newProduct = async () => {
     controla_stock: productControlStock.checked,
     stock: parseInt(document.getElementById("initialStock").value, 10) || 0,
     stock_minimo: parseInt(document.getElementById("minStock").value, 10) || 0,
-    proveedor: document.getElementById("productSupplier").value,
+    proveedor: {id: Number(document.getElementById("productSupplier").value) || null },
   };
+  console.log(productData);
+  return
 
   if (productData.codigo === "" || productData.nombre === "") {
     window.prismaFunctions.showMSG(
