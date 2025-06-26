@@ -13,6 +13,7 @@ exports.Provider = void 0;
 const typeorm_1 = require("typeorm");
 const Purchase_1 = require("./Purchase");
 const Payment_1 = require("./Payment");
+const Product_1 = require("./Product");
 let Provider = class Provider {
 };
 exports.Provider = Provider;
@@ -48,6 +49,10 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Provider.prototype, "regimen", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => Product_1.Product, (product) => product.proveedor),
+    __metadata("design:type", Product_1.Product)
+], Provider.prototype, "producto", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Purchase_1.Purchase, (purchase) => purchase.provider),
     __metadata("design:type", Array)

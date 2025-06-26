@@ -24,7 +24,25 @@ exports.AppDataSource = new typeorm_1.DataSource({
     database: "./db/prisma_contable.sqlite",
     synchronize: true,
     logging: true,
-    entities: [Provider_1.Provider, Category_1.Category, Product_1.Product, Stock_1.Stock, Client_1.Client, DetailsSale_1.DetailsSale, DetailsPurchase_1.DetailsPurchase, Sale_1.Sale, Purchase_1.Purchase, Options_1.Option, Price_1.Price, Tax_1.Tax, TaxSales_1.TaxSales, TaxPurchases_1.TaxPurchases, Payment_1.Payment, CashManagement_1.CashManagement, Receipt_1.Receipt],
+    entities: [
+        Provider_1.Provider,
+        Category_1.Category,
+        Product_1.Product,
+        Stock_1.Stock,
+        Client_1.Client,
+        DetailsSale_1.DetailsSale,
+        DetailsPurchase_1.DetailsPurchase,
+        Sale_1.Sale,
+        Purchase_1.Purchase,
+        Options_1.Option,
+        Price_1.Price,
+        Tax_1.Tax,
+        TaxSales_1.TaxSales,
+        TaxPurchases_1.TaxPurchases,
+        Payment_1.Payment,
+        CashManagement_1.CashManagement,
+        Receipt_1.Receipt,
+    ]
 });
 exports.AppDataSource.initialize()
     .then(() => {

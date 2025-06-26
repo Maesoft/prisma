@@ -1,8 +1,9 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Category } from "./Category"
 import { Stock } from "./Stock";
 import { Price } from "./Price";
 import { Tax } from "./Tax";
+import { Provider } from "./Provider";
 
 @Entity()
 export class Product {
@@ -30,6 +31,10 @@ export class Product {
 
     @Column({default: 0})
     stock: number
+
+    @OneToOne(()=> Provider, (provider)=> provider.producto)
+    @JoinColumn()
+    proveedor: Provider
 
     @OneToMany(()=> Price, (price)=> price.producto)
     precios: Price[];

@@ -15,6 +15,7 @@ const Category_1 = require("./Category");
 const Stock_1 = require("./Stock");
 const Price_1 = require("./Price");
 const Tax_1 = require("./Tax");
+const Provider_1 = require("./Provider");
 let Product = class Product {
 };
 exports.Product = Product;
@@ -50,6 +51,11 @@ __decorate([
     (0, typeorm_1.Column)({ default: 0 }),
     __metadata("design:type", Number)
 ], Product.prototype, "stock", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => Provider_1.Provider, (provider) => provider.producto),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Provider_1.Provider)
+], Product.prototype, "proveedor", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Price_1.Price, (price) => price.producto),
     __metadata("design:type", Array)

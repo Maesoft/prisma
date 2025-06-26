@@ -46,12 +46,12 @@
                         <label for="productSupplier">Proveedor</label>
                         <div class="row">
                             <div class="col-9">
-                                <select class="form-select" id="productSupplier">
+                                <select class="form-select" id="productSupplier" required>
+                                    
                                 </select>
                             </div>
                             <div class="col-3">
-                                <button type="button" class="btn" data-bs-toggle="modal"
-                                    data-bs-target="#supplierModal">➕</button>
+                                <button type="button" class="btn" id="btnAddSupplier">➕</button>
                             </div>
                         </div>
                     </div>
@@ -99,7 +99,7 @@
 
                 </div>
             </div>
-            <div class="form-group mt-4 text-center">
+            <div class="form-group mt-2 text-center">
                 <button type="button" class="btn btn-dark" onclick="window.close()">Cancelar</button>
                 <button type="button" class="btn btn-secondary" onclick="newProduct()">Guardar</button>
             </div>

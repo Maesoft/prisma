@@ -23,7 +23,26 @@ export const AppDataSource = new DataSource({
     database: "./db/prisma_contable.sqlite",
     synchronize: true,
     logging: true,
-    entities: [Provider, Category, Product, Stock, Client, DetailsSale, DetailsPurchase, Sale, Purchase, Option, Price, Tax, TaxSales, TaxPurchases, Payment, CashManagement, Receipt],
+    entities: [
+        Provider,
+        Category,
+        Product,
+        Stock,
+        Client,
+        DetailsSale,
+        DetailsPurchase,
+        Sale,
+        Purchase,
+        Option,
+        Price,
+        Tax,
+        TaxSales,
+        TaxPurchases,
+        Payment,
+        CashManagement,
+        Receipt,
+        
+    ]
 });
 
 AppDataSource.initialize()

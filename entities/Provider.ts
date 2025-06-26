@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne } from 'typeorm';
 import { Purchase } from './Purchase';
 import { Payment } from './Payment';
+import { Product } from './Product';
 
 @Entity()
 export class Provider {
@@ -27,6 +28,9 @@ export class Provider {
 
     @Column()
     regimen: 'Monotributista' | 'Responsable Inscripto';
+
+    @OneToOne(() => Product, (product) => product.proveedor)
+    producto: Product;
 
     @OneToMany(() => Purchase, (purchase) => purchase.provider)
     purchase: Purchase[];
