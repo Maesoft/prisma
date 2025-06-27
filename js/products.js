@@ -101,7 +101,7 @@ const newProduct = async () => {
     proveedor: {id: Number(document.getElementById("productSupplier").value) || null },
   };
   console.log(productData);
-  return
+
 
   if (productData.codigo === "" || productData.nombre === "") {
     window.prismaFunctions.showMSG(
