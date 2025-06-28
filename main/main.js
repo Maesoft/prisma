@@ -431,9 +431,10 @@ ipcMain.handle("edit-product", async (event, id, productData) => {
     editProduct.imagen = productData.imagen;
     editProduct.categoria = productData.categoria;
     editProduct.stock = productData.stock;
-    editProduct.costo = productData.costo;
-    editProduct.precio1 = productData.precio1;
-    editProduct.precio2 = productData.precio2;
+    editProduct.controla_stock = productData.controla_stock;
+    editProduct.stock_minimo = productData.stock_minimo;
+    editProduct.proveedor = productData.proveedor;
+    
 
     await productRepository.save(editProduct);
 

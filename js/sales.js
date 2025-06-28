@@ -79,6 +79,7 @@ const loadProducts = async () => {
       return;
     }
     products = res.products;
+    console.log(products);
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Error", error);
   }
@@ -137,7 +138,27 @@ const renderProductSales = () => {
 };
 const createProductRow = (product, index) => {
   const row = document.createElement("tr");
-  const selectedPrice = product.precio_unitario ?? product.precios?.[0]?.precio ?? 0;
+
+  const precios = Array.isArray(product.precios) ? product.precios : [];
+  const selectedPrice = product.precio_unitario ?? precios[0]?.precio ?? 0;
+
+  const precioInputOrSelect = precios.length > 0
+    ? `
+      <select class="precio-select form-select form-select-sm" data-index="${index}">
+        ${getSortedPriceOptions(precios, selectedPrice)}
+      </select>
+    `
+    : `
+      <input 
+        type="number" 
+        value="${selectedPrice}" 
+        min="0" 
+        step="1"
+        class="precio-input form-control form-control-sm" 
+        data-index="${index}" 
+        onkeyup="updateSubTotal(event)"
+      />
+    `;
 
   row.innerHTML = `
     <td class="codigo">${product.codigo}</td>
@@ -145,24 +166,27 @@ const createProductRow = (product, index) => {
     <td>
       <input 
         type="number" 
-        value="${product.cantidad}" 
+        value="${product.cantidad || 1}" 
         min="1" 
-        max="${product.stock}" 
+        max="${product.stock ?? 9999}" 
         data-index="${index}" 
-        class="cantidad-input h-25 w-50"
+        class="cantidad-input form-control form-control-sm"
       />
     </td>
     <td>
-      <select class="precio-select" data-index="${index}">
-        ${getSortedPriceOptions(product.precios, selectedPrice)}
-      </select>
+      ${precioInputOrSelect}
     </td>
-    <td class="total-cell"></td>
-    <td><button class="btn btn-remove" data-index="${index}">✖</button></td>
+    <td class="total-cell text-end"></td>
+    <td>
+      <button class="btn btn-sm btn-danger btn-remove" data-index="${index}">✖</button>
+    </td>
   `;
 
-  const selectPrecio = row.querySelector(".precio-select");
-  updateSubTotal({ target: selectPrecio });
+  // Lógica de subtotal para select o input
+  const priceElement = row.querySelector(".precio-select") || row.querySelector(".precio-input");
+  if (priceElement) {
+    updateSubTotal({ target: priceElement });
+  }
 
   return row;
 };
@@ -475,7 +499,7 @@ const buildSaleDetail = () => {
   const detalle = [];
   for (let i = 0; i < tablaProductos.rows.length; i++) {
     const row = tablaProductos.rows[i];
-    const precioUnitarioSelect = row.cells[3].querySelector("select");
+    const precioUnitarioSelect = row.cells[3].querySelector("select, input");
     const cantidadInput = row.cells[2].querySelector("input");
 
     detalle.push({
@@ -701,8 +725,8 @@ const printSale = async () => {
     };
     window.prismaFunctions.openWindow({
       windowName: "printInvoice",
-      width: 800,
-      height: 1100,
+      width: 400,
+      height: 550,
       frame: true,
       modal: false,
       data: invoice,

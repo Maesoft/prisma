@@ -14,6 +14,7 @@ const detalleFactura = document.getElementById("detalle-factura");
 const subtotalFactura = document.getElementById("subtotal");
 const impuestosFactura = document.getElementById("impuestos");
 const totalFactura = document.getElementById("total");
+const observacion = document.getElementById("observacion");
 
 let datosEmpresa = null;
 let datosComprobante = null;
@@ -123,6 +124,7 @@ const llenarCampos = () => {
     
     detalleFactura.appendChild(row);
   });
+  observacion.textContent = datosComprobante?.observacion;
 } else {
   console.warn("No hay detalles de factura válidos para mostrar.");
 }

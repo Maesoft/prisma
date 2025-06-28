@@ -9,6 +9,8 @@ const selectPrices = document.getElementById("productPrices");
 const selectTaxes = document.getElementById("productTaxes");
 const productControlStock = document.getElementById("productControlStock");
 const productTax = document.getElementById("productTaxes");
+const minStock = document.getElementById("minStock");
+const productSupplier = document.getElementById("productSupplier");
 let productSearchModal;
 
 let products = [];
@@ -70,7 +72,29 @@ const loadCategories = async () => {
     );
   }
 };
-const loadProductIntoForm = (product) => {  
+const loadProviders = async () => {
+  const res = await window.prismaFunctions.getProviders();
+
+  if (res.success) {
+    productSupplier.innerHTML = "";
+
+    res.providers.forEach((provider) => {
+      const option = document.createElement("option");
+      option.value = provider.id;
+      option.textContent = provider.razon_social;
+      productSupplier.appendChild(option);
+    });
+  } else {
+    window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      res.message,
+      ["Aceptar"],
+      0
+    );
+  }
+};
+const loadProductIntoForm = (product) => {
   idProduct = product.id;
   inputCode.value = product.codigo;
   inputName.value = product.nombre;
@@ -78,11 +102,17 @@ const loadProductIntoForm = (product) => {
   inputStock.value = product.stock;
   inputImage.src = product.imagen ? product.imagen : "../assets/sin_imagen.png";
   inputDesc.innerText = product.descripcion;
+  minStock.value = product.stock_minimo || 0;
+  productControlStock.checked = product.controla_stock;
+  productSupplier.value = product.proveedor?.id;
 
   selectPrices.innerHTML = "";
   product.precios.forEach((price) => {
     const option = document.createElement("option");
     option.value = price.precio;
+    option.style.fontSize = "0.7em";
+    option.style.overflowX = "hidden";
+    option.style.padding = "0";
     option.textContent = `${price.titulo} : $${price.precio.toLocaleString(
       "es-AR",
       { minimumFractionDigits: 2, maximumFractionDigits: 2 }
@@ -90,9 +120,12 @@ const loadProductIntoForm = (product) => {
     selectPrices.appendChild(option);
   });
   selectTaxes.innerHTML = "";
-  product.impuestos.forEach((tax) => {  
+  product.impuestos.forEach((tax) => {
     const option = document.createElement("option");
     option.value = tax.porcentaje;
+    option.style.fontSize = "0.7em";
+    option.style.overflowX = "hidden";
+    option.style.padding = "0";
     option.textContent = `${tax.titulo} ${tax.porcentaje}% ❌`;
     selectTaxes.appendChild(option);
   });
@@ -163,8 +196,12 @@ const saveProduct = async () => {
       descripcion: inputDesc.value,
       categoria: selectCategory.value,
       imagen: inputImage.src,
+      controla_stock: productControlStock.value,
+      stock_minimo: parseInt(minStock.value, 10) || 0,
+      proveedor: productSupplier.value ? { id: Number(productSupplier.value) } : null,
     };
-
+    console.log("Datos del producto a guardar:", productData);
+    
     const res = await window.prismaFunctions.editProduct(
       idProduct,
       productData
@@ -191,13 +228,14 @@ const saveTaxes = async () => {
 
   if (resDel.success) {
     const taxes = Array.from(selectTaxes.options).map((option) => ({
-      producto: {id: idProduct},
+      producto: { id: idProduct },
       titulo: option.textContent.split(" ")[0],
       porcentaje: parseFloat(option.value),
     }));
     const resAdd = await window.prismaFunctions.addTax(taxes);
-    if (!resAdd.success)window.prismaFunctions.showMSG("error", "Prisma", resAdd.message);
-} else {
+    if (!resAdd.success)
+      window.prismaFunctions.showMSG("error", "Prisma", resAdd.message);
+  } else {
     window.prismaFunctions.showMSG("error", "Prisma", res.message);
   }
 };
@@ -206,13 +244,14 @@ const savePrices = async () => {
 
   if (resDel.success) {
     const prices = Array.from(selectPrices.options).map((option) => ({
-      producto: {id: idProduct},
+      producto: { id: idProduct },
       titulo: option.textContent.split(" : ")[0],
       precio: parseFloat(option.value),
     }));
     const resAdd = await window.prismaFunctions.addPrice(prices);
-    if (!resAdd.success)window.prismaFunctions.showMSG("error", "Prisma", res.message);
-} else {
+    if (!resAdd.success)
+      window.prismaFunctions.showMSG("error", "Prisma", res.message);
+  } else {
     window.prismaFunctions.showMSG("error", "Prisma", res.message);
   }
 };
@@ -227,6 +266,9 @@ const addPrice = () => {
     const option = document.createElement("option");
     option.textContent = `${title} : $${value}`;
     option.value = valueNumber;
+    option.style.fontSize = "0.7em";
+    option.style.overflowX = "hidden";
+    option.style.padding = "0";
     selectPrices.appendChild(option);
     document.getElementById("priceTitle").value = "";
     document.getElementById("priceValue").value = "";
@@ -240,6 +282,9 @@ const addTax = () => {
     const option = document.createElement("option");
     option.textContent = `${title} ${value}%`;
     option.value = value;
+    option.style.fontSize = "0.7em";
+    option.style.overflowX = "hidden";
+    option.style.padding = "0";
     productTax.appendChild(option);
     document.getElementById("taxTitle").value = "";
     document.getElementById("taxValue").value = "";
@@ -253,6 +298,7 @@ document.addEventListener("DOMContentLoaded", function () {
   productSearchModal.show();
   loadProducts();
   loadCategories();
+  loadProviders();
 });
 selectPrices.addEventListener("click", (e) => {
   if (e.target.tagName === "OPTION") {
