@@ -78,7 +78,7 @@ const loadProducts = async () => {
       window.prismaFunctions.showMSG("error", "Error", res.message);
       return;
     }
-    products = res.products;    
+    products = res.products;
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Error", error);
   }
@@ -112,6 +112,19 @@ const renderProducts = (arrProducts) => {
   });
 };
 const renderProductSales = () => {
+  // Antes de limpiar, guardar las cantidades y precios actuales del DOM
+  document.querySelectorAll("#tablaProductos tr").forEach((row) => {
+  const codigo = row.querySelector(".codigo")?.textContent;
+  const cantidadInput = row.querySelector(".cantidad-input");
+  const precioInput = row.querySelector(".precio-select, .precio-input");
+
+  const producto = productsSales.find((p) => p.codigo === codigo);
+  if (producto) {
+    producto.cantidad = parseFloat(cantidadInput?.value) || 1;
+    producto.precio_unitario = parseFloat(precioInput?.value) || 0;
+  }
+});
+
   tablaProductos.innerHTML = "";
 
   productsSales.forEach((product, index) => {
@@ -124,6 +137,8 @@ const renderProductSales = () => {
 };
 const createProductRow = (product, index) => {
   const row = document.createElement("tr");
+  const selectedPrice = product.precio_unitario ?? product.precios?.[0]?.precio ?? 0;
+
   row.innerHTML = `
     <td class="codigo">${product.codigo}</td>
     <td>${product.nombre}</td>
@@ -139,7 +154,7 @@ const createProductRow = (product, index) => {
     </td>
     <td>
       <select class="precio-select" data-index="${index}">
-        ${getSortedPriceOptions(product.precios)}
+        ${getSortedPriceOptions(product.precios, selectedPrice)}
       </select>
     </td>
     <td class="total-cell"></td>
@@ -151,7 +166,7 @@ const createProductRow = (product, index) => {
 
   return row;
 };
-const getSortedPriceOptions = (precios) => {
+const getSortedPriceOptions = (precios, selectedPrice = 0) => {
   const sorted = [...precios].sort((a, b) => {
     const strA = String(a.titulo);
     const strB = String(b.titulo);
@@ -166,16 +181,16 @@ const getSortedPriceOptions = (precios) => {
   });
 
   return sorted
-    .map(
-      (price) => `
-      <option value="${price.precio}">
+    .map((price) => `
+      <option value="${price.precio}" ${
+        price.precio == selectedPrice ? "selected" : ""
+      }>
         ${price.titulo} - $ ${price.precio.toLocaleString("es-AR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}
       </option>
-    `
-    )
+    `)
     .join("");
 };
 const attachEventListeners = () => {
@@ -282,6 +297,7 @@ const updateSubTotal = (event) => {
   const index = parseInt(cantidadInput.dataset.index);
   if (productsSales[index]) {
     productsSales[index].cantidad = cantidad;
+    productsSales[index].precio_unitario = precio;
   }
 
   calculateTotal();
@@ -311,14 +327,13 @@ const calculateTotal = () => {
     totalDisplay.textContent = ` $ ${total.toLocaleString("es-AR", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-  })}`;
+    })}`;
   }
 };
 const calculateImpuestos = () => {
   const impuestosAgrupados = [];
 
   productsSales.forEach((product, index) => {
-    
     const cantidad = product.cantidad || 0;
     const precioUnitario = parseFloat(
       document.querySelectorAll(".precio-select")[index]?.value || 0
@@ -327,7 +342,6 @@ const calculateImpuestos = () => {
 
     if (Array.isArray(product.impuestos)) {
       product.impuestos.forEach((tax) => {
-        
         const clave = `${tax.titulo} ${tax.porcentaje}%`;
 
         if (!impuestosAgrupados[clave]) {
@@ -343,10 +357,13 @@ const calculateImpuestos = () => {
     impuestosDisplay.innerHTML = "";
     Object.entries(impuestosAgrupados).forEach(([nombre, valor]) => {
       const div = document.createElement("div");
-      div.innerHTML = `<strong>${nombre}:</strong> $ ${valor.toLocaleString("es-AR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}`;
+      div.innerHTML = `<strong>${nombre}:</strong> $ ${valor.toLocaleString(
+        "es-AR",
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }
+      )}`;
       impuestosDisplay.appendChild(div);
     });
   }
@@ -375,23 +392,21 @@ const addProductToSale = (product) => {
           `Hay solo ${product.stock} unidades de el producto ${product.nombre}.`
         );
       }
-      updateExistingProduct(existingProduct, price);
+      existingProduct.cantidad += 1;
     } else {
       addNewProduct(product, price);
     }
   } else {
     // Producto sin control de stock
     if (existingProduct) {
-      updateExistingProduct(existingProduct, 0);
+      existingProduct.cantidad += 1;
     } else {
-      addNewProduct(product, 0);
+      addNewProduct(product, price);
     }
   }
+  console.log(existingProduct);
+  
   renderProductSales();
-};
-const updateExistingProduct = (product, price) => {
-  product.cantidad += 1;
-  product.total = product.cantidad * price;
 };
 const addNewProduct = (product, price) => {
   productsSales.push({
@@ -404,6 +419,7 @@ const addNewProduct = (product, price) => {
     precios: product.precios,
     impuestos: product.impuestos,
     total: price,
+    precio_unitario: price,
   });
 };
 const collect = async () => {
@@ -671,8 +687,7 @@ const printSale = async () => {
         telefono: clientSelect.telefono,
       },
       fecha: formatearFecha(fechaVenta.value),
-      tipo_comprobante:
-        tipoComprobante.value,
+      tipo_comprobante: tipoComprobante.value,
       numero_comprobante: `${ptoVta.value}-${nroComp.value}`,
       subtotal: total - calculateImpuestos(),
       impuestos: impuestosDisplay.innerHTML,
@@ -727,7 +742,7 @@ const updateTax = async (saleId) => {
       const porcentaje = parseFloat(match[2]);
       const monto = parseFloat(match[3].replace(/\./g, "").replace(",", "."));
 
-      const taxData = { nombre, porcentaje, monto, sale:saleId}
+      const taxData = { nombre, porcentaje, monto, sale: saleId };
       try {
         const res = await window.prismaFunctions.addTaxSale(taxData);
         if (!res.success) {

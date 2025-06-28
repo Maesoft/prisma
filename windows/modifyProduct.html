@@ -55,7 +55,8 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group text-center mt-2">
-                        <img class="img-thumbnail rounded w-75 mt-2" id="productImage" onerror="this.src='../assets/sin_imagen.png'" src="../assets/sin_imagen.png"
+                        <img class="img-thumbnail rounded w-75 mt-2" id="productImage"
+                            onerror="this.src='../assets/sin_imagen.png'" src="../assets/sin_imagen.png"
                             alt="Imagen del producto">
                         <input type="file" id="productImageInput" accept="image/*" style="display: none;">
                     </div>
@@ -118,7 +119,7 @@
             <div class="form-group p-4">
                 <input type="text" class="form-control bg-secondary" id="searchInput" oninput="findProducts()" />
             </div>
-            <div class="modal-body">
+            <div class="modal-body p-4" style="max-height: 60vh; overflow-y: auto;">
                 <div class="table-responsive">
                     <table class="table table-bordered w-100" id="productsTable" style="cursor: default;">
                         <thead>
@@ -172,4 +173,5 @@
         </div>
     </div>
 </div>
+
 </html>

@@ -460,7 +460,7 @@ ipcMain.handle("get-products", async () => {
   try {
     const productRepository = AppDataSource.getRepository(Product);
     const products = await productRepository.find({
-      relations: ["categoria", "precios", "impuestos", "stockMovements"],
+      relations: ["categoria", "proveedor", "precios", "impuestos", "stockMovements"],
       order: { codigo: "ASC" },
     });
     return { success: true, products };
