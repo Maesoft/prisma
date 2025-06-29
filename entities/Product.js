@@ -56,8 +56,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Product.prototype, "stock_minimo", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => Provider_1.Provider, (provider) => provider.producto),
-    (0, typeorm_1.JoinColumn)(),
+    (0, typeorm_1.ManyToOne)(() => Provider_1.Provider, (provider) => provider.productos),
     __metadata("design:type", Provider_1.Provider)
 ], Product.prototype, "proveedor", void 0);
 __decorate([

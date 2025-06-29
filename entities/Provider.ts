@@ -29,8 +29,8 @@ export class Provider {
     @Column()
     regimen: 'Monotributista' | 'Responsable Inscripto';
 
-    @OneToOne(() => Product, (product) => product.proveedor)
-    producto: Product;
+    @OneToMany(() => Product, (product) => product.proveedor)
+    productos: Product[];
 
     @OneToMany(() => Purchase, (purchase) => purchase.provider)
     purchase: Purchase[];

@@ -166,11 +166,11 @@ const createProductRow = (product, index) => {
     <td>
       <input 
         type="number" 
-        value="${product.cantidad || 1}" 
+        value="${product.cantidad}" 
         min="1" 
-        max="${product.stock ?? 9999}" 
+        max="${product.stock}" 
         data-index="${index}" 
-        class="cantidad-input form-control form-control-sm"
+        class="cantidad-input w-50 text-center form-control form-control-sm"
       />
     </td>
     <td>

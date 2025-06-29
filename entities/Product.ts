@@ -35,8 +35,7 @@ export class Product {
     @Column({default: 0})
     stock_minimo: number
 
-    @OneToOne(()=> Provider, (provider)=> provider.producto)
-    @JoinColumn()
+    @ManyToOne(()=> Provider, (provider)=> provider.productos)
     proveedor: Provider
 
     @OneToMany(()=> Price, (price)=> price.producto)

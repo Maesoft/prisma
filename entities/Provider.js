@@ -50,9 +50,9 @@ __decorate([
     __metadata("design:type", String)
 ], Provider.prototype, "regimen", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => Product_1.Product, (product) => product.proveedor),
-    __metadata("design:type", Product_1.Product)
-], Provider.prototype, "producto", void 0);
+    (0, typeorm_1.OneToMany)(() => Product_1.Product, (product) => product.proveedor),
+    __metadata("design:type", Array)
+], Provider.prototype, "productos", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Purchase_1.Purchase, (purchase) => purchase.provider),
     __metadata("design:type", Array)
