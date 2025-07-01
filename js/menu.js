@@ -40,7 +40,7 @@ const menuTemplate = [
       { label: 'Modificar Articulo', click: () => { windowManager.createWindow("modifyProduct", 800, 600, true, false) } },
       { label: 'Ver Articulos', click: () => { /* Función para lista de precios */ } },
       { type: 'separator' },
-      { label: 'Lista de Precios', click: () => { /* Función para lista de precios */ } }
+      { label: 'Lista de Precios', click: () => {windowManager.createWindow("modifyPrices", 440, 460, false, false) } }
     ]
   },
   {
@@ -48,7 +48,7 @@ const menuTemplate = [
     submenu: [
       { label: 'Ingreso/Egreso de Stock', click: () => { windowManager.createWindow("stockEntry", 800, 500, true, true) } },
       { type: 'separator' },
-      { label: 'Resumen de Stock', click: () => { windowManager.createWindow("stockReport", 1100,800,true, false) } },
+      { label: 'Resumen de Stock', click: () => { windowManager.createWindow("stockReport", 1100, 600, true, false) } },
       { type: 'separator' },
       { label: 'Stock Minimo', click: () => { } },
       { type: 'separator' },
