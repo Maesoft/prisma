@@ -40,7 +40,7 @@ const menuTemplate = [
       { label: 'Modificar Articulo', click: () => { windowManager.createWindow("modifyProduct", 800, 600, true, false) } },
       { label: 'Ver Articulos', click: () => { /* Función para lista de precios */ } },
       { type: 'separator' },
-      { label: 'Lista de Precios', click: () => {windowManager.createWindow("modifyPrices", 440, 460, false, false) } }
+      { label: 'Modificador de Precios', click: () => {windowManager.createWindow("modifyPrices", 440, 460, true, false) } }
     ]
   },
   {

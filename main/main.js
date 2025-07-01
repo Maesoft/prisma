@@ -527,6 +527,48 @@ ipcMain.handle("delete-price", async (event, idProduct) => {
     return { success: false, message: error.message };
   }
 });
+ipcMain.handle("modify-prices-by-id", async (event, productIds, porcentaje, redondear) => {
+  try {
+    const productRepository = AppDataSource.getRepository(Product);
+    const priceRepository = AppDataSource.getRepository(Price);
+    const { In } = require("typeorm");
+
+
+    if (!Array.isArray(productIds) || productIds.length === 0) {
+      return { success: false, message: "No se proporcionaron productos." };
+    }
+
+    // Buscar productos por ID con sus precios
+    const productos = await productRepository.find(
+      {
+      where: { id: In(productIds) },
+      relations: ["precios"] 
+      }
+    );
+
+    let preciosModificados = 0;
+
+    for (const producto of productos) {
+      for (const precio of producto.precios) {
+        let nuevoPrecio = precio.precio + (precio.precio * porcentaje / 100);
+        if (redondear) {
+          nuevoPrecio = Math.round(nuevoPrecio);
+        }
+        precio.precio = Number(nuevoPrecio.toFixed(2));
+        await priceRepository.save(precio);
+        preciosModificados++;
+      }
+    }
+
+    return {
+      success: true,
+      message: `Precios actualizados correctamente. (${preciosModificados} precios modificados)`,
+    };
+  } catch (error) {
+    console.error("Error al modificar precios por ID:", error);
+    return { success: false, message: "Error al modificar precios." };
+  }
+});
 ipcMain.handle("add-stock", async (event, stockData) => {
   try {
     const stockRepository = AppDataSource.getRepository(Stock);

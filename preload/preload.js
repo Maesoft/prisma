@@ -24,6 +24,7 @@ contextBridge.exposeInMainWorld("prismaFunctions", {
   addProduct: (productData) => ipcRenderer.invoke("add-product", productData),
   getProducts: () => ipcRenderer.invoke("get-products"),
   addPrice: (priceData) => ipcRenderer.invoke("add-price",priceData),
+  modifyPrices: (ids, porcentaje, redondear) => ipcRenderer.invoke("modify-prices-by-id",ids, porcentaje, redondear),
   addTax: (taxData) => ipcRenderer.invoke("add-tax",taxData),
   addTaxSale: (taxData) => ipcRenderer.invoke("add-tax-sale",taxData),
   addTaxPurchase: (taxData) => ipcRenderer.invoke("add-tax-purchase",taxData),
