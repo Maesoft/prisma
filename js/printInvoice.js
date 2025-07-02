@@ -42,6 +42,9 @@ const llenarCampos = () => {
     case "VEN":
       tipoComprobante.textContent = "VENTA";
       break;
+    case "F":
+      tipoComprobante.textContent = "Factura";
+      break;
     case "FA":
       tipoComprobante.textContent = "Factura A";
       break;
@@ -50,6 +53,18 @@ const llenarCampos = () => {
       break;
     case "FC":
       tipoComprobante.textContent = "Factura C";
+      break;
+    case "T":
+      tipoComprobante.textContent = "Ticket";
+      break;
+    case "TA":
+      tipoComprobante.textContent = "Ticket A";
+      break;
+    case "TB":
+      tipoComprobante.textContent = "Ticket B";
+      break;
+    case "TC":
+      tipoComprobante.textContent = "Ticket C";
       break;
 
     default:
@@ -77,7 +92,7 @@ const llenarCampos = () => {
   domicilioCliente.textContent =
     datosComprobante?.client?.direccion || "Domicilio no disponible";
 
-  subtotalFactura.textContent = `$ ${(typeof datosComprobante?.subtotal ===
+  subtotalFactura.innerHTML = `<strong>Sub-Total: $</strong> ${(typeof datosComprobante?.subtotal ===
   "number"
     ? datosComprobante.subtotal
     : 0
@@ -88,7 +103,7 @@ const llenarCampos = () => {
 
   impuestosFactura.innerHTML = datosComprobante.impuestos ? datosComprobante.impuestos : "$ 0,00";
 
-  totalFactura.textContent = `$ ${(typeof datosComprobante?.total === "number"
+  totalFactura.innerHTML = `<strong>Total: $</strong> ${(typeof datosComprobante?.total === "number"
     ? datosComprobante.total
     : 0
   ).toLocaleString("es-AR", {
@@ -140,4 +155,4 @@ window.prismaFunctions.onReporteDatos(async (data) => {
 
 setTimeout(() => {
   window.print();
-}, 1000);
+}, 2000);

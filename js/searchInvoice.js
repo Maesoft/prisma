@@ -45,22 +45,39 @@ const printInvoice = (invoice) => {
   );
   if (Array.isArray(invoice.impuestos)) {
     const htmlImpuestos = invoice.impuestos.map((imp) => {
-      return `<p class="mb-0"><strong>${imp.nombre} ${imp.porcentaje
-        }%:</strong> $ ${imp.monto.toLocaleString("es-AR", {
-          minimumFractionDigits: 2,
-        })}</p>`;
+      return `<p class="mb-0"><strong>${imp.nombre} ${
+        imp.porcentaje
+      }%:</strong> $ ${imp.monto.toLocaleString("es-AR", {
+        minimumFractionDigits: 2,
+      })}</p>`;
     });
 
     invoice.impuestos = htmlImpuestos.join("");
   }
-  window.prismaFunctions.openWindow({
-    windowName: "printInvoice",
-    width: 400,
-    height: 550,
-    frame: true,
-    modal: false,
-    data: invoice,
-  });
+  if (
+    invoice.tipo_comprobante === "T" ||
+    invoice.tipo_comprobante === "TA" ||
+    invoice.tipo_comprobante === "TB" ||
+    invoice.tipo_comprobante === "TC"
+  ) {
+    window.prismaFunctions.openWindow({
+      windowName: "printTicket",
+      width: 200,
+      height: 550,
+      frame: true,
+      modal: false,
+      data: invoice,
+    });
+  } else {
+    window.prismaFunctions.openWindow({
+      windowName: "printInvoice",
+      width: 400,
+      height: 550,
+      frame: true,
+      modal: false,
+      data: invoice,
+    });
+  }
 };
 
 document.addEventListener("DOMContentLoaded", loadInvoices);

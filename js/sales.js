@@ -115,16 +115,16 @@ const renderProducts = (arrProducts) => {
 const renderProductSales = () => {
   // Antes de limpiar, guardar las cantidades y precios actuales del DOM
   document.querySelectorAll("#tablaProductos tr").forEach((row) => {
-  const codigo = row.querySelector(".codigo")?.textContent;
-  const cantidadInput = row.querySelector(".cantidad-input");
-  const precioInput = row.querySelector(".precio-select, .precio-input");
+    const codigo = row.querySelector(".codigo")?.textContent;
+    const cantidadInput = row.querySelector(".cantidad-input");
+    const precioInput = row.querySelector(".precio-select, .precio-input");
 
-  const producto = productsSales.find((p) => p.codigo === codigo);
-  if (producto) {
-    producto.cantidad = parseFloat(cantidadInput?.value) || 1;
-    producto.precio_unitario = parseFloat(precioInput?.value) || 0;
-  }
-});
+    const producto = productsSales.find((p) => p.codigo === codigo);
+    if (producto) {
+      producto.cantidad = parseFloat(cantidadInput?.value) || 1;
+      producto.precio_unitario = parseFloat(precioInput?.value) || 0;
+    }
+  });
 
   tablaProductos.innerHTML = "";
 
@@ -142,13 +142,14 @@ const createProductRow = (product, index) => {
   const precios = Array.isArray(product.precios) ? product.precios : [];
   const selectedPrice = product.precio_unitario ?? precios[0]?.precio ?? 0;
 
-  const precioInputOrSelect = precios.length > 0
-    ? `
+  const precioInputOrSelect =
+    precios.length > 0
+      ? `
       <select class="precio-select form-select form-select-sm" data-index="${index}">
         ${getSortedPriceOptions(precios, selectedPrice)}
       </select>
     `
-    : `
+      : `
       <input 
         type="number" 
         value="${selectedPrice}" 
@@ -183,7 +184,8 @@ const createProductRow = (product, index) => {
   `;
 
   // Lógica de subtotal para select o input
-  const priceElement = row.querySelector(".precio-select") || row.querySelector(".precio-input");
+  const priceElement =
+    row.querySelector(".precio-select") || row.querySelector(".precio-input");
   if (priceElement) {
     updateSubTotal({ target: priceElement });
   }
@@ -205,16 +207,18 @@ const getSortedPriceOptions = (precios, selectedPrice = 0) => {
   });
 
   return sorted
-    .map((price) => `
+    .map(
+      (price) => `
       <option value="${price.precio}" ${
         price.precio == selectedPrice ? "selected" : ""
       }>
         ${price.titulo} - $ ${price.precio.toLocaleString("es-AR", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}
       </option>
-    `)
+    `
+    )
     .join("");
 };
 const attachEventListeners = () => {
@@ -428,8 +432,6 @@ const addProductToSale = (product) => {
       addNewProduct(product, price);
     }
   }
-  console.log(existingProduct);
-  
   renderProductSales();
 };
 const addNewProduct = (product, price) => {
@@ -560,169 +562,37 @@ const cleanFields = () => {
   getLastInvoice();
 };
 const printSale = async () => {
-  const resDatosEmpresa = await window.prismaFunctions.loadOption();
-  if (!resDatosEmpresa.success) {
-    await window.prismaFunctions.showMSG(
-      "error",
-      "Prisma",
-      "Debe cargar los datos de su empresa para poder imprimir comprobantes. Ir a Archivo->Opciones y cargar los datos solicitados."
-    );
-    return;
-  }
-
-  // Datos de la empresa y cliente
-  const { nombre, cuit, domicilio, telefono, logo } = resDatosEmpresa.options;
-  const clientSelect = clients.find((client) => client.id == idClient);
-
-  // Aseguramos que el logo tenga el prefijo base64 si es necesario.
-  const logoSrc = logo.startsWith("data:image/")
-    ? logo
-    : `data:image/png;base64,${logo}`;
-
-  // Función para insertar los detalles de la factura
-  const insertSaleDetailRows = (win, isTicket = false) => {
-    const tabla = win.document.getElementById("detalle-factura");
-    saleDetail.forEach((product) => {
-      const row = win.document.createElement("tr");
-      if (isTicket) {
-        row.innerHTML = `
-          <td>${product.cantidad}</td>
-          <td>${product.producto}</td>
-          <td>${product.subtotal.toLocaleString("es-AR", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}</td>`;
-      } else {
-        row.innerHTML = `
-          <td>${product.cantidad}</td>
-          <td>${product.producto}</td>
-          <td>${product.precio_unitario.toLocaleString("es-AR", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}</td>
-          <td>${product.subtotal.toLocaleString("es-AR", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}</td>`;
-      }
-      tabla.appendChild(row);
-    });
+    const clientSelect = clients.find((client) => client.id == idClient);
+  const invoice = {
+    client: {
+      razon_social: clientSelect.razon_social,
+      cuit: clientSelect.cuit,
+      direccion: clientSelect.direccion,
+      telefono: clientSelect.telefono,
+    },
+    fecha: formatearFecha(fechaVenta.value),
+    tipo_comprobante: tipoComprobante.value,
+    numero_comprobante: `${ptoVta.value}-${nroComp.value}`,
+    subtotal: total - calculateImpuestos(),
+    impuestos: impuestosDisplay.innerHTML,
+    total: total,
+    details: saleDetail.map((item) => ({
+      producto: item.producto,
+      cantidad: item.cantidad,
+      precio_unitario: item.precio_unitario,
+      subtotal: item.subtotal,
+    })),
   };
-
-  // Función que abre una ventana, escribe el contenido y se encarga de la impresión
-  const openAndPrint = (contenido, width, height, isTicket = false) => {
-    const ventana = window.open("", "", `width=${width},height=${height}`);
-    ventana.document.write(contenido);
-    ventana.document.close();
-
-    // Función de sondeo para esperar a que exista la tabla "detalle-factura"
-    const waitForTable = () => {
-      const tabla = ventana.document.getElementById("detalle-factura");
-      if (tabla) {
-        insertSaleDetailRows(ventana, isTicket);
-        // Esperamos un poco más para asegurarnos de que todo se renderice bien
-        setTimeout(() => {
-          ventana.print();
-          ventana.onafterprint = () => ventana.close();
-        }, 300);
-      } else {
-        setTimeout(waitForTable, 100);
-      }
-    };
-    waitForTable();
-  };
-
-  // Generación del HTML para Ticket o A4
-  let htmlContent = "";
   if (tipoComprobante.selectedOptions[0].innerText.includes("Ticket")) {
-    htmlContent = `
-      <!DOCTYPE html>
-      <html lang="es">
-      <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Ticket de Venta</title>
-      <link rel="stylesheet" href="../css/bootstrap.min.css" />
-      <script defer src="../js/bootstrap.min.js"></script>
-      <style>
-        @page { size: auto; margin: 0; }
-        body { font-size: 12px; margin: 0; padding: 0; width: 58mm; }
-        .container { width: 58mm; max-width: 100%; padding: 5px; text-align: center; }
-        .border { padding: 5px; }
-        p, h3 { margin: 2px 0; font-size: 10px; }
-        hr { margin: 5px 0; }
-        table { width: 100%; margin-bottom: 5px; }
-        th, td { font-size: 10px; text-align: left; }
-        img { display: block !important; max-width: 100% !important; height: auto !important; }
-        @media print {
-            body, .container { width: 58mm; margin: 0; padding: 0; }
-            img { max-width: 100% !important; }
-        }
-    </style>
-</head>
-<body class="container">
-    <div class="border">
-        <img src="${logoSrc}" alt="Logo" width="40" class="mb-1 d-block mx-auto">
-        <h3 class="fw-bold">${nombre}</h3>
-        <p>CUIT: ${cuit}</p>
-        <p>${domicilio}</p>
-        <p>Tel: ${telefono}</p>
-        <hr>
-        <p class="fw-bold">${
-          tipoComprobante.options[tipoComprobante.selectedIndex].text
-        }</p>
-        <p>Fecha: ${formatearFecha(fechaVenta.value)}</p>
-        <p>No. Comp: ${ptoVta.value}-${nroComp.value}</p>
-        <hr>
-        <p><strong>Cliente:</strong> ${clientSelect.razon_social}</p>
-        <p><strong>CUIT:</strong> ${clientSelect.cuit}</p>
-        <hr>
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 20%;">Cant</th>
-                    <th style="width: 50%;">Desc</th>
-                    <th style="width: 30%;">$</th>
-                </tr>
-            </thead>
-            <tbody id="detalle-factura">
-                <!-- Se insertarán los productos -->
-            </tbody>
-        </table>
-        <hr>
-        <p class="fs-6 fw-bold">Total: $ ${total.toLocaleString("es-AR", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}</p>
-        <hr>
-        <p class="mb-1">${observacion.value}</p>
-        <p class="fw-bold">¡Gracias por su compra!</p>
-    </div>
-</body>
-</html>
-`;
-    openAndPrint(htmlContent, 200, 500, true);
+    window.prismaFunctions.openWindow({
+      windowName: "printTicket",
+      width: 200,
+      height: 550,
+      frame: true,
+      modal: false,
+      data: invoice,
+    });
   } else {
-    const invoice = {
-      client: {
-        razon_social: clientSelect.razon_social,
-        cuit: clientSelect.cuit,
-        direccion: clientSelect.direccion,
-        telefono: clientSelect.telefono,
-      },
-      fecha: formatearFecha(fechaVenta.value),
-      tipo_comprobante: tipoComprobante.value,
-      numero_comprobante: `${ptoVta.value}-${nroComp.value}`,
-      subtotal: total - calculateImpuestos(),
-      impuestos: impuestosDisplay.innerHTML,
-      total: total,
-      details: saleDetail.map((item) => ({
-        producto: item.producto,
-        cantidad: item.cantidad,
-        precio_unitario: item.precio_unitario,
-        subtotal: item.subtotal,
-      })),
-    };
     window.prismaFunctions.openWindow({
       windowName: "printInvoice",
       width: 400,
