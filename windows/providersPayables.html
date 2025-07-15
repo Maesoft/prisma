@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Proveedores</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <script src="../js/providersPayables.js" defer></script>
+    <script defer src="../js/bootstrap.min.js"></script>
+</head>
+<style>
+    body {
+        zoom: 80%;
+        background-color: #f8f9fa;
+    }
+
+    .container {
+        max-width: 1500px;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .table-responsive {
+        margin-top: 20px;
+    }
+</style>
+<body>
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3">Lista de Proveedores</h1>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Código</th>
+                        <th scope="col">Razón Social</th>
+                        <th scope="col">Saldo</th>
+                        <th scope="col">Último Pago</th>
+                    </tr>
+                </thead>
+                <tbody id="providersTableBody">
+                    <!-- Filas insertadas dinámicamente por JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

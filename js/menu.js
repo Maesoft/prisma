@@ -17,7 +17,8 @@ const menuTemplate = [
       { label: 'Modificar Proveedor', click: () => { windowManager.createWindow("modifyProvider", 800, 600, true, false) } },
       { label: 'Eliminar Proveedor', click: () => { windowManager.createWindow("deleteProvider", 600, 400, false, true) } },
       { type: 'separator' },
-      { label: 'Resumen de Cuenta', click: () => { windowManager.createWindow("providerReport", 700, 423, false, false) } },
+      { label: 'Resumen de Cuenta', click: () => { windowManager.createWindow("reportAccountProvider", 700, 423, false, false) } },
+      { label: 'Proveedores a Pagar', click: () => {  windowManager.createWindow("providersPayables", 1100, 600, true, false)} },
       { label: 'Lista de Proveedores', click: () => {  windowManager.createWindow("listProviders", 1100, 600, true, false)} }
     ]
   },
@@ -29,7 +30,7 @@ const menuTemplate = [
       { label: 'Eliminar Cliente', click: () => { windowManager.createWindow("deleteClient", 600, 400, false, true) } },
       { type: 'separator' },
       { label: 'Resumen de cuenta', click: () => {  windowManager.createWindow("clientReport", 700, 423, false, false) } },
-      { label: 'Lista de Clientes', click: () => { /* Función para lista de clientes */ } }
+      { label: 'Informes de Clientes', click: () => { /* Función para lista de clientes */ } }
     ]
   },
   {
