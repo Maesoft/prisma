@@ -179,7 +179,7 @@ const createProductRow = (product, index) => {
     </td>
     <td class="total-cell text-end"></td>
     <td>
-      <button class="btn btn-sm btn-danger btn-remove" data-index="${index}">✖</button>
+      <button class="btn btn-sm btn-dark btn-remove" data-index="${index}">✖</button>
     </td>
   `;
 
@@ -506,7 +506,7 @@ const buildSaleDetail = () => {
 
     detalle.push({
       producto: row.cells[1].innerText,
-      cantidad: parseInt(cantidadInput.value),
+      cantidad: String(cantidadInput.value).replace(",", "."),
       precio_unitario: parseFloat(precioUnitarioSelect.value),
       subtotal: parseFloat(
         row.cells[4].innerText.replace(/\./g, "").replace(",", ".")
@@ -562,7 +562,7 @@ const cleanFields = () => {
   getLastInvoice();
 };
 const printSale = async () => {
-    const clientSelect = clients.find((client) => client.id == idClient);
+  const clientSelect = clients.find((client) => client.id == idClient);
   const invoice = {
     client: {
       razon_social: clientSelect.razon_social,
@@ -576,12 +576,17 @@ const printSale = async () => {
     subtotal: total - calculateImpuestos(),
     impuestos: impuestosDisplay.innerHTML,
     total: total,
-    details: saleDetail.map((item) => ({
-      producto: item.producto,
-      cantidad: item.cantidad,
-      precio_unitario: item.precio_unitario,
-      subtotal: item.subtotal,
-    })),
+    details: saleDetail.map((item) => {
+      //Hacemos esto por si el usuario ingrea cantidad con coma, por ejemplo "1,5 kg"
+      const cantidad = parseFloat(String(item.cantidad).replace(",", ".")) || 0;
+
+      return {
+        producto: item.producto,
+        cantidad: cantidad,
+        precio_unitario: Number(item.precio_unitario),
+        subtotal: Number(item.subtotal),
+      };
+    }),
   };
   if (tipoComprobante.selectedOptions[0].innerText.includes("Ticket")) {
     window.prismaFunctions.openWindow({
@@ -607,7 +612,7 @@ const updateStock = () => {
   productsSales.forEach(async (product) => {
     if (product.controla_stock) {
       const productData = {
-        stock: product.stock - product.cantidad,
+        stock: product.stock - parseFloat(product.cantidad),
       };
       const stockData = {
         producto: { id: product.id },
@@ -615,7 +620,7 @@ const updateStock = () => {
           nroComp.value
         }`,
         operacion: "Egreso",
-        cantidad: -product.cantidad,
+        cantidad: -parseFloat(product.cantidad),
         stockResultante: product.stock - product.cantidad,
       };
 

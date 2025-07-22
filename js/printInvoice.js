@@ -37,7 +37,7 @@ const cargarDatosEmpresa = async () => {
 };
 const llenarCampos = () => {
   console.log(datosComprobante);
-  
+
   switch (datosComprobante.tipo_comprobante) {
     case "VEN":
       tipoComprobante.textContent = "VENTA";
@@ -92,8 +92,7 @@ const llenarCampos = () => {
   domicilioCliente.textContent =
     datosComprobante?.client?.direccion || "Domicilio no disponible";
 
-  subtotalFactura.innerHTML = `<strong>Sub-Total: $</strong> ${(typeof datosComprobante?.subtotal ===
-  "number"
+  subtotalFactura.innerHTML = `${(typeof datosComprobante?.subtotal === "number"
     ? datosComprobante.subtotal
     : 0
   ).toLocaleString("es-AR", {
@@ -101,9 +100,12 @@ const llenarCampos = () => {
     maximumFractionDigits: 2,
   })}`;
 
-  impuestosFactura.innerHTML = datosComprobante.impuestos ? datosComprobante.impuestos : "$ 0,00";
+  impuestosFactura.innerHTML = datosComprobante.impuestos
+    ? datosComprobante.impuestos
+    : "$ 0,00";
 
-  totalFactura.innerHTML = `<strong>Total: $</strong> ${(typeof datosComprobante?.total === "number"
+  totalFactura.innerHTML = `<strong>Total: $</strong> ${(typeof datosComprobante?.total ===
+  "number"
     ? datosComprobante.total
     : 0
   ).toLocaleString("es-AR", {
@@ -112,38 +114,48 @@ const llenarCampos = () => {
   })}`;
 
   if (Array.isArray(datosComprobante?.details)) {
-  datosComprobante.details.forEach((detail) => {  
-    const row = document.createElement("tr");
-    const cantidad = detail?.cantidad ?? "—";
-    const producto = detail?.producto ?? "Producto no disponible";
-    const precioUnitario = typeof detail?.precio_unitario === "number"
-      ? detail.precio_unitario.toLocaleString("es-AR", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })
-      : "0,00";
+    datosComprobante.details.forEach((detail) => {
+      const row = document.createElement("tr");
 
-    const subtotal = typeof detail?.subtotal === "number"
-      ? detail.subtotal.toLocaleString("es-AR", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })
-      : "0,00";
+      const cantidad =
+        typeof detail?.cantidad === "number"
+          ? detail.cantidad.toLocaleString("es-AR", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+          : "—";
 
-    row.innerHTML = `
-      <td>${cantidad}</td>
-      <td>${producto}</td>
-      <td>${precioUnitario}</td>
-      <td>${subtotal}</td>
-    `;
-    
-    detalleFactura.appendChild(row);
-  });
-  observacion.textContent = datosComprobante?.observacion;
-} else {
-  console.warn("No hay detalles de factura válidos para mostrar.");
-}
+      const producto = detail?.producto ?? "Producto no disponible";
 
+      const precioUnitario =
+        typeof detail?.precio_unitario === "number"
+          ? detail.precio_unitario.toLocaleString("es-AR", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+          : "0,00";
+
+      const subtotal =
+        typeof detail?.subtotal === "number"
+          ? detail.subtotal.toLocaleString("es-AR", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+          : "0,00";
+
+      row.innerHTML = `
+    <td>${cantidad}</td>
+    <td>${producto}</td>
+    <td>${precioUnitario}</td>
+    <td>${subtotal}</td>
+  `;
+
+      detalleFactura.appendChild(row);
+    });
+    observacion.textContent = datosComprobante?.observacion;
+  } else {
+    console.warn("No hay detalles de factura válidos para mostrar.");
+  }
 };
 window.prismaFunctions.onReporteDatos(async (data) => {
   if (!datosEmpresa) {

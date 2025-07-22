@@ -12,7 +12,7 @@ export class DetailsSale {
   @Column()
   producto: string;
 
-  @Column()
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   cantidad: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
