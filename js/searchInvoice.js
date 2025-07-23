@@ -71,8 +71,8 @@ const printInvoice = (invoice) => {
   } else {
     window.prismaFunctions.openWindow({
       windowName: "printInvoice",
-      width: 400,
-      height: 550,
+      width: 450,
+      height: 700,
       frame: true,
       modal: false,
       data: invoice,
