@@ -48,6 +48,7 @@ const getProvidersPayables = async () => {
 };
 const renderProvidersTable = async () => {
   const providers = await getProvidersPayables();
+  console.log(providers);
 
   const tableBody = document.getElementById("providersTableBody");
   tableBody.innerHTML = ""; // Limpiar tabla antes de renderizar
@@ -58,13 +59,16 @@ const renderProvidersTable = async () => {
             <td>${provider.codigo}</td>
             <td>${provider.razon_social}</td>
             <td>$ ${provider.saldo.toLocaleString("es-AR", {
-              minimumFractionDigits: 2,
-            })}</td>
-            <td>${formatearFecha(provider.ultPago)}</td>
-
+      minimumFractionDigits: 2,
+    })}</td>
+            <td>${provider.ultPago == "No hay pagos" ? "No hay pagos" : formatearFecha(provider.ultPago)}</td>
         `;
     tableBody.appendChild(row);
   });
 };
-
-renderProvidersTable();
+document.addEventListener("DOMContentLoaded", () => {
+  const fechaEmision = document.getElementById("fechaEmision");
+  const fechaActual = new Date().toISOString().split("T")[0];
+  fechaEmision.innerHTML = `<strong>Emitido el:</strong> ${formatearFecha(fechaActual)}`;
+  renderProvidersTable();
+})

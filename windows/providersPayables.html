@@ -20,7 +20,8 @@
         max-width: 1500px;
     }
 
-    .table th, .table td {
+    .table th,
+    .table td {
         vertical-align: middle;
     }
 
@@ -28,12 +29,13 @@
         margin-top: 20px;
     }
 </style>
+
 <body>
     <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1 class="h3">Lista de Proveedores</h1>
+        <div class="d-flex flex-column mb-3">
+            <h1 class="h3">Proveedores a pagar</h1>
+            <p id="fechaEmision">Fecha Emision:</p>
         </div>
-
         <div class="table-responsive">
             <table class="table table-striped table-hover align-middle">
                 <thead class="table-dark">
