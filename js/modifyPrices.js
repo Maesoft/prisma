@@ -3,7 +3,6 @@ const selectFilter = document.getElementById("selectFilter");
 const selectCategory = document.getElementById("selectCategory");
 const selectSupplier = document.getElementById("selectSupplier");
 const redondearCheckbox = document.getElementById("redondear");
-
 let productosAfectados = [];
 
 const allProducts = async () => {
@@ -99,17 +98,17 @@ const actualizarPrecios = async (e) => {
   const redondear = redondearCheckbox.checked;
   const productIds = productosAfectados.map((product) => product.id);
   try {
+    const progressModal = document.getElementById("progressModal");
+    const modal = new bootstrap.Modal(progressModal);
+    modal.show();
     const res = await window.prismaFunctions.modifyPrices(
       productIds,
       porcentaje,
       redondear
     );
+    modal.hide();
     if (res.success) {
-      window.prismaFunctions.showMSG(
-        "info",
-        "Prisma",
-        res.message
-      );
+      window.prismaFunctions.showMSG("info", "Prisma", res.message);
       labelProductosAfectados.textContent = (
         await allProducts()
       ).length.toString();
@@ -123,11 +122,7 @@ const actualizarPrecios = async (e) => {
     }
   } catch (error) {
     console.error("Error actualizando precios:", error);
-    window.prismaFunctions.showMSG(
-      "error",
-      "Prisma",
-      "Error al actualizar los precios. Por favor, cierre el programa y vuelva a abrirlo."
-    );
+    window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
 };
 document.addEventListener("DOMContentLoaded", async () => {
@@ -146,6 +141,12 @@ selectFilter.addEventListener("change", async (e) => {
     case "proveedor":
       selectSupplier.classList.remove("d-none");
       selectCategory.classList.add("d-none");
+      break;
+    case "todos":
+      selectCategory.classList.add("d-none");
+      selectSupplier.classList.add("d-none");
+      labelProductosAfectados.textContent = (await allProducts()).length.toString();
+      productosAfectados = await allProducts();
       break;
 
     default:
