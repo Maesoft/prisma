@@ -29,8 +29,9 @@ const menuTemplate = [
       { label: 'Modificar Cliente', click: () => { windowManager.createWindow("modifyClient", 800, 600, true, false) } },
       { label: 'Eliminar Cliente', click: () => { windowManager.createWindow("deleteClient", 600, 400, false, true) } },
       { type: 'separator' },
-      { label: 'Resumen de cuenta', click: () => {  windowManager.createWindow("clientReport", 700, 423, false, false) } },
-      { label: 'Informes de Clientes', click: () => { /* Función para lista de clientes */ } }
+      { label: 'Resumen de Cuenta', click: () => {  windowManager.createWindow("reportAccountClient", 700, 423, false, false) } },
+      { label: 'Clientes a Cobrar', click: () => { windowManager.createWindow("clientsReceivables", 600, 1000, true, false) } },
+      { label: 'Lista de Clientes', click: () => { windowManager.createWindow("listClients", 1100, 600, true, false) }},
     ]
   },
   {
