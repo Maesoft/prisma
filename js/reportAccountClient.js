@@ -86,7 +86,7 @@ const makeReport = async () => {
               tipo_comprobante: venta.tipo_comprobante,
               numero_comprobante: venta.numero_comprobante,
               observacion: venta.observacion,
-              total: Number(venta.total)
+              total: parseFloat(venta.total)
             });
           }
         }
@@ -143,7 +143,7 @@ const printReport = async (report) => {
         <td>${rep.tipo_comprobante}${rep.numero_comprobante}</td>
         <td>${debe ? debe.toFixed(2) : ''}</td>
         <td>${haber ? haber.toFixed(2) : ''}</td>
-        <td class="text-end">${saldo.toFixed(2)}</td>
+        <td class="text-end">${parseFloat(saldo)}</td>
       </tr>
     `;
   });

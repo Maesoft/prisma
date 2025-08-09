@@ -4,20 +4,21 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lista de Proveedores</title>
+    <title>Prisma</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/styles.css" />
     <script src="../js/providersPayables.js" defer></script>
     <script defer src="../js/bootstrap.min.js"></script>
 </head>
 <style>
-    body {
-        zoom: 80%;
-        background-color: #f8f9fa;
+    @page {
+        size: A4 portrait;
+        margin: 0;
     }
 
-    .container {
-        max-width: 1500px;
+    body {
+        zoom: 70%;
+        background-color: #f8f9fa;
     }
 
     .table th,
@@ -28,17 +29,29 @@
     .table-responsive {
         margin-top: 20px;
     }
+
+    @media print {
+        body {
+            zoom: 80%;
+        }
+    }
 </style>
 
 <body>
-    <div class="container mt-4">
-        <div class="d-flex flex-column mb-3">
-            <h1 class="h3">Proveedores a pagar</h1>
+    <div class="p-4 mt-4">
+        <div class="d-flex flex-column mb-">
+            <h1 class="h3">Proveedores a Pagar</h1>
             <p id="fechaEmision">Fecha Emision:</p>
         </div>
         <div class="table-responsive">
             <table class="table table-striped table-hover align-middle">
                 <thead class="table-dark">
+                    <colgroup>
+                        <col style="width: 15%" />
+                        <col style="width: 45%" />
+                        <col style="width: 20%" />
+                        <col style="width: 20%" />
+                    </colgroup>
                     <tr>
                         <th scope="col">Código</th>
                         <th scope="col">Razón Social</th>
@@ -53,5 +66,4 @@
         </div>
     </div>
 </body>
-
 </html>
