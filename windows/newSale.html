@@ -65,14 +65,7 @@
             </div>
         </div>
         <table class="mt-2 table table-striped" style="cursor: default; max-height: 100vh; overflow-y: auto;">
-            <colgroup>
-                <col style="width: 5%">
-                <col style="width: 20%">
-                <col style="width: 15%">
-                <col style="width: 15%">
-                <col style="width: 15%">
-                <col style="width: 5%">
-            </colgroup>
+
             <thead class="table-dark">
                 <tr>
                     <th>Código</th>
@@ -88,9 +81,19 @@
             </tbody>
         </table>
         <div id="totales">
-            <div class="text-end"><strong>Sub-Total: </strong><span id="subtotal-display">$ 0,00</span></div>
-            <div class="text-end" id="impuestos-display"><strong>Impuestos: </strong>$ 0,00</div>
-            <div class="text-end"><strong>Total: </strong><span id="total-display">$ 0,00</span></div>
+            <div class="col-12 d-flex justify-content-end">
+                <div class="col-4 text-start">
+                    <div class="text-end">
+                        <strong>Sub-Total: </strong>
+                        <span id="subtotal-display">$ 0,00</span>
+                    </div>
+                    <div id="impuestos-display"></div>
+                    <div class="text-end">
+                        <strong>Total: </strong>
+                        <span id="total-display">$ 0,00</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
 

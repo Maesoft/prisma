@@ -36,8 +36,6 @@ const cargarDatosEmpresa = async () => {
   }
 };
 const llenarCampos = () => {
-  console.log(datosComprobante);
-
   switch (datosComprobante.tipo_comprobante) {
     case "VEN":
       tipoComprobante.textContent = "VENTA";
@@ -92,26 +90,21 @@ const llenarCampos = () => {
   domicilioCliente.textContent =
     datosComprobante?.client?.direccion || "Domicilio no disponible";
 
-  subtotalFactura.innerHTML = `${(typeof datosComprobante?.subtotal === "number"
-    ? datosComprobante.subtotal
-    : 0
-  ).toLocaleString("es-AR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
-
+  subtotalFactura.innerHTML =
+    "$" +
+    datosComprobante.subtotal.toLocaleString("es-AR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    console.log(datosComprobante.impuestos);
   impuestosFactura.innerHTML = datosComprobante.impuestos
-    ? datosComprobante.impuestos
-    : "$ 0,00";
 
-  totalFactura.innerHTML = `<strong>Total: $</strong> ${(typeof datosComprobante?.total ===
-  "number"
-    ? datosComprobante.total
-    : 0
-  ).toLocaleString("es-AR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
+  totalFactura.innerHTML =
+    "$" +
+    datosComprobante.total.toLocaleString("es-AR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
 
   if (Array.isArray(datosComprobante?.details)) {
     datosComprobante.details.forEach((detail) => {

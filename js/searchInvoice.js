@@ -43,13 +43,18 @@ const printInvoice = (invoice) => {
     (acc, item) => acc + item.subtotal,
     0
   );
+  
   if (Array.isArray(invoice.impuestos)) {
     const htmlImpuestos = invoice.impuestos.map((imp) => {
-      return `<p class="mb-0"><strong>${imp.nombre} ${
-        imp.porcentaje
-      }%:</strong> $ ${imp.monto.toLocaleString("es-AR", {
-        minimumFractionDigits: 2,
-      })}</p>`;
+      return `
+      <div class="d-flex justify-content-between">
+          <strong>${imp.nombre} ${imp.porcentaje}%:</strong>
+          <span>$ ${imp.monto.toLocaleString("es-AR", {
+            minimumFractionDigits: 2,
+          })}</span>
+      </div>
+      `;
+      
     });
 
     invoice.impuestos = htmlImpuestos.join("");

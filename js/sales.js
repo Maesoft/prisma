@@ -156,14 +156,15 @@ const createProductRow = (product, index) => {
         min="0" 
         step="1"
         class="precio-input form-control form-control-sm" 
+        style="font-size: 0.8rem;"
         data-index="${index}" 
         onkeyup="updateSubTotal(event)"
       />
     `;
 
   row.innerHTML = `
-    <td class="codigo">${product.codigo}</td>
-    <td>${product.nombre}</td>
+    <td style="font-size: 0.8rem;" class="codigo text-center">${product.codigo}</td>
+    <td style="font-size: 0.8rem;">${product.nombre}</td>
     <td>
       <input 
         type="number" 
@@ -171,13 +172,14 @@ const createProductRow = (product, index) => {
         min="1" 
         max="${product.stock}" 
         data-index="${index}" 
-        class="cantidad-input w-50 text-center form-control form-control-sm"
+        class="cantidad-input w-75 text-center form-control form-control-sm"
+        style="font-size: 0.8rem;"
       />
     </td>
     <td>
       ${precioInputOrSelect}
     </td>
-    <td class="total-cell text-end"></td>
+    <td class="total-cell text-end" style="font-size: 0.8rem;"></td>
     <td>
       <button class="btn btn-sm btn-dark btn-remove" data-index="${index}">✖</button>
     </td>
@@ -385,6 +387,7 @@ const calculateImpuestos = () => {
     impuestosDisplay.innerHTML = "";
     Object.entries(impuestosAgrupados).forEach(([nombre, valor]) => {
       const div = document.createElement("div");
+      div.className = "text-end";
       div.innerHTML = `<strong>${nombre}:</strong> $ ${valor.toLocaleString(
         "es-AR",
         {
@@ -634,16 +637,18 @@ const updateTax = async (saleId) => {
 
   for (const div of divs) {
     const text = div.textContent.trim(); // "Iva 21%: $ 33.600,00"
-    const match = text.match(/^(.+?)\s(\d+)%:\s\$?\s?([\d.,]+)/);
+    const match = text.match(/^(.+?)\s(\d+(?:[.,]\d+)?)%:\s\$?\s?([\d.,]+)/);
 
     if (match) {
       const nombre = match[1].trim();
       const porcentaje = parseFloat(match[2]);
       const monto = parseFloat(match[3].replace(/\./g, "").replace(",", "."));
 
-      const taxData = { nombre, porcentaje, monto, sale: saleId };
+      const taxData = [{ nombre, porcentaje, monto, sale: saleId }];
       try {
+       
         const res = await window.prismaFunctions.addTaxSale(taxData);
+
         if (!res.success) {
           window.prismaFunctions.showMSG(
             "error",

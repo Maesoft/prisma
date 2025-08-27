@@ -129,8 +129,6 @@ const loadProductIntoForm = (product) => {
     option.textContent = `${tax.titulo} ${tax.porcentaje}% ❌`;
     selectTaxes.appendChild(option);
   });
-
-  productControlStock.checked = product.controla_stock;
   productSearchModal.hide();
 };
 const clearFields = () => {
@@ -196,7 +194,7 @@ const saveProduct = async () => {
       descripcion: inputDesc.value,
       categoria: selectCategory.value,
       imagen: inputImage.src,
-      controla_stock: productControlStock.value,
+      controla_stock: productControlStock.checked,
       stock_minimo: parseInt(minStock.value, 10) || 0,
       proveedor: productSupplier.value ? { id: Number(productSupplier.value) } : null,
     };
