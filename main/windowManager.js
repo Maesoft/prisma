@@ -11,6 +11,7 @@ class WindowManager {
     this.mainWindow = new BrowserWindow({
       width: 1024,
       height: 768,
+      icon: path.join(__dirname, '../assets/winico.png'),     
       webPreferences: {
         preload: path.join(__dirname, '../preload/preload.js')
       }
@@ -34,6 +35,7 @@ class WindowManager {
       height,
       frame,
       modal,
+      icon: path.join(__dirname, '../assets/winico.png'),
       resizable: false,
       maximizable: false,
       minimizable: true,

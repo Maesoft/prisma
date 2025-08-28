@@ -540,9 +540,9 @@ const handleRealSale = async (saleData, detalle) => {
     saleDetail.push(...detalleConVenta);
 
     await window.prismaFunctions.addDetailSale(detalleConVenta);
-    updateStock();
-    updateTax(saleId);
-    await printSale();
+    await updateStock();
+    await updateTax(saleId);
+    await printSale(saleId);
     cleanFields();
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
@@ -564,74 +564,79 @@ const cleanFields = () => {
   totalDisplay.textContent = "0.00";
   getLastInvoice();
 };
-const printSale = async () => {
-  const clientSelect = clients.find((client) => client.id == idClient);
-  const invoice = {
-    client: {
-      razon_social: clientSelect.razon_social,
-      cuit: clientSelect.cuit,
-      direccion: clientSelect.direccion,
-      telefono: clientSelect.telefono,
-    },
-    fecha: formatearFecha(fechaVenta.value),
-    tipo_comprobante: tipoComprobante.value,
-    numero_comprobante: `${ptoVta.value}-${nroComp.value}`,
-    subtotal: total - calculateImpuestos(),
-    impuestos: impuestosDisplay.innerHTML,
-    total: total,
-    details: saleDetail.map((item) => {
-      //Hacemos esto por si el usuario ingrea cantidad con coma, por ejemplo "1,5 kg"
-      const cantidad = parseFloat(String(item.cantidad).replace(",", ".")) || 0;
+const printSale = async (saleId) => {
+  const resInvoices = await window.prismaFunctions.getSales();
+  if (!resInvoices.success) {
+    window.prismaFunctions.showMSG("error", "Prisma", "Ocurrio un error al guardar la factura. Cierre el programa y vuelva a intentarlo. Verifique si la factura se guardó en Ventas > Facturas.");
+    return;
+  }
+  const invoiceToPrint = resInvoices.sales.find(
+    (invoice) => invoice.id === saleId )
 
-      return {
-        producto: item.producto,
-        cantidad: cantidad,
-        precio_unitario: Number(item.precio_unitario),
-        subtotal: Number(item.subtotal),
-      };
-    }),
-  };
+ invoiceToPrint.subtotal = invoiceToPrint.details.reduce(
+    (acc, item) => acc + item.subtotal,
+    0
+  );
+  console.log(invoiceToPrint);
+  
+  if (Array.isArray(invoiceToPrint.impuestos)) {
+    const htmlImpuestos = invoiceToPrint.impuestos.map((imp) => {
+      return `
+      <div class="d-flex justify-content-between">
+          <strong>${imp.nombre} ${imp.porcentaje}%:</strong>
+          <span>$ ${imp.monto.toLocaleString("es-AR", {
+            minimumFractionDigits: 2,
+          })}</span>
+      </div>
+      `;
+      
+    });
+
+    invoiceToPrint.impuestos = htmlImpuestos.join("");
+  }
   if (tipoComprobante.selectedOptions[0].innerText.includes("Ticket")) {
+
     window.prismaFunctions.openWindow({
       windowName: "printTicket",
       width: 200,
       height: 550,
       frame: true,
       modal: false,
-      data: invoice,
+      data: invoiceToPrint,
     });
   } else {
     window.prismaFunctions.openWindow({
       windowName: "printInvoice",
-      width: 400,
-      height: 550,
+      width: 450,
+      height: 700,
       frame: true,
       modal: false,
-      data: invoice,
+      data: invoiceToPrint,
     });
   }
 };
-const updateStock = () => {
-  productsSales.forEach(async (product) => {
-    if (product.controla_stock) {
-      const productData = {
-        stock: product.stock - parseFloat(product.cantidad),
-      };
-      const stockData = {
-        producto: { id: product.id },
-        detalle: `Venta - ${tipoComprobante.value + ptoVta.value}-${
-          nroComp.value
-        }`,
-        operacion: "Egreso",
-        cantidad: -parseFloat(product.cantidad),
-        stockResultante: product.stock - product.cantidad,
-      };
+const updateStock = async () => {
+  for (const product of productsSales) {
+    if (!product.controla_stock) continue;
 
-      await window.prismaFunctions.editProduct(product.id, productData);
-      await window.prismaFunctions.addStock(stockData);
-    }
-  });
+    const cantidad = parseFloat(product.cantidad);
+    const nuevoStock = product.stock - cantidad;
+
+    const productData = { stock: nuevoStock };
+
+    const stockData = {
+      producto: { id: product.id },
+      detalle: `Venta - ${tipoComprobante.value}${ptoVta.value}-${nroComp.value}`,
+      operacion: "Egreso",
+      cantidad: -cantidad,
+      stockResultante: nuevoStock,
+    };
+
+    await window.prismaFunctions.editProduct(product.id, productData);
+    await window.prismaFunctions.addStock(stockData);
+  }
 };
+
 const updateTax = async (saleId) => {
   const divs = impuestosDisplay.querySelectorAll("div");
 

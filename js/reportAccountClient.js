@@ -198,6 +198,21 @@ const printReport = async (report) => {
     }
   });
 };
+const seleccionarCliente = async () => {
+  await loadClients();
+  const codeToSearch = clients.find(
+    (client) => client.codigo == inputCodigoCliente.value
+  );
+  if (!codeToSearch) {
+    inputCodigoCliente.value = "";
+    inputCodigoCliente.focus();
+    labelNombreCliente.textContent = "Cliente no encotrado.";
+  } else {
+    // idclient = codeToSearch.id;
+    labelNombreCliente.textContent = codeToSearch.razon_social;
+    inputDocument.focus()
+  }
+}
 inputCodigoCliente.addEventListener("focusout", async (event) => {
   seleccionarCliente()
 });
@@ -215,18 +230,3 @@ inputCodigoCliente.addEventListener("keyup", async (event) => {
     seleccionarCliente()
   }
 });
-const seleccionarCliente = async () => {
-  await loadClients();
-  const codeToSearch = clients.find(
-    (client) => client.codigo == inputCodigoCliente.value
-  );
-  if (!codeToSearch) {
-    inputCodigoCliente.value = "";
-    inputCodigoCliente.focus();
-    labelNombreCliente.textContent = "Cliente no encotrado.";
-  } else {
-    // idclient = codeToSearch.id;
-    labelNombreCliente.textContent = codeToSearch.razon_social;
-    inputDocument.focus()
-  }
-}
