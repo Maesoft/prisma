@@ -5,7 +5,7 @@ const menuTemplate = [
     label: 'Archivo',
     submenu: [
       { label: 'Backup', click: () => { /* Función de backup */ } },
-      { label: 'Opciones', click: () => { windowManager.createWindow("option", 700, 585, false, true) } },
+      { label: 'Mi Negocio...', click: () => { windowManager.createWindow("option", 700, 585, false, true) } },
       { type: 'separator' },
       { label: 'Salir', role: 'quit' }
     ]
@@ -52,7 +52,7 @@ const menuTemplate = [
       { type: 'separator' },
       { label: 'Resumen de Stock', click: () => { windowManager.createWindow("stockReport", 1100, 600, true, false) } },
       { type: 'separator' },
-      { label: 'Stock Minimo', click: () => { } },
+      { label: 'Stock Minimo', click: () => { windowManager.createWindow("reportStockMin", 1100,600, true, false)} },
       { type: 'separator' },
       { label: 'Comparar Stock Fisico', click: () => { } },
       { label: 'Consultar Movimientos', click: () => { } },

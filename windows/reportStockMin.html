@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Prisma</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script defer src="../js/bootstrap.min.js"></script>
+    <script defer src="../js/reportStockMin.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Reporte de Faltantes de Inventario</h2>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Stock Actual</th>
+                    <th>Stock Mínimo</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody id="listProducts">
+                <!-- Filas de productos se insertarán aquí dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

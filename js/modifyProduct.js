@@ -26,6 +26,8 @@ const renderProducts = (productList) => {
     return;
   }
   productList.forEach((product) => {
+    console.log(product);
+    
     const row = document.createElement("tr");
     row.setAttribute("data-id", product.id);
     row.innerHTML = `
