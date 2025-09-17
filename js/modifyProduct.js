@@ -11,6 +11,7 @@ const productControlStock = document.getElementById("productControlStock");
 const productTax = document.getElementById("productTaxes");
 const minStock = document.getElementById("minStock");
 const productSupplier = document.getElementById("productSupplier");
+const btnAddSupplier = document.getElementById("btnAddSupplier");
 let productSearchModal;
 
 let products = [];
@@ -323,3 +324,16 @@ productImageInput.addEventListener("change", (event) => {
     reader.readAsDataURL(file);
   }
 });
+btnAddSupplier.addEventListener("click", () => {
+  window.prismaFunctions.openWindow({
+    windowName: "newProvider",
+    width: 800,
+    height: 600,
+    frame: true,
+    modal: false,
+    data: null
+  })
+})
+window.addEventListener("focus",()=>{
+  loadProviders()
+})

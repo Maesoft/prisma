@@ -138,6 +138,9 @@ const renderProductSales = () => {
 };
 const createProductRow = (product, index) => {
   const row = document.createElement("tr");
+  row.style.height = "12px";
+  row.style.border = "1px solid #d3d3d3";
+  row.style.borderRadius = "6px";
 
   const precios = Array.isArray(product.precios) ? product.precios : [];
   const selectedPrice = product.precio_unitario ?? precios[0]?.precio ?? 0;
@@ -145,43 +148,55 @@ const createProductRow = (product, index) => {
   const precioInputOrSelect =
     precios.length > 0
       ? `
-      <select class="precio-select form-select form-select-sm" data-index="${index}">
-        ${getSortedPriceOptions(precios, selectedPrice)}
-      </select>
-    `
+        <select 
+          class="precio-select form-control text-center" 
+          data-index="${index}" 
+          style="font-size: 0.7rem; height: 16px; padding: 0px 4px; line-height: 1; border: 1px solid #ccc; margin: 0; width: auto; min-width: 60px;"
+        >
+          ${getSortedPriceOptions(precios, selectedPrice)}
+        </select>
+      `
       : `
-      <input 
-        type="number" 
-        value="${selectedPrice}" 
-        min="0" 
-        step="1"
-        class="precio-input form-control form-control-sm" 
-        style="font-size: 0.8rem;"
-        data-index="${index}" 
-        onkeyup="updateSubTotal(event)"
-      />
-    `;
+        <input 
+          type="number" 
+          value="${selectedPrice}" 
+          min="0" 
+          step="1"
+          class="precio-input form-control text-center" 
+          style="font-size: 0.7rem; height: 16px; padding: 0px 4px; line-height: 1; border: 1px solid #ccc; margin: 0; width: auto; min-width: 60px;"
+          data-index="${index}" 
+          onkeyup="updateSubTotal(event)"
+          size="6"
+        />
+      `;
 
   row.innerHTML = `
-    <td style="font-size: 0.8rem;" class="codigo text-center">${product.codigo}</td>
-    <td style="font-size: 0.8rem;">${product.nombre}</td>
-    <td>
+    <td class="codigo text-center small p-1" style="font-size: 0.7rem; line-height: 1;">${product.codigo}</td>
+    <td class="small p-1" style="font-size: 0.7rem; line-height: 1; padding-left: 4px;">${product.nombre}</td>
+    <td class="text-center p-1" style="width: 60px;">
       <input 
         type="number" 
         value="${product.cantidad}" 
         min="1" 
         max="${product.stock}" 
         data-index="${index}" 
-        class="cantidad-input w-75 text-center form-control form-control-sm"
-        style="font-size: 0.8rem;"
+        class="cantidad-input form-control text-center"
+        style="font-size: 0.7rem; height: 16px; padding: 0px 2px; line-height: 1; border: 1px solid #ccc; margin: 0; width: auto; min-width: 40px;"
+        size="3"
       />
     </td>
-    <td>
+    <td class="text-center p-1" style="width: auto;">
       ${precioInputOrSelect}
     </td>
-    <td class="total-cell text-end" style="font-size: 0.8rem;"></td>
-    <td>
-      <button class="btn btn-sm btn-dark btn-remove" data-index="${index}">✖</button>
+    <td class="total-cell text-end small fw-semibold p-1" style="font-size: 0.7rem; line-height: 1.5; padding-right: 4px;"></td>
+    <td class="text-center p-1" style="width: 40px;">
+      <button 
+        class="btn btn-dark btn-sm p-0 btn-remove d-flex align-items-center justify-content-center" 
+        style="width: 16px; height: 16px; font-size: 0.6rem; line-height: 1; margin: 0;" 
+        data-index="${index}"
+      >
+        ✖
+      </button>
     </td>
   `;
 
@@ -242,9 +257,11 @@ const replaceSelect = (event) => {
   const input = document.createElement("input");
   input.type = "number";
   input.step = "1";
-  input.className = "precio-input";
+  input.className = "precio-input form-control text-center";
   input.value = select.value;
-
+  input.style.cssText = `font-size: 0.7rem; height: 16px; padding: 0px 4px; line-height: 1; border: 1px solid #ccc; margin: 0; width: auto; min-width: 60px;`;
+    
+          
   // Reemplazar el select por el input
   select.parentNode.replaceChild(input, select);
   input.focus();
@@ -252,7 +269,8 @@ const replaceSelect = (event) => {
   input.addEventListener("keyup", (e) => {
     if (e.key == "Enter") {
       const newSelect = document.createElement("select");
-      newSelect.className = "precio-select";
+      newSelect.className = "precio-select form-control text-center";
+      newSelect.style.cssText = `font-size: 0.7rem; height: 16px; padding: 0px 4px; line-height: 1; border: 1px solid #ccc; margin: 0; width: auto; min-width: 60px;`;
       const option = document.createElement("option");
       option.value = input.value;
       option.textContent = parseFloat(input.value).toLocaleString("es-AR", {
