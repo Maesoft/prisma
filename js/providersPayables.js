@@ -12,7 +12,8 @@ const getProvidersPayables = async () => {
     }
 
     const providers = res.providers;
-
+    console.log(providers);
+    
     const providersPayables = providers
       .map((provider) => {
         let ultPago = "";

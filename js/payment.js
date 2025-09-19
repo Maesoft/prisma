@@ -107,21 +107,28 @@ const getInvoices = async (idProvider) => {
 
   if (res.success) {
     res.purchases.forEach((inv) => {
-      if (inv.provider.id === idProvider) {
+      if (inv.provider.id === idProvider && inv.payment === null) {
         const option = document.createElement("option");
         option.value = inv.id;
         option.textContent = inv.tipo_comprobante + inv.numero_comprobante;
+        option.dataset.total = inv.total;
         invoiceList.appendChild(option);
       }
     });
   }
 };
-const moveSelected = (from, to) => {
+const moveSelected = (from, to, sign) => {
   Array.from(from.selectedOptions).forEach((opt) => {
     from.removeChild(opt);
     to.appendChild(opt);
+    const saldo = parseFloat(opt.dataset.total) || 0;
+    updateTotal(sign * saldo);
   });
 }
+const updateTotal = (monto) => {
+  const current = parseFloat(amount.value) || 0;
+  amount.value = (current + monto).toFixed(2);
+};
 const validateFields = () => {
   const fecha = new Date(orderDate.value);
   if (isNaN(fecha.getTime())) {
@@ -170,7 +177,7 @@ const newPayment = async () => {
   const paymentData = {
     fecha: orderDate.value,
     nro_comprobante: orderNumber.value,
-    monto: amount.value.replace(/\./g, "").replace(",", "."),
+    monto: parseFloat(amount.value),
     facturas: selectedInvoices,
     proveedor: { id: idProvider },
     caja: { id: Number(paymentMethodSelect.value) },
@@ -188,8 +195,8 @@ const newPayment = async () => {
 };
 
 // Event listeners
-invoiceList.addEventListener("dblclick", () => moveSelected(invoiceList, invoiceApply));
-invoiceApply.addEventListener("dblclick", () => moveSelected(invoiceApply, invoiceList));
+invoiceList.addEventListener("dblclick", () => moveSelected(invoiceList, invoiceApply, +1));
+invoiceApply.addEventListener("dblclick", () => moveSelected(invoiceApply, invoiceList, -1));
 orderSupply.addEventListener("focusout", selectProvider);
 orderSupply.addEventListener("keyup", async (e) => {
   if (e.key === "F3") {

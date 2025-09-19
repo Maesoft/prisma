@@ -151,7 +151,7 @@ const createProductRow = (product, index) => {
         <select 
           class="precio-select form-control text-center" 
           data-index="${index}" 
-          style="font-size: 0.7rem; height: 16px; padding: 0px 4px; line-height: 1; border: 1px solid #ccc; margin: 0; width: auto; min-width: 60px;"
+          style="font-size: 0.7rem; height: 16px; padding: 0px 4px; line-height: 1; border: 1px solid #ccc; margin: auto; width: auto; min-width: 60px;"
         >
           ${getSortedPriceOptions(precios, selectedPrice)}
         </select>
@@ -163,7 +163,7 @@ const createProductRow = (product, index) => {
           min="0" 
           step="1"
           class="precio-input form-control text-center" 
-          style="font-size: 0.7rem; height: 16px; padding: 0px 4px; line-height: 1; border: 1px solid #ccc; margin: 0; width: auto; min-width: 60px;"
+          style="font-size: 0.7rem; height: 16px; padding: 0px 4px; line-height: 1; border: 1px solid #ccc; margin: auto; width: auto; min-width: 60px;"
           data-index="${index}" 
           onkeyup="updateSubTotal(event)"
           size="6"
@@ -173,7 +173,7 @@ const createProductRow = (product, index) => {
   row.innerHTML = `
     <td class="codigo text-center small p-1" style="font-size: 0.7rem; line-height: 1;">${product.codigo}</td>
     <td class="small p-1" style="font-size: 0.7rem; line-height: 1; padding-left: 4px;">${product.nombre}</td>
-    <td class="text-center p-1" style="width: 60px;">
+    <td class="text-center p-1" style="width: auto;">
       <input 
         type="number" 
         value="${product.cantidad}" 
@@ -181,7 +181,7 @@ const createProductRow = (product, index) => {
         max="${product.stock}" 
         data-index="${index}" 
         class="cantidad-input form-control text-center"
-        style="font-size: 0.7rem; height: 16px; padding: 0px 2px; line-height: 1; border: 1px solid #ccc; margin: 0; width: auto; min-width: 40px;"
+        style="font-size: 0.7rem; height: 16px; padding: 0px 2px; line-height: 1; border: 1px solid #ccc; margin: auto; width: auto; min-width: 100px;"
         size="3"
       />
     </td>
@@ -267,24 +267,7 @@ const replaceSelect = (event) => {
   input.focus();
   input.select();
   input.addEventListener("keyup", (e) => {
-    if (e.key == "Enter") {
-      const newSelect = document.createElement("select");
-      newSelect.className = "precio-select form-control text-center";
-      newSelect.style.cssText = `font-size: 0.7rem; height: 16px; padding: 0px 4px; line-height: 1; border: 1px solid #ccc; margin: 0; width: auto; min-width: 60px;`;
-      const option = document.createElement("option");
-      option.value = input.value;
-      option.textContent = parseFloat(input.value).toLocaleString("es-AR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-      newSelect.appendChild(option);
-
-      // Reasignar los eventos necesarios
-      newSelect.addEventListener("change", updateSubTotal);
-      newSelect.addEventListener("contextmenu", replaceSelect);
-      input.parentNode.replaceChild(newSelect, input);
-      updateSubTotal({ target: newSelect });
-    }
+      updateSubTotal({ target: e.currentTarget });
   });
 };
 const deleteItem = (event) => {
@@ -384,7 +367,7 @@ const calculateImpuestos = () => {
   productsSales.forEach((product, index) => {
     const cantidad = product.cantidad || 0;
     const precioUnitario = parseFloat(
-      document.querySelectorAll(".precio-select")[index]?.value || 0
+      document.querySelectorAll(".precio-select , .precio-input")[index]?.value || 0
     );
     const subtotal = cantidad * precioUnitario;
 

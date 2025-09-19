@@ -11,6 +11,11 @@
     <script defer src="../js/bootstrap.min.js"></script>
 </head>
 <style>
+    @page {
+        size: A4 landscape;
+        margin: 0;
+    }
+
     body {
         zoom: 80%;
         background-color: #f8f9fa;
@@ -20,7 +25,8 @@
         max-width: 1500px;
     }
 
-    .table th, .table td {
+    .table th,
+    .table td {
         vertical-align: middle;
     }
 
@@ -28,29 +34,36 @@
         margin-top: 20px;
     }
 </style>
-<body>
-    <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1 class="h3">Lista de Proveedores</h1>
-        </div>
 
-        <div class="table-responsive">
-            <table class="table table-striped table-hover align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col">Código</th>
-                        <th scope="col">Razón Social</th>
-                        <th scope="col">CUIT</th>
-                        <th scope="col">Domicilio</th>
-                        <th scope="col">Teléfono</th>
-                        <th scope="col">Correo Electrónico</th>
-                        <th scope="col">Régimen</th>
-                    </tr>
-                </thead>
-                <tbody id="providersTableBody">
-                    <!-- Filas insertadas dinámicamente por JS -->
-                </tbody>
-            </table>
+<body>
+    <div class="container mt-4 d-flex flex-column justify-content-between min-vh-100">
+        <div>
+            <div class="d-flex justify-content-between p-1 align-items-center mb-3">
+                <h1 class="h3">Lista de Proveedores</h1>
+                <img src="../assets/impresora.png" alt="Imprimir..." class="boton-imprimir" onclick="imprimir()" ; />
+            </div>
+
+            <div class="table-responsive table-container">
+                <table class="table table-striped table-hover align-middle" style="cursor: pointer;">
+                    <thead class="table-dark border border-dark border-2 ">
+                        <tr>
+                            <th scope="col">Código</th>
+                            <th scope="col">Razón Social</th>
+                            <th scope="col">CUIT</th>
+                            <th scope="col">Domicilio</th>
+                            <th scope="col">Teléfono</th>
+                            <th scope="col">Correo Electrónico</th>
+                            <th scope="col">Régimen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="providersTableBody">
+                        <!-- Filas insertadas dinámicamente por JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <button class="btn px-4 btn-dark" onclick="window.close()">Cerrar</button>
         </div>
     </div>
 </body>

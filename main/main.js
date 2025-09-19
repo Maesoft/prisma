@@ -207,7 +207,7 @@ ipcMain.handle("get-purchases", async () => {
   try {
     const purchaseRepository = AppDataSource.getRepository(Purchase);
     const purchases = await purchaseRepository.find({
-      relations: ["provider", "details"],
+      relations: ["provider", "details", "impuestos", "payment"],
       order: { fecha: "ASC" },
     });
     return { success: true, purchases };

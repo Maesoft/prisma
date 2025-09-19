@@ -111,17 +111,24 @@ const getInvoices = async (idClient) => {
         const option = document.createElement("option");
         option.value = inv.id;
         option.textContent = inv.tipo_comprobante + inv.numero_comprobante;
+        option.dataset.total = inv.total;
         invoiceList.appendChild(option);
       }
     });
   }
 };
-const moveSelected = (from, to) => {
+const moveSelected = (from, to, sign) => {
   Array.from(from.selectedOptions).forEach((opt) => {
     from.removeChild(opt);
     to.appendChild(opt);
+    const saldo = parseFloat(opt.dataset.total) || 0;
+    updateTotal(sign * saldo);
   });
 }
+const updateTotal = (monto) => {
+  const current = parseFloat(amount.value) || 0;
+  amount.value = (current + monto).toFixed(2);
+};
 const validateFields = () => {
   const fecha = new Date(orderDate.value);
   if (isNaN(fecha.getTime())) {
@@ -166,11 +173,10 @@ const newReceipt = async () => {
   if (!validateFields()) return;
 
   const selectedInvoices = Array.from(invoiceApply.options).map((opt) => ({ id: Number(opt.value) }));
-
   const receiptData = {
     fecha: orderDate.value,
     nro_comprobante: orderNumber.value,
-    monto: amount.value.replace(/\./g, "").replace(",", "."),
+    monto: parseFloat(amount.value),
     facturas: selectedInvoices,
     cliente: { id: idClient },
     caja: { id: Number(paymentMethodSelect.value) },
@@ -188,8 +194,8 @@ const newReceipt = async () => {
 };
 
 // Event listeners
-invoiceList.addEventListener("dblclick", () => moveSelected(invoiceList, invoiceApply));
-invoiceApply.addEventListener("dblclick", () => moveSelected(invoiceApply, invoiceList));
+invoiceList.addEventListener("dblclick", () => moveSelected(invoiceList, invoiceApply, +1));
+invoiceApply.addEventListener("dblclick", () => moveSelected(invoiceApply, invoiceList, -1));
 inputClient.addEventListener("focusout", selectClient);
 inputClient.addEventListener("keyup", async (e) => {
   if (e.key === "F3") {

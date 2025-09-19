@@ -9,3 +9,27 @@
 .fuente-pequeña{
     font-size:x-small;
 }
+
+.boton-imprimir{
+    width:32px; 
+    height:32px; 
+    transition: transform 0.2s; 
+    cursor:pointer;
+}
+.boton-imprimir:hover{
+    transform: scale(1.1);
+}
+.table-container{
+    height: 500px; /* Ajusta este valor según tus necesidades */
+    overflow-y: auto;    
+}
+.table-container::-webkit-scrollbar {
+    width: 8px; /* Ancho del scrollbar */
+}
+.table-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2); /* Color del thumb */
+    border-radius: 4px; /* Radio del thumb */
+}
+.table-container::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.1); /* Color del track */
+}
