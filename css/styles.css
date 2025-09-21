@@ -20,8 +20,10 @@
     transform: scale(1.1);
 }
 .table-container{
-    height: 500px; /* Ajusta este valor según tus necesidades */
-    overflow-y: auto;    
+      width: 100%;
+      height: 300px; /* altura fija o máxima */
+      overflow-y: auto; /* solo hace scroll vertical en este div */
+      border: 1px solid #ccc;   
 }
 .table-container::-webkit-scrollbar {
     width: 8px; /* Ancho del scrollbar */

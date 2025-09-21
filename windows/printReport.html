@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Reporte de Ventas</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
     <script defer src="../js/bootstrap.min.js"></script>
     <style>
         @page {
@@ -31,6 +32,8 @@
             <h1 class="text-center" id="titulo"><strong>Titulo</h1></strong>
             <p class="text-center mt-1" id="fechaEmision">fechaEmision</p>
             <p class="text-center" id="periodo">periodo</p>
+            <img src="../assets/impresora.png" alt="Imprimir..." class="boton-imprimir" onclick="imprimir()"/>
+
         </div>
         <div class="full-width-container" id="reporte">
 
@@ -50,7 +53,11 @@
         periodo.innerHTML = `<strong>Desde:</strong> ${data.fechaInicio} <br> <strong>Hasta:</strong> ${data.fechaFin}`;
         reporte.innerHTML = data.html;
     });
-    setTimeout(() => { window.print() }, 1000);
+    function imprimir() {
+        document.querySelector('.boton-imprimir').style.display = 'none';
+        window.print();
+        document.querySelector('.boton-imprimir').style.display = 'block';
+    }
 </script>
 
 </html>
