@@ -89,7 +89,9 @@ const updateClient = async () => {
 const searchClient = async () => {
   const searchInput = document.getElementById("inputModalClients").value;
   const clientsFiltered = allClients.filter((client) =>
-    client.razon_social.toLowerCase().includes(searchInput.toLowerCase())
+    client.razon_social.toLowerCase().includes(searchInput.toLowerCase()) ||
+    client.cuit.toLowerCase().includes(searchInput.toLowerCase()) ||
+    client.codigo.toLowerCase().includes(searchInput.toLowerCase())
   );
   renderClients(clientsFiltered);
 };

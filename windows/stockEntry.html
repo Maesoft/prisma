@@ -78,20 +78,19 @@
             <div class="form-group p-4">
                 <input type="text" class="form-control bg-secondary" id="searchInput" oninput="findProducts()" />
             </div>
-            <div class="modal-body p-4" style="max-height: 50vh; overflow-y: auto;">
-                <div class="table-responsive">
-                    <table class="table table-bordered w-100" id="productsTable" style="cursor: default;">
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Nombre</th>
-                                <th>Categoria</th>
-                                <th>Stock</th>
-                            </tr>
-                        </thead>
-                        <tbody style="cursor: pointer;"></tbody>
-                    </table>
-                </div>
+            <div class="table-container px-3" style="height: 260px;">
+                <table class="table table-bordered table-striped text-center" id="productsTable"
+                    style="cursor: default; font-size: 0.8rem;">
+                    <thead>
+                        <tr class="table-dark">
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Categoria</th>
+                            <th>Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody style="cursor: pointer;"></tbody>
+                </table>
             </div>
         </div>
     </div>

@@ -84,7 +84,9 @@ const deleteProviders = async (provider) => {
 };
 input.addEventListener("input",()=>{
   const filteredProviders = providers.filter((provider) =>
-    provider.razon_social.toLowerCase().includes(input.value.toLowerCase())
+    provider.razon_social.toLowerCase().includes(input.value.toLowerCase()) ||
+    provider.codigo.toLowerCase().includes(input.value.toLowerCase()) ||
+    provider.cuit.toLowerCase().includes(input.value.toLowerCase())
   );
   renderProviders(filteredProviders);
 })

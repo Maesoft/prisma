@@ -11,27 +11,28 @@
 
 <body style="zoom: 80% ;">
     <div class="form-group p-4">
-        <input type="text" class="form-control bg-secondary" id="inputModalInvoices" tabindex="1"/>
+        <input type="text" class="form-control bg-secondary" id="inputModalInvoices" tabindex="1" />
     </div>
-
-    <table class="table text-center" style="cursor: default;">
-        <thead>
-            <colgroup>
-                <col style="width: 17%">
-                <col style="width: 34%">
-                <col style="width: 29%">
-                <col style="width: 20%">
-            </colgroup>
-            <tr>
-                <th>Fecha</th>
-                <th>Razon Social</th>
-                <th>Comprobante</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody id="listInvoices" style="cursor: pointer;">
-        </tbody>
-    </table>
+    <div class="table-container px-3">
+        <table class="table table-bordered table-striped text-center" style="cursor: default;">
+            <thead>
+                <colgroup>
+                    <col style="width: 17%">
+                    <col style="width: 34%">
+                    <col style="width: 29%">
+                    <col style="width: 20%">
+                </colgroup>
+                <tr class="table-dark">
+                    <th>Fecha</th>
+                    <th>Razon Social</th>
+                    <th>Comprobante</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody id="listInvoices" style="cursor: pointer;">
+            </tbody>
+        </table>
+    </div>
     </div>
 </body>
 

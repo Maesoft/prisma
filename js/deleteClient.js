@@ -91,7 +91,9 @@ const deleteClients = async (client) => {
 };
 input.addEventListener("input",()=>{
   const filteredClients = clients.filter((client) =>
-    client.razon_social.toLowerCase().includes(input.value.toLowerCase())
+    client.razon_social.toLowerCase().includes(input.value.toLowerCase()) ||
+    client.cuit.toLowerCase().includes(input.value.toLowerCase()) ||
+    client.codigo.toLowerCase().includes(input.value.toLowerCase())
   );
   renderClients(filteredClients);
 })

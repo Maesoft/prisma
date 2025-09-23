@@ -1,4 +1,5 @@
 const inputCodigoCliente = document.getElementById("inputCodigoCliente");
+const inputModalClients = document.getElementById("inputModalClients");
 const inputDocument = document.getElementById("inputDocument");
 const labelNombreCliente = document.getElementById("nombreCliente");
 const fechaActual = new Date().toISOString().split("T")[0];
@@ -70,12 +71,12 @@ const makeReport = async () => {
     : null;
 
   const movimientos = [];
-  
+
   clients.forEach((client) => {
     // Procesar ventas
     if (Array.isArray(client.sales)) {
-      client.sales.forEach((venta) => {   
-        const fechaVenta = new Date(venta.fecha);     
+      client.sales.forEach((venta) => {
+        const fechaVenta = new Date(venta.fecha);
         if (
           (!fechaInicio || fechaVenta >= fechaInicio) &&
           (!fechaFin || fechaVenta <= fechaFin)
@@ -86,7 +87,7 @@ const makeReport = async () => {
               tipo_comprobante: venta.tipo_comprobante,
               numero_comprobante: venta.numero_comprobante,
               observacion: venta.observacion,
-              total: parseFloat(venta.total)
+              total: parseFloat(venta.total),
             });
           }
         }
@@ -106,16 +107,16 @@ const makeReport = async () => {
               tipo_comprobante: "REC",
               numero_comprobante: recibo.nro_comprobante,
               observacion: recibo.observacion,
-              total: Number(recibo.monto)
+              total: Number(recibo.monto),
             });
           }
         }
       });
     }
   });
-   const datosFiltrados = movimientos.sort((a, b) => {
-    const [diaA, mesA, anioA] = a.fecha.split('/');
-    const [diaB, mesB, anioB] = b.fecha.split('/');
+  const datosFiltrados = movimientos.sort((a, b) => {
+    const [diaA, mesA, anioA] = a.fecha.split("/");
+    const [diaB, mesB, anioB] = b.fecha.split("/");
     const dateA = new Date(`${anioA}-${mesA}-${diaA}`);
     const dateB = new Date(`${anioB}-${mesB}-${diaB}`);
     return dateA - dateB;
@@ -123,29 +124,46 @@ const makeReport = async () => {
   printReport(datosFiltrados);
 };
 const printReport = async (report) => {
-  const tiposDebe = ['FA', 'FB', 'FC', 'F', 'T', 'TA', 'TB', 'TC', 'NDA', 'NDB', 'NDC', 'VEN'];
-  const tiposHaber = ['REC', 'NCA', 'NCB', 'NCC'];
+  const tiposDebe = [
+    "FA",
+    "FB",
+    "FC",
+    "F",
+    "T",
+    "TA",
+    "TB",
+    "TC",
+    "NDA",
+    "NDB",
+    "NDC",
+    "VEN",
+  ];
+  const tiposHaber = ["REC", "NCA", "NCB", "NCC"];
 
   if (fechaInicio) fechaInicio.setDate(fechaInicio.getDate() + 1);
   if (fechaFin) fechaFin.setDate(fechaFin.getDate() + 1);
 
   let saldo = 0;
 
-  let rowsHtml = '';
-  report.forEach(rep => {
+  let rowsHtml = "";
+  report.forEach((rep) => {
     const debe = tiposDebe.includes(rep.tipo_comprobante) ? rep.total : 0;
     const haber = tiposHaber.includes(rep.tipo_comprobante) ? rep.total : 0;
     saldo += debe - haber;
 
+    const formatter = new Intl.NumberFormat("es-AR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
     rowsHtml += `
-      <tr>
-        <td>${rep.fecha}</td>
-        <td>${rep.tipo_comprobante}${rep.numero_comprobante}</td>
-        <td>${debe ? debe.toFixed(2) : ''}</td>
-        <td>${haber ? haber.toFixed(2) : ''}</td>
-        <td class="text-end">${parseFloat(saldo)}</td>
-      </tr>
-    `;
+  <tr>
+    <td>${rep.fecha}</td>
+    <td>${rep.tipo_comprobante}${rep.numero_comprobante}</td>
+    <td class="text-end">${debe ? formatter.format(debe) : ""}</td>
+    <td class="text-end">${haber ? formatter.format(haber) : ""}</td>
+    <td class="text-end">${formatter.format(parseFloat(saldo))}</td>
+  </tr>
+`;
   });
 
   const html = `
@@ -160,25 +178,31 @@ const printReport = async (report) => {
       </style>
     </head>
     <body>
-      <h4><strong>Razón Social:</strong> ${clients.find(pr => pr.codigo == inputCodigoCliente.value).razon_social || 'N/A'}</h4>
+      <h4><strong>Razón Social:</strong> ${
+        clients.find((pr) => pr.codigo == inputCodigoCliente.value)
+          .razon_social || "N/A"
+      }</h4>
       <table class="table table-striped" id="informe">
         <thead class="text-center">
-          <tr>
+          <tr class="table-dark">
             <th class="text-start">Fecha</th>
             <th class="text-start">Comprobante</th>
-            <th class="text-start">Debe</th>
-            <th class="text-start">Haber</th>
-            <th class="text-end">Saldo</th>
+            <th class="text-center">Debe</th>
+            <th class="text-center">Haber</th>
+            <th class="text-center">Saldo</th>
           </tr>
         </thead>
         <tbody>
           ${rowsHtml}
         </tbody>
       </table>
-      <div class="text-end"><strong>Total: </strong> $ ${(saldo).toLocaleString("es-AR", { 
-        minimumFractionDigits: 2, 
-        maximumFractionDigits: 2 
-      })}</div>
+      <div class="text-end"><strong>Total: </strong> $ ${saldo.toLocaleString(
+        "es-AR",
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }
+      )}</div>
     </body>
     </html>
   `;
@@ -193,9 +217,11 @@ const printReport = async (report) => {
       html,
       title: "Resumen de cuenta",
       fechaEmision: formatearFecha(fechaActual),
-      fechaInicio: fechaInicio ? fechaInicio.toLocaleDateString("es-AR") : "Sin fecha",
+      fechaInicio: fechaInicio
+        ? fechaInicio.toLocaleDateString("es-AR")
+        : "Sin fecha",
       fechaFin: fechaFin ? fechaFin.toLocaleDateString("es-AR") : "Sin fecha",
-    }
+    },
   });
 };
 const seleccionarCliente = async () => {
@@ -210,12 +236,10 @@ const seleccionarCliente = async () => {
   } else {
     // idclient = codeToSearch.id;
     labelNombreCliente.textContent = codeToSearch.razon_social;
-    inputDocument.focus()
+    inputDocument.focus();
   }
-}
-inputCodigoCliente.addEventListener("focusout", async (event) => {
-  seleccionarCliente()
-});
+};
+
 inputCodigoCliente.addEventListener("keyup", async (event) => {
   if (event.key === "F3") {
     const clientSearchModal = new bootstrap.Modal(
@@ -227,6 +251,15 @@ inputCodigoCliente.addEventListener("keyup", async (event) => {
     setTimeout(() => inputModalClients.focus(), 200);
   }
   if (event.key === "Enter") {
-    seleccionarCliente()
+    seleccionarCliente();
   }
+});
+inputModalClients.addEventListener("input", (e) => {
+  const criterio = e.target.value;
+  const filteredClients = clients.filter((client) =>
+    client.razon_social.toLowerCase().includes(criterio.toLowerCase()) ||
+    client.codigo.toLowerCase().includes(criterio.toLowerCase()) ||
+    client.cuit.toLowerCase().includes(criterio.toLowerCase()) 
+  );
+  renderClients(filteredClients);
 });

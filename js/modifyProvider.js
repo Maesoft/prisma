@@ -79,7 +79,9 @@ const updateProvider = async () => {
 const searchProvider = async () => {
   const searchInput = document.getElementById("inputModalProviders").value;
   const providersFiltered = allProviders.filter((provider) =>
-    provider.razon_social.toLowerCase().includes(searchInput.toLowerCase())
+    provider.razon_social.toLowerCase().includes(searchInput.toLowerCase()) ||
+    provider.codigo.toLowerCase().includes(searchInput.toLowerCase()) ||
+    provider.cuit.toLowerCase().includes(searchInput.toLowerCase())
   );
   renderProviders(providersFiltered);
 };

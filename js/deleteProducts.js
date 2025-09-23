@@ -91,7 +91,9 @@ const deleteProduct = async (product) => {
 };
 input.addEventListener("input",()=>{
   const filteredProducts = products.filter((product) =>
-    product.nombre.toLowerCase().includes(input.value.toLowerCase())
+    product.nombre.toLowerCase().includes(input.value.toLowerCase()) ||
+    product.categoria.name.toLowerCase().includes(input.value.toLowerCase())||
+    product.codigo.toLowerCase().includes(input.value.toLowerCase())
   );
   renderProducts(filteredProducts);
 })

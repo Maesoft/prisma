@@ -761,14 +761,18 @@ inputCodigoProducto.addEventListener("keyup", async (event) => {
 inputModalClients.addEventListener("input", (e) => {
   const criterio = e.target.value;
   const filteredClients = clients.filter((client) =>
-    client.razon_social.toLowerCase().includes(criterio.toLowerCase())
+    client.razon_social.toLowerCase().includes(criterio.toLowerCase()) ||
+    client.codigo.toLowerCase().includes(criterio.toLowerCase()) ||
+    client.cuit.toLowerCase().includes(criterio.toLowerCase())
   );
   renderClients(filteredClients);
 });
 inputModalProduct.addEventListener("input", (e) => {
   const criterio = e.target.value;
   const filteredProducts = products.filter((product) =>
-    product.nombre.toLowerCase().includes(criterio.toLowerCase())
+    product.nombre.toLowerCase().includes(criterio.toLowerCase()) ||
+    product.categoria.name.toLowerCase().includes(criterio.toLowerCase()) ||
+    product.codigo.toLowerCase().includes(criterio.toLowerCase())
   );
   renderProducts(filteredProducts);
 });

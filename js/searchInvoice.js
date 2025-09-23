@@ -94,6 +94,6 @@ inputSearch.addEventListener("input", (e) => {
       inv.client?.razon_social.toLowerCase().includes(query.toLowerCase()) ||
       inv.fecha.includes(formatearFecha(query)) ||
       inv.numero_comprobante.toLowerCase().includes(query.toLowerCase())
-  );
+      );
   renderInvoices(filtered);
 });

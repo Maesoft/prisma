@@ -1,4 +1,5 @@
 const inputCodigoProveedor = document.getElementById("inputCodigoProveedor");
+const inputModalSuppliers = document.getElementById("inputModalSuppliers");
 const inputDocument = document.getElementById("inputDocument");
 const labelNombreProveedor = document.getElementById("nombreProveedor");
 const fechaActual = new Date().toISOString().split("T")[0];
@@ -19,7 +20,6 @@ const loadProviders = async () => {
       return;
     }
     providers = res.providers;
-    
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Prisma", error.message);
   }
@@ -80,14 +80,14 @@ const makeReport = async () => {
         if (
           (!fechaInicio || fechaCompra >= fechaInicio) &&
           (!fechaFin || fechaCompra <= fechaFin)
-        ) {          
+        ) {
           if (inputCodigoProveedor.value == provider.codigo) {
             movimientos.push({
               fecha: formatearFecha(compra.fecha),
               tipo_comprobante: compra.tipo_comprobante,
               numero_comprobante: compra.numero_comprobante,
               observacion: compra.observacion,
-              total: Number(compra.total)
+              total: Number(compra.total),
             });
           }
         }
@@ -107,7 +107,7 @@ const makeReport = async () => {
               tipo_comprobante: "OP",
               numero_comprobante: pago.nro_comprobante,
               observacion: pago.observacion,
-              total: Number(pago.monto)
+              total: Number(pago.monto),
             });
           }
         }
@@ -115,38 +115,55 @@ const makeReport = async () => {
     }
   });
   const datosFiltrados = movimientos.sort((a, b) => {
-    const [diaA, mesA, anioA] = a.fecha.split('/');
-    const [diaB, mesB, anioB] = b.fecha.split('/');
+    const [diaA, mesA, anioA] = a.fecha.split("/");
+    const [diaB, mesB, anioB] = b.fecha.split("/");
     const dateA = new Date(`${anioA}-${mesA}-${diaA}`);
     const dateB = new Date(`${anioB}-${mesB}-${diaB}`);
     return dateA - dateB;
   });
-    printReport(datosFiltrados);
+  printReport(datosFiltrados);
 };
 const printReport = async (report) => {
-  const tiposDebe = ['FA', 'FB', 'FC', 'F', 'T', 'TA', 'TB', 'TC', 'NDA', 'NDB', 'NDC', 'VEN'];
-  const tiposHaber = ['OP', 'NCA', 'NCB', 'NCC'];
+  const tiposDebe = [
+    "FA",
+    "FB",
+    "FC",
+    "F",
+    "T",
+    "TA",
+    "TB",
+    "TC",
+    "NDA",
+    "NDB",
+    "NDC",
+    "VEN",
+  ];
+  const tiposHaber = ["OP", "NCA", "NCB", "NCC"];
 
   if (fechaInicio) fechaInicio.setDate(fechaInicio.getDate() + 1);
   if (fechaFin) fechaFin.setDate(fechaFin.getDate() + 1);
 
   let saldo = 0;
 
-  let rowsHtml = '';
-  report.forEach(rep => {
+  let rowsHtml = "";
+  report.forEach((rep) => {
     const debe = tiposDebe.includes(rep.tipo_comprobante) ? rep.total : 0;
     const haber = tiposHaber.includes(rep.tipo_comprobante) ? rep.total : 0;
     saldo += debe - haber;
 
+    const formatter = new Intl.NumberFormat("es-AR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
     rowsHtml += `
-      <tr>
-        <td>${rep.fecha}</td>
-        <td>${rep.tipo_comprobante}${rep.numero_comprobante}</td>
-        <td>${debe ? debe.toFixed(2) : ''}</td>
-        <td>${haber ? haber.toFixed(2) : ''}</td>
-        <td class="text-end">${saldo.toFixed(2)}</td>
-      </tr>
-    `;
+  <tr>
+    <td>${rep.fecha}</td>
+    <td>${rep.tipo_comprobante}${rep.numero_comprobante}</td>
+    <td class="text-end">${debe ? formatter.format(debe) : ""}</td>
+    <td class="text-end">${haber ? formatter.format(haber) : ""}</td>
+    <td class="text-end">${formatter.format(parseFloat(saldo))}</td>
+  </tr>
+`;
   });
 
   const html = `
@@ -161,25 +178,31 @@ const printReport = async (report) => {
       </style>
     </head>
     <body>
-      <h4><strong>Razón Social:</strong> ${providers.find(pr => pr.codigo == inputCodigoProveedor.value).razon_social || 'N/A'}</h4>
+      <h4><strong>Razón Social:</strong> ${
+        providers.find((pr) => pr.codigo == inputCodigoProveedor.value)
+          .razon_social || "N/A"
+      }</h4>
       <table class="table table-striped" id="informe">
         <thead class="text-center">
-          <tr>
+          <tr class="table-dark">
             <th class="text-start">Fecha</th>
             <th class="text-start">Comprobante</th>
-            <th class="text-start">Debe</th>
-            <th class="text-start">Haber</th>
-            <th class="text-end">Saldo</th>
+            <th class="text-center">Debe</th>
+            <th class="text-center">Haber</th>
+            <th class="text-center">Saldo</th>
           </tr>
         </thead>
         <tbody>
           ${rowsHtml}
         </tbody>
       </table>
-      <div class="text-end"><strong>Total: </strong> $ ${(saldo).toLocaleString("es-AR", { 
-        minimumFractionDigits: 2, 
-        maximumFractionDigits: 2 
-      })}</div>
+      <div class="text-end"><strong>Total: </strong> $ ${saldo.toLocaleString(
+        "es-AR",
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }
+      )}</div>
     </body>
     </html>
   `;
@@ -194,14 +217,13 @@ const printReport = async (report) => {
       html,
       title: "Resumen de cuenta",
       fechaEmision: formatearFecha(fechaActual),
-      fechaInicio: fechaInicio ? fechaInicio.toLocaleDateString("es-AR") : "Sin fecha",
+      fechaInicio: fechaInicio
+        ? fechaInicio.toLocaleDateString("es-AR")
+        : "Sin fecha",
       fechaFin: fechaFin ? fechaFin.toLocaleDateString("es-AR") : "Sin fecha",
-    }
+    },
   });
 };
-inputCodigoProveedor.addEventListener("focusout", async (event) => {
-  seleccionarProveedor()
-});
 inputCodigoProveedor.addEventListener("keyup", async (event) => {
   if (event.key === "F3") {
     const providerSearchModal = new bootstrap.Modal(
@@ -210,10 +232,10 @@ inputCodigoProveedor.addEventListener("keyup", async (event) => {
     providerSearchModal.show();
     await loadProviders();
     renderProviders(providers);
-    setTimeout(() => inputModalProviders.focus(), 200);
+    setTimeout(() => inputModalSuppliers.focus(), 200);
   }
   if (event.key === "Enter") {
-    seleccionarProveedor()
+    seleccionarProveedor();
   }
 });
 const seleccionarProveedor = async () => {
@@ -228,6 +250,15 @@ const seleccionarProveedor = async () => {
   } else {
     // idProvider = codeToSearch.id;
     labelNombreProveedor.textContent = codeToSearch.razon_social;
-    inputDocument.focus()
+    inputDocument.focus();
   }
-}
+};
+inputModalSuppliers.addEventListener("input", (e) => {
+  const criterio = e.target.value;
+  const filteredProviders = providers.filter((provider) =>
+    provider.razon_social.toLowerCase().includes(criterio.toLowerCase()) ||
+    provider.codigo.toLowerCase().includes(criterio.toLowerCase()) ||
+    provider.cuit.toLowerCase().includes(criterio.toLowerCase())
+  );
+  renderProviders(filteredProviders);
+});
