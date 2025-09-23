@@ -66,26 +66,27 @@
                 <input type="text" class="form-control bg-secondary" id="inputModalProviders" tabindex="1"
                     oninput="searchProvider()" />
             </div>
+            <div class="table-container px-3">
+                <table class="table table-bordered table-striped text-center" style="cursor: default; font-size: 0.8rem;">
+                    <thead >
+                        <colgroup>
+                            <col style="width: 10%">
+                            <col style="width: 40%">
+                            <col style="width: 30%">
+                            <col style="width: 20%">
+                        </colgroup>
+                        <tr class="table-dark">
+                            <th>Código</th>
+                            <th>Razon Social</th>
+                            <th>CUIT</th>
+                            <th>Regimen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listProviders" style="cursor: pointer;">
 
-            <table class="table text-center" style="cursor: default;">
-                <thead>
-                    <colgroup>
-                        <col style="width: 10%">
-                        <col style="width: 40%">
-                        <col style="width: 30%">
-                        <col style="width: 20%">
-                    </colgroup>
-                    <tr>
-                        <th>Código</th>
-                        <th>Razon Social</th>
-                        <th>CUIT</th>
-                        <th>Regimen</th>
-                    </tr>
-                </thead>
-                <tbody id="listProviders" style="cursor: pointer;">
-
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
 
         </div>
     </div>

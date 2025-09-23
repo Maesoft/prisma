@@ -127,20 +127,20 @@
 <div class="modal fade" id="productSearchModal" tabindex="-1" aria-labelledby="productSearchModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content " >
             <div class="modal-header bg-black text-white">
                 <h5 class="modal-title" id="productSearchModalLabel">
                     Buscar Articulo
                 </h5>
                 <button type="button" class="btn-close bg-secondary w-2" onclick="window.close()"></button>
             </div>
-            <div class="form-group p-4">
+            <div class="form-group px-3 mt-2">
                 <input type="text" class="form-control bg-secondary" id="searchInput" oninput="findProducts()" />
             </div>
-            <div class="modal-body p-4" style="max-height: 60vh; overflow-y: auto;">
-                <div class="table-responsive">
-                    <table class="table table-bordered w-100" id="productsTable" style="cursor: default;">
-                        <thead>
+            <div class="modal-body" style="max-height: 62vh; overflow-y: auto;">
+                <div class="table-responsive table-container">
+                    <table class="table table-bordered table-striped w-100" id="productsTable" style="cursor: default; font-size: 0.8rem;">
+                        <thead class="table-dark">
                             <tr>
                                 <th>Código</th>
                                 <th>Nombre</th>

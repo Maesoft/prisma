@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <script defer src="../js/bootstrap.min.js"></script>
     <script defer src="../js/modifyClient.js"></script>
     <title>Prisma</title>
@@ -54,7 +55,7 @@
     </div>
 </body>
 <!-- Modal para listar Clientes -->
- <div class="modal" id="modalClients" data-bs-backdrop="static" tabindex="-1" style="display: block;">
+<div class="modal" id="modalClients" data-bs-backdrop="static" tabindex="-1" style="display: block;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-black text-white">
@@ -64,30 +65,32 @@
                 <button type="button" class="btn-close bg-secondary w-2" onclick="window.close()"></button>
             </div>
             <div class="form-group p-4">
-                <input type="text" class="form-control bg-secondary" id="inputModalClients" tabindex="1" oninput="searchClient()" />
+                <input type="text" class="form-control bg-secondary" id="inputModalClients" tabindex="1"
+                    oninput="searchClient()" />
             </div>
+            <div class="table-container">
+                <table class="table table-striped text-center" style="cursor: default; font-size: 0.8rem;">
+                    <thead >
+                        <colgroup>
+                            <col style="width: 10%">
+                            <col style="width: 40%">
+                            <col style="width: 30%">
+                            <col style="width: 20%">
+                        </colgroup>
+                        <tr class="table-dark">
+                            <th>Código</th>
+                            <th>Razon Social</th>
+                            <th>CUIT</th>
+                            <th>Regimen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listClients" style="cursor: pointer;">
 
-            <table class="table text-center" style="cursor: default;">
-                <thead>
-                    <colgroup>
-                        <col style="width: 10%">
-                        <col style="width: 40%">
-                        <col style="width: 30%">
-                        <col style="width: 20%">
-                    </colgroup>
-                    <tr>
-                        <th>Código</th>
-                        <th>Razon Social</th>
-                        <th>CUIT</th>
-                        <th>Regimen</th>
-                    </tr>
-                </thead>
-                <tbody id="listClients" style="cursor: pointer;">
-
-                </tbody>
-            </table>
-
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+
 </html>

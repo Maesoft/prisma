@@ -32,12 +32,5 @@ const renderProvidersTable = async () => {
         tableBody.appendChild(row);
     });
 };
-const imprimir = () => {
-    
-    document.querySelector(".boton-imprimir").style.display = 'none';
-    document.querySelector(".boton").style.display = 'none';
-    window.print();
-    document.querySelector(".boton-imprimir").style.display = 'block';
-    document.querySelector(".boton").style.display = 'block';
-}
+
 renderProvidersTable();
