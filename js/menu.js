@@ -5,7 +5,7 @@ const menuTemplate = [
     label: 'Archivo',
     submenu: [
       { label: 'Backup', click: () => { /* Función de backup */ } },
-      { label: 'Mi Negocio...', click: () => { windowManager.createWindow("option", 700, 585, false, true) } },
+      { label: 'Mi Empresa', click: () => { windowManager.createWindow("option", 700, 585, false, true) } },
       { type: 'separator' },
       { label: 'Salir', role: 'quit' }
     ]

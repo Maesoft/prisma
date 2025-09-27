@@ -9,7 +9,24 @@
     <script defer src="../js/payment.js"></script>
     <title>Prisma</title>
 </head>
+<style>
 
+    @media print {
+        .btn {
+            display: none;
+        }
+        #invoiceApply {
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+            border: none;
+        }
+    }
+    @page {
+        size: A4 Portrait;
+        margin: 0;
+    }
+</style>
 <body>
     <div class="p-3">
         <h1 class="mb-0">Orden de Pago</h1>

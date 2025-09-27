@@ -34,9 +34,9 @@ const renderProducts = (arrProducts) => {
         <td>${product.codigo}</td>
         <td>${product.descripcion}</td>
         <td>${product.categoria.name}</td>
-        <td>${product.stock}</td>
-        <td>${product.stock_minimo}</td>
-        <td>${status}</td>
+        <td class="text-center">${product.stock}</td>
+        <td class="text-center">${product.stock_minimo}</td>
+        <td class="text-center">${status}</td>
         
         `;
 

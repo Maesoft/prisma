@@ -70,7 +70,7 @@ const makeReport = async () => {
     ? new Date(document.getElementById("fechaFin").value)
     : null;
 
-  const movimientos = [];
+  let movimientos = [];
 
   providers.forEach((provider) => {
     // Procesar compras
@@ -114,14 +114,19 @@ const makeReport = async () => {
       });
     }
   });
-  const datosFiltrados = movimientos.sort((a, b) => {
+
+  if(inputDocument.value){
+    movimientos = movimientos.filter(mov => mov.tipo_comprobante === inputDocument.value);
+  }
+  const datosOrdenados = movimientos.sort((a, b) => {
     const [diaA, mesA, anioA] = a.fecha.split("/");
     const [diaB, mesB, anioB] = b.fecha.split("/");
     const dateA = new Date(`${anioA}-${mesA}-${diaA}`);
     const dateB = new Date(`${anioB}-${mesB}-${diaB}`);
     return dateA - dateB;
   });
-  printReport(datosFiltrados);
+  
+  printReport(datosOrdenados);
 };
 const printReport = async (report) => {
   const tiposDebe = [

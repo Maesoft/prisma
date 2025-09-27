@@ -211,16 +211,6 @@ orderSupply.addEventListener("keyup", async (e) => {
 amount.addEventListener("input", () => {
   amount.value = amount.value.replace(/[^0-9,]/g, "");
 });
-amount.addEventListener("blur", () => {
-  const raw = amount.value.replace(/\./g, "").replace(",", ".");
-  const number = parseFloat(raw);
-  if (!isNaN(number)) {
-    amount.value = number.toLocaleString("es-AR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  }
-});
 btnGenerate.addEventListener("click", newPayment);
 document.addEventListener("DOMContentLoaded", async () => {
   await getLastPayment();

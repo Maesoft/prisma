@@ -112,7 +112,7 @@ const makeReport = async () => {
       (!fechaInicio || fechaVenta >= fechaInicio) &&
       (!fechaFin || fechaVenta <= fechaFin);
 
-    return coincideCliente && coincideFecha;
+    return coincideCliente && coincideFecha && coincideProducto;
   });
 
   printReport(ventasFiltradas);

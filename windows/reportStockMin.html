@@ -1,18 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Prisma</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <script defer src="../js/bootstrap.min.js"></script>
     <script defer src="../js/reportStockMin.js"></script>
 </head>
+
 <body>
-    <div class="container mt-5">
-        <h2 class="mb-4">Reporte de Faltantes de Inventario</h2>
-        <table class="table table-bordered table-striped">
+    <div class="d-flex justify-content-between p-4">
+        <div>
+            <h2 class="mb-1">Reporte de Faltantes de Inventario</h2>
+            <p id="fechaEmision"></p>
+        </div>
+        <div>
+            <img src="../assets/impresora.png" alt="Imprimir..." class="boton-imprimir mr-3" onclick="imprimir()" />
+        </div>
+    </div>
+    <div class="table-container">
+        <table class="table table-bordered table-striped" style="font-size: 0.8rem;">
             <thead class="table-dark">
-                <tr>
+                <tr class="text-center">
                     <th>#</th>
                     <th>Producto</th>
                     <th>Categoría</th>
@@ -26,5 +37,7 @@
             </tbody>
         </table>
     </div>
+
 </body>
+
 </html>
