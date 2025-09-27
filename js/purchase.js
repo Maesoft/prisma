@@ -126,7 +126,7 @@ const calculateImpuestos = () => {
     const subtotal = cantidad * precioUnitario;
     if (Array.isArray(product.impuestos)) {
       product.impuestos.forEach((tax) => {
-        
+
         const clave = `${tax.titulo} ${tax.porcentaje}%`;
 
         if (!impuestosAgrupados[clave]) {
@@ -140,7 +140,7 @@ const calculateImpuestos = () => {
 
   if (impuestosDisplay) {
     impuestosDisplay.innerHTML = "";
-    Object.entries(impuestosAgrupados).forEach(([nombre, valor]) => {      
+    Object.entries(impuestosAgrupados).forEach(([nombre, valor]) => {
       const div = document.createElement("div");
       div.innerHTML = `<strong>${nombre}:</strong> $ ${valor.toLocaleString("es-AR", {
         minimumFractionDigits: 2,
@@ -155,6 +155,10 @@ const renderProductPurchase = () => {
   tablaProductos.innerHTML = "";
   productsPurchase.forEach((product, index) => {
     const row = document.createElement("tr");
+    row.style.height = "12px";
+    row.style.border = "1px solid #d3d3d3";
+    row.style.borderRadius = "6px";
+
     row.innerHTML = `
       <td class="codigo">${product.codigo}</td>
       <td>${product.nombre}</td>
@@ -164,13 +168,15 @@ const renderProductPurchase = () => {
           value="${product.cantidad}" 
           min="1" 
           data-index="${index}" 
-          class="cantidad-input h-25 w-50"
+          class="cantidad-input form-control text-center"
+          style="font-size: 0.7rem; height: 16px; padding: 0px 4px; line-height: 1; border: 1px solid #ccc; margin: auto; width: auto; min-width: 60px;"
         />
       </td>
       <td>
-        <input class="precio-input" type="number" data-index="${index}" value="${
-      product.precios?.[0]?.precio ?? 0
-    }" min="0"/>
+        <input class="precio-input form-control text-center"
+        style="font-size: 0.7rem; height: 16px; padding: 0px 4px; line-height: 1; border: 1px solid #ccc; margin: auto; width: auto; min-width: 60px;"
+        type="number" data-index="${index}" value="${product.precios?.[0]?.precio ?? 0
+      }" min="0"/>
       </td>
       <td class="total-cell">
       ${((product.precios?.[0]?.precio ?? 0) * product.cantidad).toLocaleString(
@@ -180,7 +186,13 @@ const renderProductPurchase = () => {
           maximumFractionDigits: 2,
         }
       )}</td>
-      <td><button class="btn btn-remove" data-index="${index}">✖</button></td>
+      <td><button 
+        class="btn btn-dark btn-sm p-0 btn-remove d-flex align-items-center justify-content-center" 
+        style="width: 16px; height: 16px; font-size: 0.6rem; line-height: 1; margin: 0;" 
+        data-index="${index}"
+      >
+        ✖
+      </button></td>
     `;
 
     tablaProductos.appendChild(row);
@@ -276,7 +288,7 @@ const calculateTotal = () => {
   });
 
   const impuestos = calculateImpuestos();
-  
+
   if (subTotalDisplay) {
     subTotalDisplay.textContent = ` $ ${subtotal.toLocaleString("es-AR", {
       minimumFractionDigits: 2,
@@ -290,7 +302,7 @@ const calculateTotal = () => {
     totalDisplay.textContent = ` $ ${total.toLocaleString("es-AR", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-  })}`;
+    })}`;
   }
 };
 const addProductToPurchase = (product) => {
@@ -392,7 +404,7 @@ const updateTax = async (purchaseId) => {
       const porcentaje = parseFloat(match[2]);
       const monto = parseFloat(match[3].replace(/\./g, "").replace(",", "."));
 
-      const taxData = { nombre, porcentaje, monto, purchase:purchaseId}
+      const taxData = { nombre, porcentaje, monto, purchase: purchaseId }
       try {
         const res = await window.prismaFunctions.addTaxPurchase(taxData);
         if (!res.success) {
@@ -436,9 +448,8 @@ const updateStock = () => {
       };
       const stockData = {
         producto: { id: product.id },
-        detalle: `Compra - ${tipoComprobante.value + ptoVta.value}-${
-          nroComp.value
-        }`,
+        detalle: `Compra - ${tipoComprobante.value + ptoVta.value}-${nroComp.value
+          }`,
         operacion: "Ingreso",
         cantidad: +product.cantidad,
         stockResultante: product.stock + product.cantidad,
@@ -482,7 +493,6 @@ inputCodigoProveedor.addEventListener("focusout", async (event) => {
   );
   if (!codeToSearch) {
     inputCodigoProveedor.value = "";
-    inputCodigoProveedor.focus();
     labelNombreProveedor.textContent = "Codigo incorrecto.";
   } else {
     idProvider = codeToSearch.id;
@@ -511,7 +521,7 @@ inputCodigoProducto.addEventListener("keyup", async (event) => {
       return;
     }
     addProductToPurchase(codeToSearch);
-    
+
     inputCodigoProducto.value = "";
     inputCodigoProducto.focus();
     calculateTotal();
@@ -520,7 +530,9 @@ inputCodigoProducto.addEventListener("keyup", async (event) => {
 inputModalProviders.addEventListener("input", (e) => {
   const criterio = e.target.value;
   const filteredProviders = providers.filter((provider) =>
-    provider.razon_social.toLowerCase().includes(criterio.toLowerCase())
+    provider.razon_social.toLowerCase().includes(criterio.toLowerCase()) ||
+    provider.codigo.toLowerCase().includes(criterio.toLowerCase()) ||
+    provider.cuit.toLowerCase().includes(criterio.toLowerCase())
   );
   renderProviders(filteredProviders);
 });
