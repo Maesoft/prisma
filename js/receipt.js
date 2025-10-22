@@ -173,10 +173,11 @@ const newReceipt = async () => {
   if (!validateFields()) return;
 
   const selectedInvoices = Array.from(invoiceApply.options).map((opt) => ({ id: Number(opt.value) }));
+
   const receiptData = {
     fecha: orderDate.value,
     nro_comprobante: orderNumber.value,
-    monto: parseFloat(amount.value),
+    monto: Number(amount.value), 
     facturas: selectedInvoices,
     cliente: { id: idClient },
     caja: { id: Number(paymentMethodSelect.value) },
@@ -207,19 +208,7 @@ inputClient.addEventListener("keyup", async (e) => {
   }
   if (e.key === "Enter") selectClient();
 });
-amount.addEventListener("input", () => {
-  amount.value = amount.value.replace(/[^0-9,]/g, "");
-});
-amount.addEventListener("blur", () => {
-  const raw = amount.value.replace(/\./g, "").replace(",", ".");
-  const number = parseFloat(raw);
-  if (!isNaN(number)) {
-    amount.value = number.toLocaleString("es-AR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  }
-});
+
 btnGenerate.addEventListener("click", newReceipt);
 document.addEventListener("DOMContentLoaded", async () => {
   await getLastReceipt();

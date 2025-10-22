@@ -637,7 +637,6 @@ const updateStock = async () => {
     await window.prismaFunctions.addStock(stockData);
   }
 };
-
 const updateTax = async (saleId) => {
   const divs = impuestosDisplay.querySelectorAll("div");
 

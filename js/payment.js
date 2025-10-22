@@ -208,9 +208,6 @@ orderSupply.addEventListener("keyup", async (e) => {
   }
   if (e.key === "Enter") selectProvider();
 });
-amount.addEventListener("input", () => {
-  amount.value = amount.value.replace(/[^0-9,]/g, "");
-});
 btnGenerate.addEventListener("click", newPayment);
 document.addEventListener("DOMContentLoaded", async () => {
   await getLastPayment();

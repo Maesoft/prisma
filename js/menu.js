@@ -64,7 +64,7 @@ const menuTemplate = [
       { label: 'Ingresar Compra', click: () => { windowManager.createWindow("newPurchase", 800, 630, true, false) } },
       { label: 'Eliminar Compra', click: () => { } },
       { type: 'separator' },
-      { label: 'Resumen de Compras', click: () => { } },
+      { label: 'Informe de Compras', click: () => { windowManager.createWindow("purchaseReport", 700, 520, false, false) } },
       { label: 'Facturas', click: () => { } }
     ]
   },

@@ -177,7 +177,9 @@ const addCategory = async () => {
 const findProducts = async () => {
   const searchInput = document.getElementById("searchInput").value;
   const filteredProducts = products.filter((product) =>
-    product.nombre.toLowerCase().includes(searchInput.toLowerCase())
+    product.nombre.toLowerCase().includes(searchInput.toLowerCase()) || 
+    product.categoria.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+    product.codigo.toLowerCase().includes(searchInput.toLowerCase())
   );
   renderProducts(filteredProducts);
 };

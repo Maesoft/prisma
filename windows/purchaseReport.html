@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Informe de Compras</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script defer src="../js/bootstrap.min.js"></script>
+    <script defer src="../js/purchaseReport.js"></script>
+</head>
+
+<body class="bg-dark">
+        
+        <form class="bg-light p-4 border rounded" id="purchaseReportForm">
+            <h2 class="text-center">Generar Informe de Compras</h2>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label">Fecha Inicio</label>
+                    <input type="date" id="fechaInicio" class="form-control">
+                </div>
+                <div class="col-6">
+                    <label class="form-label">Fecha Fin</label>
+                    <input type="date" id="fechaFin" class="form-control">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Proveedor</label>
+                <input type="text" class="form-control" id="inputProvider" placeholder="Si no selecciona ningun proveedor se incluiran todos en el informe.">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Artículo</label>
+                <input type="text" class="form-control" id="inputProduct" placeholder="Si no selecciona ningun artículo se incluiran todos en el informe.">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">IVA</label>
+                <select class="form-select">
+                    <option>Incluir IVA</option>
+                    <option>No Incluir IVA</option>
+                    <option>Solo IVA</option>
+                </select>
+            </div>
+
+            <button type="button" class="btn btn-primary w-100 mb-1" onclick="makeReport()">Generar Informe</button>
+            <button type="button" class="btn btn-dark w-100" onclick="window.close()">Cancelar</button>
+        </form>
+</body>
+<div class="modal" id="modalProviders" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-black text-white">
+                <h5 class="modal-title" id="providerSearchModalLabel">
+                    Buscar Proveedor
+                </h5>
+                <button type="button" class="btn-close bg-secondary w-2" onclick="closeModal()"></button>
+            </div>
+            <div class="form-group p-4">
+                <input type="text" class="form-control bg-secondary" id="inputModalProviders" tabindex="1" oninput="searchProvider()" />
+            </div>
+            <table class="table text-center" style="cursor: default;">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Razon Social</th>
+                        <th>CUIT</th>
+                        <th>Regimen</th>
+                    </tr>
+                </thead>
+                <tbody id="listProviders" style="cursor: pointer;">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</html>
