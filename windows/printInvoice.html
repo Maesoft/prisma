@@ -25,7 +25,8 @@
     body {
       display: flex;
       flex-direction: column;
-      zoom: 65%; /* Escalado en pantalla */
+      zoom: 65%;
+      /* Escalado en pantalla */
     }
 
     .full-height-container {
@@ -45,7 +46,8 @@
 
     @media print {
       body {
-        zoom: 100%; /* Escala real para impresión */
+        zoom: 100%;
+        /* Escala real para impresión */
       }
 
       .full-height-container {
@@ -61,17 +63,17 @@
     <!-- Encabezado -->
     <div class="main-content">
       <div class="row border-bottom pb-3">
-        <div class="col-4 d-flex flex-column align-items-center">
-          <img alt="Logo de la empresa" class="img-fluid" id="logo-empresa" style="max-width:100px;">
+        <div class="col-4 d-flex flex-column align-items-center" style="margin-top: 6rem;">
           <h6 class="mb-0" id="nombre-empresa"></h6>
           <p class="mb-0" id="cuit-empresa"></p>
           <p class="mb-0" id="domicilio-empresa"></p>
           <p class="mb-0" id="telefono-empresa"></p>
         </div>
-        <div class="col-4 text-center mt-5">
-          <h1 class="display-6" id="tipo-comprobante"></h1>
+        <div class="col-4 text-center">
+          <img alt="Logo de la empresa" class="img-fluid" id="logo-empresa" style="max-width:250px;">
+          <h3 class="mt-5" id="tipo-comprobante"></h3>
         </div>
-        <div class="col-4 text-center mt-5">
+        <div class="col-4 text-center" style="margin-top: 6rem;">
           <p><strong>Fecha:</strong> <span id="fecha-comprobante"></span></p>
           <p class="mb-0"><strong>No. Comprobante:</strong></p>
           <p id="numero-comprobante"></p>
@@ -125,7 +127,7 @@
               <strong>Subtotal:</strong>
               <span id="subtotal"></span>
             </div>
-              <span id="impuestos"></span>
+            <span id="impuestos"></span>
             <div class="d-flex justify-content-between border-top pt-2 mt-2">
               <strong>Total:</strong>
               <span id="total"></span>
