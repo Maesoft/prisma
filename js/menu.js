@@ -64,7 +64,7 @@ const menuTemplate = [
       { label: 'Ingresar Compra', click: () => { windowManager.createWindow("newPurchase", 800, 630, true, false) } },
       { label: 'Eliminar Compra', click: () => { } },
       { type: 'separator' },
-      { label: 'Ingresar Gasto', click: () => { windowManager.createWindow("otherExpenses", 800, 630, true, false) } },
+      { label: 'Ingresar Gasto', click: () => { windowManager.createWindow("otherExpenses", 800, 420, true, false) } },
       { label: 'Eliminar Gasto', click: () => { } },
       { type: 'separator' },
       { label: 'Informe de Compras', click: () => { windowManager.createWindow("purchaseReport", 700, 520, false, false) } },
