@@ -22,7 +22,7 @@ const allProducts = async () => {
 };
 const loadCategories = async () => {
   try {
-    const res = await window.prismaFunctions.getCategories();
+    const res = await window.prismaFunctions.getProductCategories();
     if (!res.success) return [];
     const categorias = res.categories;
     // Añadir las categorías al select

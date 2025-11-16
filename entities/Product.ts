@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Category } from "./Category"
+import { Category } from "./ProductCategory"
 import { Stock } from "./Stock";
 import { Price } from "./Price";
 import { Tax } from "./Tax";

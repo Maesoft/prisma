@@ -9,10 +9,10 @@ export class Expenses {
     @Column({ type: 'date' })
     fecha: Date;
 
-    @OneToMany(() => CategoryExpenses, (categoryExpenses) => categoryExpenses.expenses)
-    categoryExpenses: CategoryExpenses[];
+    // @OneToMany(() => CategoryExpenses, (categoryExpenses) => categoryExpenses.expenses)
+    // categoryExpenses: CategoryExpenses[];
 
-    @OneToMany(() => CashManagement, (cash) => cash.expenses)
-    caja: CashManagement[];
+    // @OneToMany(() => CashManagement, (cash) => cash.expenses)
+    // caja: CashManagement[];
 
 }

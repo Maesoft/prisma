@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
 import { Provider } from "../entities/Provider";
-import { Category } from "../entities/Category";
+import { ProductCategory } from "../entities/ProductCategory";
 import { Product } from "../entities/Product";
 import { Stock } from "../entities/Stock";
 import { Client } from "../entities/Client";
@@ -25,7 +25,7 @@ export const AppDataSource = new DataSource({
     logging: true,
     entities: [
         Provider,
-        Category,
+        ProductCategory,
         Product,
         Stock,
         Client,

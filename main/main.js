@@ -5,7 +5,7 @@ const { menuTemplate } = require("../js/menu");
 const { Product } = require("../entities/Product");
 const { Stock } = require("../entities/Stock");
 const { Provider } = require("../entities/Provider");
-const { Category } = require("../entities/Category");
+const { ProductCategory } = require("../entities/ProductCategory");
 const { Client } = require("../entities/Client");
 const { Sale } = require("../entities/Sale");
 const { Option } = require("../entities/Options");
@@ -361,13 +361,13 @@ ipcMain.handle("edit-client", async (event, id, clientData) => {
     return { success: false, message: error.message };
   }
 });
-ipcMain.handle("get-categories", async () => {
+ipcMain.handle("get-productCategories", async () => {
   try {
-    const categoriesRepository = AppDataSource.getRepository(Category);
-    const categories = await categoriesRepository.find();
+    const categoriesRepository = AppDataSource.getRepository(ProductCategory);
+    const productCategories = await categoriesRepository.find();
     return {
       success: true,
-      categories,
+      productCategories,
     };
   } catch (error) {
     return {
@@ -376,9 +376,9 @@ ipcMain.handle("get-categories", async () => {
     };
   }
 });
-ipcMain.handle("add-category", async (event, categoryData) => {
+ipcMain.handle("add-productCategory", async (event, categoryData) => {
   try {
-    const categoriesRepository = AppDataSource.getRepository(Category);
+    const categoriesRepository = AppDataSource.getRepository(ProductCategory);
     const newCategory = categoriesRepository.create(categoryData);
     await categoriesRepository.save(newCategory);
     return {
