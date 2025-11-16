@@ -12,7 +12,7 @@ const btnAddSupplier = document.getElementById("btnAddSupplier")
 
 
 const loadCategories = async () => {
-  const res = await window.prismaFunctions.getCategories();
+  const res = await window.prismaFunctions.getProductCategories();
   if (res.success) {
     const categorySelect = document.getElementById("productCategory");
     categorySelect.innerHTML = "";
