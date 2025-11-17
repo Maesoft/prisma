@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppDataSource = void 0;
 const typeorm_1 = require("typeorm");
 const Provider_1 = require("../entities/Provider");
-const Category_1 = require("../entities/Category");
+const ProductCategory_1 = require("../entities/ProductCategory");
 const Product_1 = require("../entities/Product");
 const Stock_1 = require("../entities/Stock");
 const Client_1 = require("../entities/Client");
@@ -26,7 +26,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
     logging: true,
     entities: [
         Provider_1.Provider,
-        Category_1.Category,
+        ProductCategory_1.ProductCategory,
         Product_1.Product,
         Stock_1.Stock,
         Client_1.Client,
