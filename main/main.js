@@ -364,10 +364,10 @@ ipcMain.handle("edit-client", async (event, id, clientData) => {
 ipcMain.handle("get-productCategories", async () => {
   try {
     const categoriesRepository = AppDataSource.getRepository(ProductCategory);
-    const productCategories = await categoriesRepository.find();
+    const categories = await categoriesRepository.find();
     return {
       success: true,
-      productCategories,
+      categories,
     };
   } catch (error) {
     return {

@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Category } from "./ProductCategory"
+import { ProductCategory } from "./ProductCategory"
 import { Stock } from "./Stock";
 import { Price } from "./Price";
 import { Tax } from "./Tax";
@@ -20,8 +20,8 @@ export class Product {
     @Column()
     descripcion: string
 
-    @ManyToOne(() => Category, (category) => category.products)
-    categoria: Category;
+    @ManyToOne(() => ProductCategory, (category) => category.products)
+    categoria: ProductCategory;
 
     @Column()
     imagen: string
