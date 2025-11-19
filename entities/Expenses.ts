@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ExpensesCategory } from "./ExpensesCategory";
 
 @Entity()
@@ -9,6 +9,13 @@ export class Expenses {
     @Column({ type: 'date' })
     fecha: Date;
 
-    @OneToMany(() => ExpensesCategory, (category) => category.expenses)
-    categoria: ExpensesCategory[];
+    @ManyToOne(() => ExpensesCategory, (category) => category.expenses)
+    categoria: ExpensesCategory;
+
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
+    total: number;
+ 
+    @Column({ type: 'text', nullable: true })
+    observaciones: string | null;
+
 }

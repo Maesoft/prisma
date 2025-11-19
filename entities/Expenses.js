@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Expenses = void 0;
 const typeorm_1 = require("typeorm");
+const ExpensesCategory_1 = require("./ExpensesCategory");
 let Expenses = class Expenses {
 };
 exports.Expenses = Expenses;
@@ -22,6 +23,18 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'date' }),
     __metadata("design:type", Date)
 ], Expenses.prototype, "fecha", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => ExpensesCategory_1.ExpensesCategory, (category) => category.expenses),
+    __metadata("design:type", ExpensesCategory_1.ExpensesCategory)
+], Expenses.prototype, "categoria", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'decimal', precision: 10, scale: 2 }),
+    __metadata("design:type", Number)
+], Expenses.prototype, "total", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], Expenses.prototype, "observaciones", void 0);
 exports.Expenses = Expenses = __decorate([
     (0, typeorm_1.Entity)()
 ], Expenses);

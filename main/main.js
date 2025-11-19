@@ -19,6 +19,8 @@ const { Receipt } = require("../entities/Receipt");
 const { Tax } = require("../entities/Tax");
 const { TaxSales } = require("../entities/TaxSales");
 const { TaxPurchases } = require("../entities/TaxPurchases");
+const { Expenses } = require("../entities/Expenses");
+const { ExpensesCategory } = require("../entities/ExpensesCategory");
 
 //Manejo de la App
 app.on("ready", async () => {
@@ -376,7 +378,7 @@ ipcMain.handle("get-productCategories", async () => {
     };
   }
 });
-ipcMain.handle("add-productCategory", async (event, categoryData) => {
+ipcMain.handle("add-product-category", async (event, categoryData) => {
   try {
     const categoriesRepository = AppDataSource.getRepository(ProductCategory);
     const newCategory = categoriesRepository.create(categoryData);
@@ -628,6 +630,33 @@ ipcMain.handle(
     return res.response;
   }
 );
+ipcMain.handle("get-expenses-categories", async () => {
+  try {
+    const categoriesRepository = AppDataSource.getRepository(ExpensesCategory);
+    const categories = await categoriesRepository.find();
+    return {
+      success: true,
+      categories,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Error al obtener categorías.",
+    };
+  }
+});
+ipcMain.handle("get-expenses", async () => {
+  try {
+    const expensesRepository = AppDataSource.getRepository(Expenses);
+    const expenses = await expensesRepository.find({
+      relations: ["payment", "ExpensesCategory"],
+      order: { fecha: "ASC" },
+    });
+    return { success: true, expenses };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
 ipcMain.handle("save-option", async (event, optionData) => {
   try {
     const optionRepository = AppDataSource.getRepository(Option);

@@ -25,4 +25,7 @@ export class Payment {
 
     @ManyToOne(() => CashManagement, (cash) => cash.payment)
     caja: CashManagement
+
+    @Column({ type: 'text', nullable: true })
+    observaciones: string;
 }

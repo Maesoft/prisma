@@ -35,13 +35,15 @@ contextBridge.exposeInMainWorld("prismaFunctions", {
   deleteTax: (idProduct) => ipcRenderer.invoke("delete-tax",idProduct),
   addProductCategory: (categoryData) =>
     ipcRenderer.invoke("add-productCategory", categoryData),
-  getProductCategories: () => ipcRenderer.invoke("get-productCategories"),
+  getProductCategories: () => ipcRenderer.invoke("get-product-categories"),
   getSales: () => ipcRenderer.invoke("get-sales"),
   addStock: (stockData) => ipcRenderer.invoke("add-stock", stockData),
   addSale: (saleData) => ipcRenderer.invoke("add-sale", saleData),
   addPurchase: (purchaseData) => ipcRenderer.invoke("add-purchase", purchaseData),
   addDetailSale: (detailData) => ipcRenderer.invoke("add-detail-sale", detailData),
   addDetailPurchase: (detailData) => ipcRenderer.invoke("add-detail-purchase", detailData),
+  getExpenses: () => ipcRenderer.invoke("get-expenses"),
+  getExpensesCategories: () => ipcRenderer.invoke("get-expenses-categories"),
   showMSG: (icon, title, message, buttons, defaultId) =>
     ipcRenderer.invoke(
       "show-message",
