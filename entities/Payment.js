@@ -45,6 +45,10 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => CashManagement_1.CashManagement, (cash) => cash.payment),
     __metadata("design:type", CashManagement_1.CashManagement)
 ], Payment.prototype, "caja", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], Payment.prototype, "observaciones", void 0);
 exports.Payment = Payment = __decorate([
     (0, typeorm_1.Entity)()
 ], Payment);

@@ -19,6 +19,8 @@ const CashManagement_1 = require("../entities/CashManagement");
 const Receipt_1 = require("../entities/Receipt");
 const TaxSales_1 = require("../entities/TaxSales");
 const TaxPurchases_1 = require("../entities/TaxPurchases");
+const Expenses_1 = require("../entities/Expenses");
+const ExpensesCategory_1 = require("../entities/ExpensesCategory");
 exports.AppDataSource = new typeorm_1.DataSource({
     type: "sqlite",
     database: "./db/prisma_contable.sqlite",
@@ -42,6 +44,8 @@ exports.AppDataSource = new typeorm_1.DataSource({
         Payment_1.Payment,
         CashManagement_1.CashManagement,
         Receipt_1.Receipt,
+        Expenses_1.Expenses,
+        ExpensesCategory_1.ExpensesCategory,
     ]
 });
 exports.AppDataSource.initialize()

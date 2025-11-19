@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Product = void 0;
 const typeorm_1 = require("typeorm");
-const Category_1 = require("./Category");
+const ProductCategory_1 = require("./ProductCategory");
 const Stock_1 = require("./Stock");
 const Price_1 = require("./Price");
 const Tax_1 = require("./Tax");
@@ -36,8 +36,8 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "descripcion", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Category_1.Category, (category) => category.products),
-    __metadata("design:type", Category_1.Category)
+    (0, typeorm_1.ManyToOne)(() => ProductCategory_1.ProductCategory, (category) => category.products),
+    __metadata("design:type", ProductCategory_1.ProductCategory)
 ], Product.prototype, "categoria", void 0);
 __decorate([
     (0, typeorm_1.Column)(),

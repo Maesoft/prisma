@@ -9,6 +9,7 @@ const labelNombreProveedor = document.querySelector("#labelProveedor");
 const btnGenerate = document.querySelector("#btnGenerate");
 const paymentMethodSelect = document.querySelector("#paymentMethod");
 const amount = document.getElementById("amount");
+const observations = document.getElementById("observations");
 orderDate.value = dateNow;
 
 let providers = [];
@@ -181,6 +182,7 @@ const newPayment = async () => {
     facturas: selectedInvoices,
     proveedor: { id: idProvider },
     caja: { id: Number(paymentMethodSelect.value) },
+    observaciones: observations.value.trim(),
   };
 
   const res = await window.prismaFunctions.addPayment(paymentData);

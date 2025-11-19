@@ -1,10 +1,10 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Expenses } from "./Expenses";
 
-Entity()
+@Entity()
 export class ExpensesCategory {
     @PrimaryGeneratedColumn()
-    id: Number
+    id: number
 
     @Column()
     nombre: string
