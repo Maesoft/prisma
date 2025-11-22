@@ -191,6 +191,20 @@ ipcMain.handle("add-payment", async (event, paymentData) => {
     };
   }
 });
+ipcMain.handle("add-expense", async (event, expenseData) => {
+  try {
+    const expenseRepository = AppDataSource.getRepository(Expenses);
+    const newExpense = expenseRepository.create(expenseData);
+    await expenseRepository.save(newExpense);
+    return {
+      success: true,
+      message: "Se guardo el comprobante exitosamente",
+      purchaseId: newExpense.id,
+    };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
 ipcMain.handle("add-purchase", async (event, purchaseData) => {
   try {
     const purchaseRepository = AppDataSource.getRepository(Purchase);
@@ -363,7 +377,7 @@ ipcMain.handle("edit-client", async (event, id, clientData) => {
     return { success: false, message: error.message };
   }
 });
-ipcMain.handle("get-productCategories", async () => {
+ipcMain.handle("get-product-categories", async () => {
   try {
     const categoriesRepository = AppDataSource.getRepository(ProductCategory);
     const categories = await categoriesRepository.find();
@@ -375,6 +389,22 @@ ipcMain.handle("get-productCategories", async () => {
     return {
       success: false,
       message: "Error al obtener categorías.",
+    };
+  }
+});
+ipcMain.handle("add-expense-category", async (event, categoryData) => {
+  try {
+    const categoriesRepository = AppDataSource.getRepository(ExpensesCategory);
+    const newCategory = categoriesRepository.create(categoryData);
+    await categoriesRepository.save(newCategory);
+    return {
+      success: true,
+      message: "Categoria guardada exitosamente.",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
     };
   }
 });

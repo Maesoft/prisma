@@ -17,18 +17,18 @@
     <h4 id="nroComp">0000</h4>
   </div>
   <div class="row g-1">
-    <div class="col-3">
+    <div class="col-2">
       <label class="form-label required">Fecha</label>
       <input type="date" class="form-control" style="font-size: 0.8rem;" id="fecha" required>
     </div>
-    <div class="col-3">
+    <div class="col-4">
       <label class="form-label required">Categoría</label>
       <div class="input-group">
         <select class="form-select" style="font-size: 0.8rem;" id="categoria" required>
 
         </select>
         <button class="btn btn-outline-secondary" style="font-size: 0.7rem;" type="button" id="btnAddCat"
-          title="Agregar categoría"><i class="bi bi-plus"></i>➕</button>
+          data-bs-toggle="modal" data-bs-target="#categoryModal"><i class="bi bi-plus"></i>➕</button>
       </div>
     </div>
     <div class="col-3">
@@ -60,3 +60,22 @@
     <button id="btnAceptar" class="btn btn-dark" id="btnGuardar"><i class="bi bi-save"></i>Aceptar</button>
   </div>
 </body>
+
+<!-- Modal para agregar categorías -->
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="categoryModalLabel">Agregar Nueva Categoría</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="newCategoryName" placeholder="Nombre de la categoría">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-dark" onclick="addCategory()">Agregar Categoría</button>
+            </div>
+        </div>
+    </div>
+</div>

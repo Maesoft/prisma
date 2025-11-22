@@ -7,7 +7,7 @@ export class ExpensesCategory {
     id: number
 
     @Column()
-    nombre: string
+    name: string
 
     @OneToMany(() => Expenses, (expense) => expense.categoria)
     expenses: Expenses[]

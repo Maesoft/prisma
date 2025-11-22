@@ -70,7 +70,7 @@ const addCategory = async () => {
     );
     return;
   }
-  const res = await window.prismaFunctions.addCategory({
+  const res = await window.prismaFunctions.addProductCategory({
     name: newCategoryName,
   });
   if (res.success) {

@@ -6,6 +6,9 @@ export class Expenses {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Column()
+    numero_comprobante: string;
+
     @Column({ type: 'date' })
     fecha: Date;
 
@@ -14,8 +17,7 @@ export class Expenses {
 
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     total: number;
- 
+
     @Column({ type: 'text', nullable: true })
     observaciones: string | null;
-
 }
