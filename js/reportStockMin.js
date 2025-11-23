@@ -32,7 +32,7 @@ const renderProducts = (arrProducts) => {
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${product.codigo}</td>
-        <td>${product.descripcion}</td>
+        <td>${product.nombre}</td>
         <td>${product.categoria.name}</td>
         <td class="text-center">${product.stock}</td>
         <td class="text-center">${product.stock_minimo}</td>

@@ -199,7 +199,7 @@ ipcMain.handle("add-expense", async (event, expenseData) => {
     return {
       success: true,
       message: "Se guardo el comprobante exitosamente",
-      purchaseId: newExpense.id,
+      expenseId: newExpense.id,
     };
   } catch (error) {
     return { success: false, message: error.message };
