@@ -679,7 +679,7 @@ ipcMain.handle("get-expenses", async () => {
   try {
     const expensesRepository = AppDataSource.getRepository(Expenses);
     const expenses = await expensesRepository.find({
-      relations: ["payment", "ExpensesCategory"],
+      relations: ["categoria"],
       order: { fecha: "ASC" },
     });
     return { success: true, expenses };
