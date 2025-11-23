@@ -1,5 +1,6 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ExpensesCategory } from "./ExpensesCategory";
+import { Payment } from "./Payment";
 
 @Entity()
 export class Expenses {
@@ -15,6 +16,10 @@ export class Expenses {
     @ManyToOne(() => ExpensesCategory, (category) => category.expenses)
     categoria: ExpensesCategory;
 
+    @OneToOne(() => Payment, (payment) => payment.gasto, { onDelete: 'SET NULL', nullable: true })
+    @JoinColumn()
+    payment: Payment;
+    
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     total: number;
 

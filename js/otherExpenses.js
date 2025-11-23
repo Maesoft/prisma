@@ -4,7 +4,7 @@ const categoria = document.getElementById("categoria");
 const btnAddCat = document.getElementById("btnAddCat");
 const caja = document.getElementById("caja");
 const importe = document.getElementById("importe");
-const descripcion = document.getElementById("descripcion");
+const observaciones = document.getElementById("descripcion");
 const btnAceptar = document.getElementById("btnAceptar");
 const btnCancel = document.getElementById("btnCancel");
 
@@ -78,19 +78,55 @@ const saveExpense = async () => {
     total: parseFloat(importe.value) || 0,
     descripcion: descripcion.value.trim(),
   };
-  console.log(expenseData);
-  
+
   const res = await window.prismaFunctions.addExpense(expenseData);
   if (res.success) {
-    window.prismaFunctions.showMSG("info", "Prisma", res.message);
-    fechaActual();
-    await ultimoComprobante();
-    importe.value = "";
-    descripcion.value = "";
+    await newPayment(res.expenseId)
   } else {
     window.prismaFunctions.showMSG("error", "Prisma", res.message);
   }
 };
+const getLastPayment = async () => {
+  const resPayments = await window.prismaFunctions.getPayments();
+  if (!resPayments.payments || resPayments.payments.length === 0) return "00000001";
+  const lastOrder = resPayments.payments.at(-1);
+  const nextNumber = (Number(lastOrder.nro_comprobante) + 1).toString().padStart(8, "0");
+  return nextNumber;
+};
+const getLastExpense = async () => {
+  const resExpenses = await window.prismaFunctions.getExpenses();
+  if (!resExpenses.expenses || resExpenses.expenses.length === 0) {
+    window.prismaFunctions.showMSG("error", "Prisma", "Ocurrio un error al guardar el Gasto.")
+  }
+  const lastExpense = resExpenses.expenses.at(-1);
+  return lastExpense.id;
+}
+const newPayment = async (expenseId) => {
+
+  const ultCompPago = await getLastPayment();
+  const ultGasto = await getLastExpense();
+
+  const paymentData = {
+    fecha: fecha.value,
+    nro_comprobante: ultCompPago,
+    monto: importe.value,
+    gastos: expenseId,
+    caja: {id: Number(caja.value)},
+    observaciones: `Corresponde al Gasto #${ultGasto}`,
+  }
+
+  const res = await window.prismaFunctions.addPayment(paymentData);
+  console.log(paymentData);
+  console.log(res);
+  // if(res.success){
+  //   window.prismaFunctions.showMSG("info", "Prisma", res.message);
+  //   fechaActual();
+  //   await ultimoComprobante();
+  //   importe.value = "";
+  //   descripcion.value = "";
+  // }
+
+}
 document.addEventListener("DOMContentLoaded", () => {
   fechaActual();
   ultimoComprobante();
