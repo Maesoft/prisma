@@ -18,8 +18,8 @@ const fechaActual = () => {
 const ultimoComprobante = async () => {
   const res = await window.prismaFunctions.getExpenses();
   const ultimo = res.expenses?.pop();
-  ultimo ? (nroComp.value = ultimo.nroComprobante + 1) : (nroComp.value = 1);
-  nroComp.value = nroComp.value.toString().padStart(6, "0");
+  ultimo ? (nroComp.textContent = Number(ultimo.numero_comprobante) + 1) : (nroComp.textContent = 1);
+  nroComp.textContent = nroComp.textContent.toString().padStart(6, "0");
 };
 const cargarCajas = async () => {
   const res = await window.prismaFunctions.getCashes();
@@ -73,11 +73,13 @@ const addCategory = async () => {
 const saveExpense = async () => {
   const expenseData = {
     fecha: fecha.value,
-    numero_comprobante: parseInt(nroComp.value, 10),
+    numero_comprobante: parseInt(nroComp.textContent, 10),
     categoria: parseInt(categoria.value, 10),
-    importe: parseFloat(importe.value),
+    total: parseFloat(importe.value) || 0,
     descripcion: descripcion.value.trim(),
   };
+  console.log(expenseData);
+  
   const res = await window.prismaFunctions.addExpense(expenseData);
   if (res.success) {
     window.prismaFunctions.showMSG("info", "Prisma", res.message);
@@ -95,3 +97,4 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarCajas();
   cargarCategorias();
 });
+btnAceptar.addEventListener("click", saveExpense)

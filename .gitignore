@@ -2,3 +2,4 @@ node_modules
 dist
 db/prisma_contable.sqlite
 entities/*.js
+main/data-source.js
