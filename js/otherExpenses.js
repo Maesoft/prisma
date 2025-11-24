@@ -71,19 +71,36 @@ const addCategory = async () => {
   }
 };
 const saveExpense = async () => {
-  const expenseData = {
-    fecha: fecha.value,
-    numero_comprobante: parseInt(nroComp.textContent, 10),
-    categoria: parseInt(categoria.value, 10),
-    total: parseFloat(importe.value) || 0,
-    descripcion: descripcion.value.trim(),
-  };
+  const ultCompPago = await getLastPayment();
 
-  const res = await window.prismaFunctions.addExpense(expenseData);
-  if (res.success) {
-    await newPayment(res.expenseId)
-  } else {
-    window.prismaFunctions.showMSG("error", "Prisma", res.message);
+  const paymentData = {
+    fecha: fecha.value,
+    nro_comprobante: ultCompPago,
+    monto: importe.value,
+    caja: {id: Number(caja.value)},
+    observaciones: `Corresponde al Gasto #${nroComp.textContent}`,
+  }
+
+  const resPayment = await window.prismaFunctions.addPayment(paymentData);
+  
+  if(resPayment){
+    const expenseData = {
+      fecha: fecha.value,
+      numero_comprobante: parseInt(nroComp.textContent, 10),
+      categoria: parseInt(categoria.value, 10),
+      total: parseFloat(importe.value) || 0,
+      observaciones: descripcion.value.trim(),
+      payment: {id: Number(resPayment.paymentId)}
+    };
+    
+  const resExpense = await window.prismaFunctions.addExpense(expenseData);
+    if(resExpense){
+      window.prismaFunctions.showMSG("info","Prisma",resExpense.message)
+      fechaActual();
+      ultimoComprobante();
+      importe.value="";
+      observaciones.value="";
+    }
   }
 };
 const getLastPayment = async () => {
@@ -101,32 +118,7 @@ const getLastExpense = async () => {
   const lastExpense = resExpenses.expenses.at(-1);
   return lastExpense.id;
 }
-const newPayment = async (expenseId) => {
 
-  const ultCompPago = await getLastPayment();
-  const ultGasto = await getLastExpense();
-
-  const paymentData = {
-    fecha: fecha.value,
-    nro_comprobante: ultCompPago,
-    monto: importe.value,
-    gastos: expenseId,
-    caja: {id: Number(caja.value)},
-    observaciones: `Corresponde al Gasto #${ultGasto}`,
-  }
-
-  const res = await window.prismaFunctions.addPayment(paymentData);
-  console.log(paymentData);
-  console.log(res);
-  // if(res.success){
-  //   window.prismaFunctions.showMSG("info", "Prisma", res.message);
-  //   fechaActual();
-  //   await ultimoComprobante();
-  //   importe.value = "";
-  //   descripcion.value = "";
-  // }
-
-}
 document.addEventListener("DOMContentLoaded", () => {
   fechaActual();
   ultimoComprobante();
