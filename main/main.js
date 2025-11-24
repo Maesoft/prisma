@@ -183,6 +183,7 @@ ipcMain.handle("add-payment", async (event, paymentData) => {
     return {
       success: true,
       message: "Pago registrado exitosamente.",
+      paymentId: newPayment.id
     };
   } catch (error) {
     return {
