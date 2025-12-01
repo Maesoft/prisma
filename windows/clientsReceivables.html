@@ -17,8 +17,12 @@
     }
 
     body {
-        zoom: 70%;
+        zoom: 80%;
         background-color: #f8f9fa;
+    }
+
+    .container {
+        max-width: 1500px;
     }
 
     .table th,
@@ -26,24 +30,42 @@
         vertical-align: middle;
     }
 
-    .table-responsive {
-        margin-top: 20px;
-    }
-
     @media print {
         body {
             zoom: 80%;
+        }
+
+        .btn {
+            display: none;
+        }
+
+        .boton-imprimir {
+            display: none;
+        }
+
+        .table-container {
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+            border: none;
+        }
+
+        #fechaEmision {
+            display: block !important;
         }
     }
 </style>
 
 <body>
-    <div class="p-4 mt-4">
-        <div class="d-flex flex-column mb-">
+    <div class="mt-4 container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3">Clientes a cobrar</h1>
-            <p id="fechaEmision">Fecha Emision:</p>
+            <div>
+                <p id="fechaEmision" style="display: none;">Fecha Emision:</p>
+                <img src="../assets/impresora.png" alt="Imprimir..." class="boton-imprimir" onclick="window.print()" />
+            </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-container" style="height: 550px;">
             <table class="table table-striped table-hover align-middle">
                 <thead class="table-dark">
                     <colgroup>
@@ -63,6 +85,9 @@
                     <!-- Filas insertadas dinámicamente por JS -->
                 </tbody>
             </table>
+        </div>
+        <div class="text-center mt-2">
+            <button class="btn btn-dark" onclick="window.close()">Cerrar</button>
         </div>
     </div>
 </body>
