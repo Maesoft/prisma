@@ -12,8 +12,7 @@ const getProvidersPayables = async () => {
     }
 
     const providers = res.providers;
-    console.log(providers);
-    
+
     const providersPayables = providers
       .map((provider) => {
         let ultPago = "";
@@ -60,9 +59,13 @@ const renderProvidersTable = async () => {
             <td>${provider.codigo}</td>
             <td>${provider.razon_social}</td>
             <td>$ ${provider.saldo.toLocaleString("es-AR", {
-      minimumFractionDigits: 2,
-    })}</td>
-            <td>${provider.ultPago == "No hay pagos" ? "No hay pagos" : formatearFecha(provider.ultPago)}</td>
+              minimumFractionDigits: 2,
+            })}</td>
+            <td>${
+              provider.ultPago == "No hay pagos"
+                ? "No hay pagos"
+                : formatearFecha(provider.ultPago)
+            }</td>
         `;
     tableBody.appendChild(row);
   });
@@ -70,6 +73,8 @@ const renderProvidersTable = async () => {
 document.addEventListener("DOMContentLoaded", () => {
   const fechaEmision = document.getElementById("fechaEmision");
   const fechaActual = new Date().toISOString().split("T")[0];
-  fechaEmision.innerHTML = `<strong>Emitido el:</strong> ${formatearFecha(fechaActual)}`;
+  fechaEmision.innerHTML = `<strong>Emitido el:</strong> ${formatearFecha(
+    fechaActual
+  )}`;
   renderProvidersTable();
-})
+});

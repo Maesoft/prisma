@@ -76,5 +76,4 @@ document.addEventListener("DOMContentLoaded", () => {
     fechaActual
   )}`;
   renderClientsTable();
-  setTimeout(() => { window.print(); }, 1000);
 });
