@@ -8,20 +8,20 @@ const observaciones = document.getElementById("descripcion");
 const btnAceptar = document.getElementById("btnAceptar");
 const btnCancel = document.getElementById("btnCancel");
 
-const fechaActual = () => {
+const today = () => {
   const hoy = new Date();
   const dia = String(hoy.getDate()).padStart(2, "0");
   const mes = String(hoy.getMonth() + 1).padStart(2, "0");
   const anio = hoy.getFullYear();
   fecha.value = `${anio}-${mes}-${dia}`;
 };
-const ultimoComprobante = async () => {
+const lastExpense = async () => {
   const res = await window.prismaFunctions.getExpenses();
   const ultimo = res.expenses?.pop();
   ultimo ? (nroComp.textContent = Number(ultimo.numero_comprobante) + 1) : (nroComp.textContent = 1);
   nroComp.textContent = nroComp.textContent.toString().padStart(6, "0");
 };
-const cargarCajas = async () => {
+const loadCashes = async () => {
   const res = await window.prismaFunctions.getCashes();
   const cajas = res.cashes;
   caja.innerHTML = "";
@@ -34,7 +34,7 @@ const cargarCajas = async () => {
     }
   });
 };
-const cargarCategorias = async () => {
+const loadCategories = async () => {
   const res = await window.prismaFunctions.getExpensesCategories();
   const categorias = res.categories;
   categoria.innerHTML = "";
@@ -65,12 +65,14 @@ const addCategory = async () => {
     const modalElement = document.getElementById("categoryModal");
     const modalInstance = bootstrap.Modal.getInstance(modalElement);
     modalInstance.hide();
-    await cargarCategorias();
+    await loadCategories();
   } else {
     window.prismaFunctions.showMSG("error", "Prisma", res.message);
   }
 };
 const saveExpense = async () => {
+if(!dataValidation()) return;
+
   const ultCompPago = await getLastPayment();
 
   const paymentData = {
@@ -96,8 +98,8 @@ const saveExpense = async () => {
   const resExpense = await window.prismaFunctions.addExpense(expenseData);
     if(resExpense){
       window.prismaFunctions.showMSG("info","Prisma",resExpense.message)
-      fechaActual();
-      ultimoComprobante();
+      today();
+      lastExpense();
       importe.value="";
       observaciones.value="";
     }
@@ -118,11 +120,29 @@ const getLastExpense = async () => {
   const lastExpense = resExpenses.expenses.at(-1);
   return lastExpense.id;
 }
-
+const dataValidation = () => {
+  if (!fecha.value) {
+    window.prismaFunctions.showMSG("info", "Prisma", "Por favor, ingrese la fecha del gasto.");
+    return false;
+  }  
+  if (!importe.value || isNaN(importe.value) || Number(importe.value) <= 0) {
+    window.prismaFunctions.showMSG("info", "Prisma", "Por favor, ingrese un importe válido mayor a cero.");
+    return false;
+  }
+  if(!caja.value){
+    window.prismaFunctions.showMSG("info", "Prisma", "Por favor, seleccione una caja.");
+    return false;
+  }
+  if(!categoria.value){
+    window.prismaFunctions.showMSG("info", "Prisma", "Por favor, seleccione una categoría.");
+    return false;
+  }
+  return true;
+}
 document.addEventListener("DOMContentLoaded", () => {
-  fechaActual();
-  ultimoComprobante();
-  cargarCajas();
-  cargarCategorias();
+  today();
+  lastExpense();
+  loadCashes();
+  loadCategories();
 });
 btnAceptar.addEventListener("click", saveExpense)
