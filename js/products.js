@@ -8,8 +8,7 @@ const selectTaxes = document.getElementById("productTaxes");
 const productControlStock = document.getElementById("productControlStock");
 const initialStock = document.getElementById("initialStock");
 const minStock = document.getElementById("minStock");
-const btnAddSupplier = document.getElementById("btnAddSupplier")
-
+const btnAddSupplier = document.getElementById("btnAddSupplier");
 
 const loadCategories = async () => {
   const res = await window.prismaFunctions.getProductCategories();
@@ -98,7 +97,9 @@ const newProduct = async () => {
     controla_stock: productControlStock.checked,
     stock: parseInt(document.getElementById("initialStock").value, 10) || 0,
     stock_minimo: parseInt(document.getElementById("minStock").value, 10) || 0,
-    proveedor: {id: Number(document.getElementById("productSupplier").value) || null },
+    proveedor: {
+      id: Number(document.getElementById("productSupplier").value) || null,
+    },
   };
 
   if (productData.codigo === "" || productData.nombre === "") {
@@ -227,11 +228,7 @@ productImage.addEventListener("click", () => {
 productImageInput.addEventListener("change", (event) => {
   const file = event.target.files[0];
   if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      document.getElementById("productImage").src = e.target.result;
-    };
-    reader.readAsDataURL(file);
+    document.getElementById("productImage").src = file.path;
   }
 });
 productControlStock.addEventListener("change", () => {
@@ -252,13 +249,13 @@ btnAddSupplier.addEventListener("click", () => {
     height: 600,
     frame: true,
     modal: false,
-    data: null
-  })
-})
+    data: null,
+  });
+});
 window.addEventListener("DOMContentLoaded", () => {
   loadCategories();
   loadProviders();
 });
-window.addEventListener("focus",()=>{
-  loadProviders()
-})
+window.addEventListener("focus", () => {
+  loadProviders();
+});

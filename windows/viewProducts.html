@@ -9,80 +9,56 @@
     <link rel="stylesheet" href="../css/styles.css">
     <script defer src="../js/bootstrap.min.js"></script>
     <script defer src="../js/viewProducts.js"></script>
+    <style>
+        /* Estilo moderno */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', sans-serif;
+        }
 
+        h2 {
+            font-weight: 600;
+        }
+
+        .toggle-buttons button {
+            min-width: 100px;
+        }
+
+        #searchInput {
+            max-width: 400px;
+        }
+
+        .card img {
+            border-radius: 8px;
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="container mt-5">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Artículos</h2>
             <button class="btn btn-dark" onclick="window.close()">Cerrar</button>
         </div>
 
-        <div class="toggle-buttons d-flex gap-2 mb-3">
-            <button class="btn btn-primary" onclick="setView('list')">Lista</button>
-            <button class="btn btn-secondary" onclick="setView('cards')">Tarjetas</button>
+        <!-- Buscador y botones toggle -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+            <input type="text" id="searchInput" class="form-control shadow-sm" placeholder="Buscar artículo..." oninput="filterProducts()">
+            <div class="toggle-buttons d-flex gap-2">
+                <button class="btn btn-dark" onclick="setView('list')">Lista</button>
+                <button class="btn btn-secondary" onclick="setView('cards')">Tarjetas</button>
+            </div>
         </div>
 
-        <div id="itemsContainer" class="row g-3">
-            <!-- Los artículos se insertan dinámicamente o podés dejarlos estáticos -->
-            
-            <!-- Ejemplo 1 -->
-            <div class="col-md-4 item-card">
-                <div class="card shadow-sm">
-                    <img src="https://via.placeholder.com/200" class="card-img-top" alt="Imagen artículo">
-                    <div class="card-body">
-                        <h5 class="card-title">Cód: A001 - Martillo</h5>
-                        <p class="card-text text-muted">Martillo de acero industrial</p>
-                        <span class="badge bg-success">Stock: 35</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ejemplo 2 -->
-            <div class="col-md-4 item-card">
-                <div class="card shadow-sm">
-                    <img src="https://via.placeholder.com/200" class="card-img-top" alt="Imagen artículo">
-                    <div class="card-body">
-                        <h5 class="card-title">Cód: A002 - Llave Francesa</h5>
-                        <p class="card-text text-muted">Llave ajustable 10"</p>
-                        <span class="badge bg-danger">Stock: 3</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ejemplo 3 -->
-            <div class="col-md-4 item-card">
-                <div class="card shadow-sm">
-                    <img src="https://via.placeholder.com/200" class="card-img-top" alt="Imagen artículo">
-                    <div class="card-body">
-                        <h5 class="card-title">Cód: A003 - Sierra Manual</h5>
-                        <p class="card-text text-muted">Sierra para madera y metal</p>
-                        <span class="badge bg-warning text-dark">Stock: 12</span>
-                    </div>
-                </div>
-            </div>
+        <!-- Contenedor de productos -->
+        <div id="itemsContainer" class="row g-4">
+            <!-- Las cards o lista se renderizan aquí -->
         </div>
     </div>
-    <!-- Script para cambiar vista -->
-    <script>
-        function setView(type) {
-            const container = document.getElementById("itemsContainer");
-
-            if (type === "list") {
-                document.querySelectorAll(".item-card").forEach(card => {
-                    card.classList.add("col-12");
-                    card.classList.remove("col-md-4");
-                });
-            } else {
-                document.querySelectorAll(".item-card").forEach(card => {
-                    card.classList.remove("col-12");
-                    card.classList.add("col-md-4");
-                });
-            }
-        }
-    </script>
-
-</body>
-
-</html>
