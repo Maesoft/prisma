@@ -12,7 +12,7 @@
   <style>
     @page {
       size: A4 portrait;
-      margin: 0;
+      margin: 8mm;
     }
 
     html,
@@ -20,21 +20,68 @@
       height: 100%;
       margin: 0;
       padding: 0;
+      background: #fff;
+      overflow: hidden;
     }
 
     body {
       display: flex;
       flex-direction: column;
-      zoom: 65%;
-      /* Escalado en pantalla */
+    }
+
+    .screen-scale {
+      transform: scale(0.68);
+      transform-origin: top left;
+      width: 147%;
+      /* 100 / 0.68 = 147 */
+      padding: 20px;
     }
 
     /* -------- ALTURA + FOOTER -------- */
     .full-height-container {
       display: flex;
       flex-direction: column;
-      flex-grow: 1;
-      padding: 2rem;
+      min-height: 260mm;
+      padding: 1.5rem;
+    }
+
+    .toolbox {
+      height: 34px;
+      padding: 0 8px;
+      display: flex;
+      justify-content: end;
+      align-items: center;
+      gap: 6px;
+      -webkit-app-region: drag;
+      /* Electron: ventana draggable */
+    }
+
+    .toolbox-btn {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: none;
+      background: #6c757d;
+      border-radius: 4px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      -webkit-app-region: no-drag;
+      /* botones clickeables */
+    }
+
+    .toolbox-btn img {
+      max-height: 18px;
+    }
+
+    /* Botón cerrar estilo Bootstrap */
+    .close-btn {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 16 16'%3e%3cpath d='M2.146 2.146a.5.5 0 0 1 .708 0L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 12px;
     }
 
     .main-content {
@@ -45,101 +92,143 @@
       margin-top: auto;
     }
 
+    .table {
+      font-size: 12px;
+    }
+
     @media print {
+
       body {
-        zoom: 100%;
-        /* Escala real para impresión */
+        background: #fff;
+      }
+
+      .screen-scale {
+        transform: none !important;
+        width: 100% !important;
+        padding: 0 !important;
       }
 
       .full-height-container {
-        margin-top: 30px;
-        padding: 0;
+        min-height: 260mm !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .footer-totales {
+        margin-top: auto !important;
+      }
+
+      /* Mejor nitidez al imprimir */
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        image-rendering: crisp-edges;
+        box-shadow: none !important;
+      }
+
+      .toolbox {
+        display: none;
+      }
+
+      .table {
+        font-size: 12px;
       }
     }
   </style>
 </head>
 
 <body>
-  
-  <div class="full-height-container">
-    <!-- Encabezado -->
-    <div class="main-content">
-      <div class="row border-bottom pb-3">
-        <div class="col-4 d-flex flex-column align-items-center" style="margin-top: 6rem;">
-          <h6 class="mb-0" id="nombre-empresa"></h6>
-          <p class="mb-0" id="cuit-empresa"></p>
-          <p class="mb-0" id="domicilio-empresa"></p>
-          <p class="mb-0" id="telefono-empresa"></p>
-        </div>
-        <div class="col-4 text-center">
-          <img alt="Logo de la empresa" class="img-fluid" id="logo-empresa" style="max-width:250px;">
-          <h3 class="mt-5" id="tipo-comprobante"></h3>
-        </div>
-        <div class="col-4 text-center" style="margin-top: 6rem;">
-          <p><strong>Fecha:</strong> <span id="fecha-comprobante"></span></p>
-          <p class="mb-0"><strong>No. Comprobante:</strong></p>
-          <p id="numero-comprobante"></p>
-        </div>
-      </div>
+  <div class="modal-header bg-black toolbox">
+    <button class="toolbox-btn btn" onclick="window.print()">
+      <img src="../assets/impresora.png" alt="Imprimir">
+    </button>
 
-      <!-- Datos del cliente -->
-      <div class="row mt-4 border-bottom">
-        <div class="col-6">
-          <p><strong>Razón Social:</strong> <span id="nombre-cliente"></span></p>
-          <p><strong>CUIT:</strong> <span id="cuit-cliente"></span></p>
-        </div>
-        <div class="col-6">
-          <p><strong>Teléfono:</strong> <span id="telefono-cliente"></span></p>
-          <p><strong>Domicilio:</strong> <span id="domicilio-cliente"></span></p>
-        </div>
-      </div>
+    <button class="toolbox-btn close-btn btn" onclick="window.close()">
 
-      <!-- Tabla de productos -->
-      <div class="row mt-4 mb-0">
-        <div class="col-12">
-          <table class="table text-center table-bordered mb-0">
-            <colgroup>
-              <col style="width: 5%">
-              <col style="width: 55%">
-              <col style="width: 20%">
-              <col style="width: 20%">
-            </colgroup>
-            <thead class="table-light">
-              <tr>
-                <th>Cantidad</th>
-                <th>Descripción</th>
-                <th>P. Unit.</th>
-                <th>Subtotal</th>
-              </tr>
-            </thead>
-            <tbody id="detalle-factura">
-              <!-- Se insertarán los productos -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+    </button>
+  </div>
 
-    <!-- Totales y observación -->
-    <div class="footer-totales">
-      <div class="row mt-4">
-        <div class="col-12 d-flex justify-content-end">
-          <div class="col-4 text-start">
-            <div class="d-flex justify-content-between">
-              <strong>Subtotal:</strong>
-              <span id="subtotal"></span>
-            </div>
-            <span id="impuestos"></span>
-            <div class="d-flex justify-content-between border-top pt-2 mt-2">
-              <strong>Total:</strong>
-              <span id="total"></span>
-            </div>
+  <div class="screen-scale">
+    <div class="full-height-container">
+      <!-- Encabezado -->
+      <div class="main-content">
+        <div class="row border-bottom pb-3">
+          <div class="col-4 d-flex flex-column align-items-center" style="margin-top: 6rem;">
+            <h6 class="mb-0" id="nombre-empresa"></h6>
+            <p class="mb-0" id="cuit-empresa"></p>
+            <p class="mb-0" id="domicilio-empresa"></p>
+            <p class="mb-0" id="telefono-empresa"></p>
+          </div>
+          <div class="col-4 text-center">
+            <img alt="Logo de la empresa" class="img-fluid" id="logo-empresa" style="max-width:250px;">
+            <h3 class="mt-5" id="tipo-comprobante"></h3>
+          </div>
+          <div class="col-4 text-center" style="margin-top: 6rem;">
+            <p><strong>Fecha:</strong> <span id="fecha-comprobante"></span></p>
+            <p class="mb-0"><strong>No. Comprobante:</strong></p>
+            <p id="numero-comprobante"></p>
+          </div>
+        </div>
+
+        <!-- Datos del cliente -->
+        <div class="row mt-4 border-bottom">
+          <div class="col-6">
+            <p><strong>Razón Social:</strong> <span id="nombre-cliente"></span></p>
+            <p><strong>CUIT:</strong> <span id="cuit-cliente"></span></p>
+          </div>
+          <div class="col-6">
+            <p><strong>Teléfono:</strong> <span id="telefono-cliente"></span></p>
+            <p><strong>Domicilio:</strong> <span id="domicilio-cliente"></span></p>
+          </div>
+        </div>
+
+        <!-- Tabla de productos -->
+        <div class="row mt-4 mb-0">
+          <div class="col-12">
+            <table class="table text-center table-bordered mb-0">
+              <colgroup>
+                <col style="width: 5%">
+                <col style="width: 55%">
+                <col style="width: 20%">
+                <col style="width: 20%">
+              </colgroup>
+              <thead class="table-light">
+                <tr>
+                  <th>Cantidad</th>
+                  <th>Descripción</th>
+                  <th>P. Unit.</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody id="detalle-factura">
+                <!-- Se insertarán los productos -->
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
 
-      <hr />
-      <p id="observacion" class="border text-center"></p>
+      <!-- Totales y observación -->
+      <div class="footer-totales">
+        <div class="row mt-4">
+          <div class="col-12 d-flex justify-content-end">
+            <div class="col-4 text-start">
+              <div class="d-flex justify-content-between">
+                <strong>Subtotal:</strong>
+                <span id="subtotal"></span>
+              </div>
+              <span id="impuestos"></span>
+              <div class="d-flex justify-content-between border-top pt-2 mt-2">
+                <strong>Total:</strong>
+                <span id="total"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr />
+        <p id="observacion" class="border text-center"></p>
+      </div>
     </div>
   </div>
 </body>
