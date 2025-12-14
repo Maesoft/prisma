@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,89 +8,148 @@
   <link rel="stylesheet" href="../css/bootstrap.min.css" />
   <script defer src="../js/bootstrap.min.js"></script>
   <script defer src="../js/printInvoice.js"></script>
-<style>
-  /* CONFIGURACIÓN DE IMPRESIÓN A4 */
-  @page {
-    size: A4 portrait;
-    margin: 8mm; /* Ajustado para evitar cortes */
-  }
+  <style>
+    /* CONFIGURACIÓN DE IMPRESIÓN A4 */
+    @page {
+      size: A4 portrait;
+      margin: 8mm;
+      /* Ajustado para evitar cortes */
+    }
 
-  html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background: #fff;
-  }
-
-  body {
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* -------- ESCALA EN PANTALLA -------- */
-  .screen-scale {
-    transform: scale(0.68);
-    transform-origin: top left;
-    width: 147%; /* 100 / 0.68 = 147 */
-    padding: 20px;
-  }
-
-  /* -------- ALTURA + FOOTER -------- */
-  .full-height-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 260mm; /* Altura útil dentro de A4 */
-    padding: 1.5rem;
-  }
-
-  .main-content {
-    flex-grow: 1;
-  }
-
-  .footer-totales {
-    margin-top: auto; /* Mantiene los totales abajo */
-  }
-  .table{
-    font-size: 12px;
-  }
-
-  /* -------- IMPRESIÓN -------- */
-  @media print {
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      overflow: hidden;
+    }
 
     body {
-      background: #fff;
+      display: flex;
+      flex-direction: column;
     }
 
+    /* -------- ESCALA EN PANTALLA -------- */
     .screen-scale {
-      transform: none !important;
-      width: 100% !important;
-      padding: 0 !important;
+      transform: scale(0.68);
+      transform-origin: top left;
+      width: 147%;
+      /* 100 / 0.68 = 147 */
+      padding: 20px;
     }
 
+    /* -------- ALTURA + FOOTER -------- */
     .full-height-container {
-      min-height: 260mm !important;
-      padding: 0 !important;
-      margin: 0 !important;
+      display: flex;
+      flex-direction: column;
+      min-height: 260mm;
+      /* Altura útil dentro de A4 */
+      padding: 1.5rem;
+    }
+
+    /* ---------- TOOLBOX ELECTRON ---------- */
+    .toolbox {
+      height: 34px;
+      padding: 0 8px;
+      display: flex;
+      justify-content: end;
+      align-items: center;
+      gap: 6px;
+      -webkit-app-region: drag;
+      /* Electron: ventana draggable */
+    }
+
+    .toolbox-btn {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: none;
+      background: #6c757d;
+      border-radius: 4px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      -webkit-app-region: no-drag;
+      /* botones clickeables */
+    }
+
+    .toolbox-btn img {
+      max-height: 18px;
+    }
+
+    /* Botón cerrar estilo Bootstrap */
+    .close-btn {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 16 16'%3e%3cpath d='M2.146 2.146a.5.5 0 0 1 .708 0L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 12px;
+    }
+
+    .main-content {
+      flex-grow: 1;
     }
 
     .footer-totales {
-      margin-top: auto !important;
+      margin-top: auto;
+      /* Mantiene los totales abajo */
     }
 
-    /* Mejor nitidez al imprimir */
-    * {
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-      image-rendering: crisp-edges;
-      box-shadow: none !important;
-    }
     .table {
       font-size: 12px;
     }
-  }
-</style>
+
+    /* -------- IMPRESIÓN -------- */
+    @media print {
+
+      body {
+        background: #fff;
+      }
+
+      .screen-scale {
+        transform: none !important;
+        width: 100% !important;
+        padding: 0 !important;
+      }
+
+      .full-height-container {
+        min-height: 260mm !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .footer-totales {
+        margin-top: auto !important;
+      }
+
+      /* Mejor nitidez al imprimir */
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        image-rendering: crisp-edges;
+        box-shadow: none !important;
+      }
+      .toolbox {
+        display: none;
+      }
+      .table {
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
-<body>
+
+<body >
+  <div class="modal-header bg-black toolbox">
+    <button class="toolbox-btn btn" onclick="window.print()">
+      <img src="../assets/impresora.png" alt="Imprimir">
+    </button>
+
+    <button class="toolbox-btn close-btn btn" onclick="window.close()"></button>
+  </div>
+
   <div class="screen-scale">
     <div class="full-height-container">
       <!-- Encabezado -->
@@ -178,4 +238,5 @@
     </div>
   </div>
 </body>
+
 </html>
