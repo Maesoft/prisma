@@ -47,15 +47,18 @@ const renderProducts = (products) => {
         <img 
           src="${product.imagen}" 
           class="img-fluid me-3" 
-          style="width: 80px; height: 80px; object-fit: cover;" 
+          style="width: 50px; height: 50px; object-fit: cover;" 
           alt="Imagen artículo"
           onerror="this.onerror=null;this.src='../assets/sin_imagen.png';"
         />          
-        <div class="card-body p-0">
-            <h5 class="card-title mb-1">Cod: ${product.codigo} - ${product.nombre}</h5>
+        <div class="card-body p-0" style="font-size:0.8rem">
+            <h6 class="card-title mb-1">Cod: ${product.codigo} - ${product.nombre}</h6>
             <p class="card-text text-muted mb-1">${product.descripcion}</p>
-            <span class="badge bg-dark w-25">Stock: ${product.stock}</span>
         </div>
+         <div class="card-body p-0" style="font-size:0.8rem">
+            <h6 class="card-title mb-1">Cod: ${product.precios}</h6>
+            <span class="badge bg-dark w-25">Stock: ${product.stock}</span>
+         </div>
         </div>`;
     } else {
       productCard.className = "col-12 col-md-4 item-card mb-3";
@@ -78,7 +81,7 @@ const renderProducts = (products) => {
       <span class="badge bg-dark mt-2">Stock: ${product.stock}</span>
     </div>
   </div>`;
-  }
+    }
     container.appendChild(productCard);
   });
 };
