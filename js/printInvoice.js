@@ -157,7 +157,3 @@ window.prismaFunctions.onReporteDatos(async (data) => {
   datosComprobante = data;
   llenarCampos();
 });
-
-setTimeout(() => {
-  window.print();
-}, 2000);

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Artículos</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <script defer src="../js/bootstrap.min.js"></script>
+    <script defer src="../js/viewProducts.js"></script>
+    <style>
+        /* Estilo moderno */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        h2 {
+            font-weight: 600;
+        }
+
+        .toggle-buttons button {
+            min-width: 100px;
+        }
+
+        #searchInput {
+            max-width: 400px;
+        }
+
+        .card img {
+            border-radius: 8px;
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Artículos</h2>
+            <button class="btn btn-dark" onclick="window.close()">Cerrar</button>
+        </div>
+
+        <!-- Buscador y botones toggle -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+            <input type="text" id="searchInput" class="form-control shadow-sm" placeholder="Buscar artículo..." oninput="filterProducts()">
+            <div class="toggle-buttons d-flex gap-2">
+                <button class="btn btn-dark" onclick="setView('list')">Lista</button>
+                <button class="btn btn-secondary" onclick="setView('cards')">Tarjetas</button>
+            </div>
+        </div>
+
+        <!-- Contenedor de productos -->
+        <div id="itemsContainer" class="row g-4">
+            <!-- Las cards o lista se renderizan aquí -->
+        </div>
+    </div>
