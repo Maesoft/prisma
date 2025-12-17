@@ -74,7 +74,7 @@ const menuTemplate = [
   {
     label: 'Ventas',
     submenu: [
-      { label: 'Ingresar Venta', click: () => { windowManager.createWindow("newSale", 800, 630, true, false) } },
+      { label: 'Ingresar Venta', click: () => { windowManager.createWindow("newSale", 850, 680, true, false) } },
       { label: 'Eliminar Venta', click: () => {  } },
       { type: 'separator' },
       { label: 'Informe de Ventas', click: () => {windowManager.createWindow("saleReport", 700, 520, false, false) } },
