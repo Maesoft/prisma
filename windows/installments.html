@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cuotas</title>
+
+  <!-- Bootstrap 5 -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-size: 0.9rem;
+    }
+
+    .card {
+      border: none;
+      border-radius: 12px;
+    }
+
+    .form-control {
+      border-radius: 8px;
+    }
+
+    .list-group-item {
+      border: none;
+      border-bottom: 1px solid #e9ecef;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .list-group-item:last-child {
+      border-bottom: none;
+    }
+
+    .btn-delete {
+      padding: 2px 8px;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm">
+          <div class="card-body">
+
+            <h5 class="mb-3 text-center">Cuotas</h5>
+
+            <!-- Formulario -->
+            <div class="mb-3">
+              <label class="form-label">Cantidad de cuotas</label>
+              <input
+                type="number"
+                class="form-control"
+                min="1"
+                placeholder="Ej: 3"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Porcentaje (%)</label>
+              <input
+                type="number"
+                class="form-control"
+                min="0"
+                placeholder="Ej: 15"
+              />
+            </div>
+
+            <div class="d-grid mb-4">
+              <button class="btn btn-primary">
+                Agregar cuota
+              </button>
+            </div>
+
+            <!-- Listado -->
+            <h6 class="text-muted mb-2">Cuotas creadas</h6>
+
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>3 cuotas</span>
+                <div class="d-flex align-items-center gap-2">
+                  <strong>15%</strong>
+                  <button class="btn btn-sm btn-outline-danger btn-delete">
+                    ✕
+                  </button>
+                </div>
+              </li>
+
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>6 cuotas</span>
+                <div class="d-flex align-items-center gap-2">
+                  <strong>30%</strong>
+                  <button class="btn btn-sm btn-outline-danger btn-delete">
+                    ✕
+                  </button>
+                </div>
+              </li>
+            </ul>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

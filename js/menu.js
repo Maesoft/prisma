@@ -6,6 +6,7 @@ const menuTemplate = [
     submenu: [
       { label: 'Backup', click: () => { /* Función de backup */ } },
       { label: 'Mi Empresa', click: () => { windowManager.createWindow("option", 700, 585, false, true) } },
+      { label: 'Cuotas', click: () => { windowManager.createWindow("installments", 540, 540, true, false) } },
       { type: 'separator' },
       { label: 'Salir', role: 'quit' }
     ]
