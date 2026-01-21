@@ -2,11 +2,11 @@ const windowManager = require("../main/windowManager");
 
 const menuTemplate = [
   {
-    label: 'Archivo',
+    label: 'Opciones',
     submenu: [
       { label: 'Backup', click: () => { /* Función de backup */ } },
       { label: 'Mi Empresa', click: () => { windowManager.createWindow("option", 700, 585, false, true) } },
-      { label: 'Cuotas', click: () => { windowManager.createWindow("installments", 540, 540, true, false) } },
+      { label: 'Cuotas e Intereses', click: () => { windowManager.createWindow("installments", 600, 620, true, false) } },
       { type: 'separator' },
       { label: 'Salir', role: 'quit' }
     ]

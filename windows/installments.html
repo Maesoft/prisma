@@ -1,116 +1,74 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <title>Cuotas</title>
-
-  <!-- Bootstrap 5 -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
-
-  <style>
-    body {
-      background-color: #f8f9fa;
-      font-size: 0.9rem;
-    }
-
-    .card {
-      border: none;
-      border-radius: 12px;
-    }
-
-    .form-control {
-      border-radius: 8px;
-    }
-
-    .list-group-item {
-      border: none;
-      border-bottom: 1px solid #e9ecef;
-      padding-left: 0;
-      padding-right: 0;
-    }
-
-    .list-group-item:last-child {
-      border-bottom: none;
-    }
-
-    .btn-delete {
-      padding: 2px 8px;
-      font-size: 0.8rem;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/bootstrap.min.css" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script defer src="../js/bootstrap.min.js"></script>
+  <script defer src="../js/installments.js"></script>
+  <title>Prisma</title>
 </head>
 
-<body>
-  <div class="container py-4">
-    <div class="row justify-content-center">
+<body style="background-color: rgb(239, 239, 239);">
+  <div class="container p-4" >
+    <div class="row justify-content-center border rounded text-white mb-4 p-3" style="background-color: rgb(149, 149, 149);">
       <div class="col-md-6 col-lg-5">
-        <div class="card shadow-sm">
-          <div class="card-body">
 
-            <h5 class="mb-3 text-center">Cuotas</h5>
+        <h5 class="mb-3 text-center">Cuotas e Intereses</h5>
+        <div class="mb-3">
+          <label class="form-label">Cantidad de cuotas</label>
+          <input type="number" class="form-control" min="1" placeholder="Ingrese cantidad de cuotas." />
+        </div>
 
-            <!-- Formulario -->
-            <div class="mb-3">
-              <label class="form-label">Cantidad de cuotas</label>
-              <input
-                type="number"
-                class="form-control"
-                min="1"
-                placeholder="Ej: 3"
-              />
-            </div>
+        <div class="mb-3">
+          <label class="form-label">Porcentaje (%)</label>
+          <input type="number" class="form-control" min="0" placeholder="Ingrese un Porcentaje." />
+        </div>
 
-            <div class="mb-3">
-              <label class="form-label">Porcentaje (%)</label>
-              <input
-                type="number"
-                class="form-control"
-                min="0"
-                placeholder="Ej: 15"
-              />
-            </div>
-
-            <div class="d-grid mb-4">
-              <button class="btn btn-primary">
-                Agregar cuota
-              </button>
-            </div>
-
-            <!-- Listado -->
-            <h6 class="text-muted mb-2">Cuotas creadas</h6>
-
-            <ul class="list-group">
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>3 cuotas</span>
-                <div class="d-flex align-items-center gap-2">
-                  <strong>15%</strong>
-                  <button class="btn btn-sm btn-outline-danger btn-delete">
-                    ✕
-                  </button>
-                </div>
-              </li>
-
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>6 cuotas</span>
-                <div class="d-flex align-items-center gap-2">
-                  <strong>30%</strong>
-                  <button class="btn btn-sm btn-outline-danger btn-delete">
-                    ✕
-                  </button>
-                </div>
-              </li>
-            </ul>
-
-          </div>
+        <div class="d-flex justify-content-center align-items-center mb-2">
+          <button class="btn btn-secondary" id="addInstallmentBtn">
+            Agregar cuota
+          </button>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Listado -->
+
+    <div class="table-scroll mb-2" style="max-height: 160px;">
+      <table class="table table-bordered text-center" style="font-size: 0.8rem;">
+        <thead class="table-dark">
+          <tr>
+            <th>Cuota</th>
+            <th>Interés (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td>1</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>10</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>15</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center">
+      <button class="btn btn-dark" onclick="window.close()">
+        Cerrar
+      </button>
+    </div>
+  </div>
 </body>
+
 </html>
