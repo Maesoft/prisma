@@ -21,7 +21,7 @@
                     <input type="text" id="inputCodigoCliente" class="form-control lh-1 mx-auto"
                         style="font-size: 0.8rem; height: 16px; min-width: 60px; padding: 12px 8px;"
                         placeholder="F3 para buscar" />
-                    <label id="nombreCliente" class="mt-1 form-label text-muted">Nombre del Cliente</label>
+                    <label id="nombreCliente" class="mt-1 mb-0 form-label text-muted">Nombre del Cliente</label>
                 </div>
             </div>
 
@@ -78,44 +78,72 @@
             </div>
         </div>
         <div class="mt-1 table-scroll" style="max-height: 180px; background-color: rgb(243, 243, 243);">
-        <table class="table table-striped" style="cursor: default; max-height: 100vh; overflow-y: auto;">
-            <thead class="table-dark">
-                <tr class="border" style="height: 20px;">
-                    <th class="p-1 text-center" style="font-size: 0.7rem; line-height: 1; vertical-align: middle;">
-                        Código</th>
-                    <th class="p-1" style="font-size: 0.7rem; line-height: 1; vertical-align: middle; ">
-                        Producto</th>
-                    <th class="p-1 text-center" style="font-size: 0.7rem; line-height: 1; vertical-align: middle;">
-                        Cantidad</th>
-                    <th class="p-1 text-center" style="font-size: 0.7rem; line-height: 1; vertical-align: middle;">
-                        Precio Unitario
-                    </th>
-                    <th class="p-1 text-end" style="font-size: 0.7rem; line-height: 1; vertical-align: middle;">Subtotal
-                    </th>
-                    <th class="p-0" style="width: 40px; vertical-align: middle;"></th>
-                </tr>
-            </thead>
-            <tbody id="tablaProductos" style="cursor: pointer;">
-                <!-- Los productos se agregarán aquí -->
-            </tbody>
-        </table>
-    </div>
-        <div id="totales" class="mt-2" style="font-size: 0.8rem;">
-            <div class="col-12 d-flex justify-content-end">
-                <div class="col-4 text-start">
-                    <div class="text-end">
-                        <strong>Sub-Total: </strong>
-                        <span id="subtotal-display">$ 0,00</span>
-                    </div>
-                    <div id="impuestos-display" class="text-end"><strong>Impuestos:</strong> $ 0,00</div>
-                    <div class="text-end">
-                        <strong>Total: </strong>
-                        <span id="total-display">$ 0,00</span>
+            <table class="table table-striped" style="cursor: default; max-height: 100vh; overflow-y: auto;">
+                <thead class="table-dark">
+                    <tr class="border" style="height: 20px;">
+                        <th class="p-1 text-center" style="font-size: 0.7rem; line-height: 1; vertical-align: middle;">
+                            Código</th>
+                        <th class="p-1" style="font-size: 0.7rem; line-height: 1; vertical-align: middle; ">
+                            Producto</th>
+                        <th class="p-1 text-center" style="font-size: 0.7rem; line-height: 1; vertical-align: middle;">
+                            Cantidad</th>
+                        <th class="p-1 text-center" style="font-size: 0.7rem; line-height: 1; vertical-align: middle;">
+                            Precio Unitario
+                        </th>
+                        <th class="p-1 text-end" style="font-size: 0.7rem; line-height: 1; vertical-align: middle;">
+                            Subtotal
+                        </th>
+                        <th class="p-0" style="width: 40px; vertical-align: middle;"></th>
+                    </tr>
+                </thead>
+                <tbody id="tablaProductos" style="cursor: pointer;">
+                    <!-- Los productos se agregarán aquí -->
+                </tbody>
+            </table>
+        </div>
+        <div id="totales" style="font-size: 0.8rem;">
+
+            <div class="row align-items-start">
+
+                <!-- Condición de venta (izquierda) -->
+                <div class="col-12 col-md-4">
+                    <label for="condicion-venta" class="form-label mb-1">
+                        <strong>Condición de venta</strong>
+                    </label>
+                    <select id="condicion-venta" class="form-select form-select-sm">
+                        <option value="1">Contado</option>
+                        <option value="3">3 cuotas (10%)</option>
+                        <option value="6">6 cuotas (20%)</option>
+                    </select>
+                </div>
+
+                <!-- Totales (derecha) -->
+                <div class="col-12 col-md-8 d-flex justify-content-end">
+                    <div class="text-start">
+                        <div class="text-end">
+                            <strong>Sub-Total: </strong>
+                            <span id="subtotal-display">$ 0,00</span>
+                        </div>
+
+                        <div id="impuestos-display" class="text-end">
+                            <strong>Impuestos:</strong> $ 0,00
+                        </div>
+
+                        <!-- Intereses -->
+                        <div id="interes-display" class="text-end">
+                            <strong>Intereses:</strong> $ 0,00
+                        </div>
+
+                        <div class="text-end">
+                            <strong>Total: </strong>
+                            <span id="total-display">$ 0,00</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
+            </div>
+
+        </div>
 
         <div class="form-group mt-1 p-2 bg-dark text-white rounded">
             <p class="form-label">Observacion</p>
