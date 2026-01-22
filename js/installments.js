@@ -27,6 +27,7 @@ const loadInstallments = async () => {
 };
 
 const createInstallment = async () => {
+  if (!validationFields()) return;
   const installmentData = {
     cuotas: Number(cuota.value),
     porcentaje: Number(interes.value),
@@ -37,23 +38,54 @@ const createInstallment = async () => {
     cleanFields();
     loadInstallments();
   } else {
-    alert("Error al crear la cuota");
+    window.prismaFunctions.showMSG("error", "Prisma", res.message);
   }
 };
+
 const cleanFields = () => {
   cuota.value = "";
   interes.value = "";
-}
+};
+
+const validationFields = () => {
+  if (cuota.value == "" || interes.value == "") {
+    window.prismaFunctions.showMSG(
+      "info",
+      "Prisma",
+      "Por favor, complete todos los campos.",
+    );
+    return false;
+  }
+  if (isNaN(cuota.value) || isNaN(interes.value)) {
+    window.prismaFunctions.showMSG(
+      "info",
+      "Prisma",
+      "Por favor, ingrese valores numéricos válidos.",
+    );
+    return false;
+  }
+  return true;
+};
+
 addInstallmentBtn.addEventListener("click", createInstallment);
 
 installmentsTableBody.addEventListener("click", async (event) => {
   if (event.target.classList.contains("delete-installment-btn")) {
+    const resMSG = await window.prismaFunctions.showMSG(
+      "question",
+      "Prisma",
+      `¿Esta seguro que desea eliminar la cuota?`,
+      ["Si", "No"],
+      0,
+    );
+
+    if (resMSG != 0) return;
     const id = event.target.dataset.id;
     const res = await window.prismaFunctions.deleteInstallment(id);
     if (res.success) {
       loadInstallments();
     } else {
-      alert("Error al eliminar la cuota");
+      window.prismaFunctions.showMSG("error", "Prisma", res.message);
     }
   }
 });
