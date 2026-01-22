@@ -18,6 +18,7 @@ import { TaxSales } from "../entities/TaxSales";
 import { TaxPurchases } from "../entities/TaxPurchases";
 import { Expenses } from "../entities/Expenses";
 import { ExpensesCategory } from "../entities/ExpensesCategory";
+import { Installments } from "../entities/Installments";
 
 
 export const AppDataSource = new DataSource({
@@ -44,7 +45,8 @@ export const AppDataSource = new DataSource({
         CashManagement,
         Receipt,
         Expenses,
-        ExpensesCategory, 
+        ExpensesCategory,
+        Installments,
     ]
 });
 

@@ -19,12 +19,12 @@
         <h5 class="mb-3 text-center">Cuotas e Intereses</h5>
         <div class="mb-3">
           <label class="form-label">Cantidad de cuotas</label>
-          <input type="number" class="form-control" min="1" placeholder="Ingrese cantidad de cuotas." />
+          <input type="number" id="cuota" class="form-control" min="1" placeholder="Ingrese cantidad de cuotas." />
         </div>
 
         <div class="mb-3">
           <label class="form-label">Porcentaje (%)</label>
-          <input type="number" class="form-control" min="0" placeholder="Ingrese un Porcentaje." />
+          <input type="number" id="interes" class="form-control" min="0" placeholder="Ingrese un Porcentaje." />
         </div>
 
         <div class="d-flex justify-content-center align-items-center mb-2">
@@ -45,20 +45,9 @@
             <th>Interés (%)</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="installmentsTableBody">
+          <!-- Filas de cuotas se agregarán aquí dinámicamente -->
 
-          <tr>
-            <td>1</td>
-            <td>5</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>10</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>15</td>
-          </tr>
         </tbody>
       </table>
     </div>

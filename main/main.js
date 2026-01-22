@@ -21,6 +21,7 @@ const { TaxSales } = require("../entities/TaxSales");
 const { TaxPurchases } = require("../entities/TaxPurchases");
 const { Expenses } = require("../entities/Expenses");
 const { ExpensesCategory } = require("../entities/ExpensesCategory");
+const { Installments } = require("../entities/Installments");
 
 //Manejo de la App
 app.on("ready", async () => {
@@ -375,6 +376,41 @@ ipcMain.handle("edit-client", async (event, id, clientData) => {
     };
   } catch (error) {
     console.error(error);
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("get-installments", async () => {
+  try {
+    const installmentsRepository = AppDataSource.getRepository(Installments);
+    const installments = await installmentsRepository.find({
+      order: { cuotas: "ASC" },
+    });
+    return { success: true, installments };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("add-installment", async (event, installmentData) => {
+  try {
+    const installmentsRepository = AppDataSource.getRepository(Installments);
+    const newInstallment = installmentsRepository.create(installmentData);
+    await installmentsRepository.save(newInstallment);
+    return {
+      success: true,
+      message: "Cuota creada exitosamente",
+      installmentId: newInstallment.id,
+    };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("delete-installment", async (event, id) => {
+  try {
+    const installmentsRepository = AppDataSource.getRepository(Installments);
+    await installmentsRepository.delete(id);
+    return { success: true, message: "Cuota eliminada exitosamente" };
+  } catch (error) {
     return { success: false, message: error.message };
   }
 });
