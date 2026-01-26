@@ -21,6 +21,9 @@ export class Sale {
   @ManyToOne(() => Client, (client) => client.sales, { onDelete: "CASCADE" })
   client: Client;
 
+  @Column({ type: 'decimal', precision: 15, scale: 2, default: 0 })
+  interes: number;
+
   @Column({ type: 'decimal', precision: 15, scale: 2 })
   total: number;
 

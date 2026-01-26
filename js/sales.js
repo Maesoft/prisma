@@ -82,7 +82,6 @@ const loadProducts = async () => {
       return;
     }
     products = res.products;
-    console.log(products);
   } catch (error) {
     window.prismaFunctions.showMSG("error", "Error", error);
   }
@@ -297,133 +296,94 @@ const deleteItem = (event) => {
   calculateTotal();
 };
 const updateSubTotal = (event) => {
-  const target = event.target;
-  const row = target.closest("tr"); //closest selecciona el elemento "tr" mas cercano al taget
-
-  if (!row) {
-    console.error("No se encontró la fila asociada.");
-    return;
-  }
+  const row = event.target.closest("tr");
+  if (!row) return;
 
   const cantidadInput = row.querySelector(".cantidad-input");
-  const precioSelect = row.querySelector(".precio-select, .precio-input");
+  const precioInput = row.querySelector(".precio-select, .precio-input");
   const totalCell = row.querySelector(".total-cell");
 
-  if (!cantidadInput || !precioSelect || !totalCell) {
-    console.error(
-      "No se encontraron los elementos necesarios en la fila:",
-      row,
-    );
-    return;
-  }
+  const cantidad = Number(cantidadInput?.value) || 0;
+  const precio = Number(precioInput?.value) || 0;
 
-  const cantidad = parseFloat(cantidadInput.value) || 0;
-  const precio = parseFloat(precioSelect.value) || 0;
+  // 1️⃣ Subtotal por fila
   const subtotal = cantidad * precio;
+  totalCell.textContent = formatMoney(subtotal);
 
-  totalCell.textContent = subtotal.toLocaleString("es-AR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
-  // Actualizar la cantidad en el array productsSales
-  const index = parseInt(cantidadInput.dataset.index);
+  // 2️⃣ Sincronizar estado
+  const index = Number(cantidadInput.dataset.index);
   if (productsSales[index]) {
     productsSales[index].cantidad = cantidad;
     productsSales[index].precio_unitario = precio;
   }
 
+  // 3️⃣ Recalcular totales
   calculateTotal();
 };
 const calculateTotal = () => {
-  const totalCells = document.querySelectorAll(".total-cell");
-
   let subtotal = 0;
 
-  // 1️⃣ Subtotal desde el DOM
-  totalCells.forEach((cell) => {
-    const valor =
-      Number(
-        cell.textContent
-          .replace(/\./g, "")
-          .replace(",", ".")
-          .replace("$", "")
-          .trim(),
-      ) || 0;
-
-    subtotal += valor;
+  productsSales.forEach((product) => {
+    const cantidad = product.cantidad || 0;
+    const precio = product.precio_unitario || 0;
+    subtotal += cantidad * precio;
   });
 
-  // 2️⃣ Impuestos (sobre subtotal)
-  const impuestos = calculateImpuestos();
+  const impuestosObj = calcularImpuestos(productsSales);
+  const impuestos = Object.values(impuestosObj).reduce((a, b) => a + b, 0);
 
-  // 3️⃣ Interés (sobre subtotal + impuestos)
   interes = calculateInteres(subtotal + impuestos);
-
-  // 4️⃣ Total final
   total = subtotal + impuestos + interes;
 
-  // 5️⃣ Render
-  if (subtotalDisplay) {
-    subtotalDisplay.textContent = formatMoney(subtotal);
-  }
+  subtotalDisplay.textContent = formatMoney(subtotal);
+  interesDisplay.textContent = formatMoney(interes);
+  totalDisplay.textContent = formatMoney(total);
 
-  if (impuestosDisplay) {
-    impuestosDisplay.innerHTML = `<strong>Impuestos:</strong> ${formatMoney(impuestos)}`;
-  }
-
-  if (interesDisplay) {
-    interesDisplay.innerHTML = `<strong>Intereses:</strong> ${formatMoney(interes || 0)}`;
-  }
-
-  if (totalDisplay) {
-    totalDisplay.textContent = formatMoney(total);
-  }
+  // 👇 Render de impuestos (solo visual)
+  renderImpuestos(impuestosObj);
 };
-const calculateImpuestos = () => {
-  const impuestosAgrupados = [];
+const calcularImpuestos = () => {
+  const impuestos = {};
 
-  productsSales.forEach((product, index) => {
+  productsSales.forEach((product) => {
     const cantidad = product.cantidad || 0;
-    const precioUnitario = parseFloat(
-      document.querySelectorAll(".precio-select , .precio-input")[index]
-        ?.value || 0,
-    );
+    const precioUnitario = product.precio_unitario || 0;
     const subtotal = cantidad * precioUnitario;
 
-    if (Array.isArray(product.impuestos)) {
-      product.impuestos.forEach((tax) => {
-        const clave = `${tax.titulo} ${tax.porcentaje}%`;
+    if (!Array.isArray(product.impuestos)) return;
 
-        if (!impuestosAgrupados[clave]) {
-          impuestosAgrupados[clave] = 0;
-        }
+    product.impuestos.forEach((tax) => {
+      const clave = `${tax.titulo} ${tax.porcentaje}%`;
 
-        impuestosAgrupados[clave] += (subtotal * tax.porcentaje) / 100;
-      });
-    }
+      if (!impuestos[clave]) {
+        impuestos[clave] = 0;
+      }
+
+      impuestos[clave] += (subtotal * tax.porcentaje) / 100;
+    });
   });
 
-  if (impuestosDisplay) {
-    impuestosDisplay.innerHTML = "";
+  return impuestos;
+};
+const renderImpuestos = (impuestos) => {
+  impuestosDisplay.innerHTML = "";
 
-    const entries = Object.entries(impuestosAgrupados);
+  const entries = Object.entries(impuestos);
 
-    if (entries.length === 0) {
-      impuestosDisplay.innerHTML = `<div class="text-end"><strong>Impuestos:</strong> $ 0,00</div>`;
-    } else {
-      entries.forEach(([nombre, valor]) => {
-        const div = document.createElement("div");
-        div.className = "text-end";
-        div.innerHTML = `<strong>${nombre}:</strong> $ ${valor.toLocaleString(
-          "es-AR",
-          { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-        )}`;
-        impuestosDisplay.appendChild(div);
-      });
-    }
-    return Object.values(impuestosAgrupados).reduce((acc, val) => acc + val, 0);
-  }
+  if (entries.length === 0) return;
+
+  entries.forEach(([nombre, valor]) => {
+    const div = document.createElement("div");
+    div.className = "text-end";
+    div.innerHTML = `
+      <strong>${nombre}:</strong>
+      $ ${valor.toLocaleString("es-AR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}
+    `;
+    impuestosDisplay.appendChild(div);
+  });
 };
 const calculateInteres = (base) => {
   const value = Number(selectCondicion.value);
@@ -495,7 +455,6 @@ const collect = async () => {
     tipoComprobante.selectedOptions[0].innerText === "Presupuesto";
 
   const detalle = buildSaleDetail();
-
   if (isBudget) {
     await handleBudgetSale(detalle);
   } else {
@@ -531,26 +490,22 @@ const buildSaleData = () => ({
   tipo_comprobante: tipoComprobante.value,
   numero_comprobante: `${ptoVta.value}-${nroComp.value}`,
   client: idClient,
+  interes: interes,
   total: total,
   observacion: observacion.value,
 });
 const buildSaleDetail = () => {
-  const detalle = [];
-  for (let i = 0; i < tablaProductos.rows.length; i++) {
-    const row = tablaProductos.rows[i];
-    const precioUnitarioSelect = row.cells[3].querySelector("select, input");
-    const cantidadInput = row.cells[2].querySelector("input");
+  return productsSales.map((product) => {
+    const cantidad = Number(product.cantidad) || 0;
+    const precio = Number(product.precio_unitario) || 0;
 
-    detalle.push({
-      producto: row.cells[1].innerText,
-      cantidad: String(cantidadInput.value).replace(",", "."),
-      precio_unitario: parseFloat(precioUnitarioSelect.value),
-      subtotal: parseFloat(
-        row.cells[4].innerText.replace(/\./g, "").replace(",", "."),
-      ),
-    });
-  }
-  return detalle;
+    return {
+      producto: product.nombre,
+      cantidad,
+      precio_unitario: precio,
+      subtotal: cantidad * precio,
+    };
+  });
 };
 const handleBudgetSale = async (detalle) => {
   saleDetail.length = 0;
@@ -593,9 +548,10 @@ const cleanFields = () => {
   total = 0;
   idClient = 0;
   tablaProductos.innerHTML = "";
+  interesDisplay.textContent = "$ 0.00";
   impuestosDisplay.innerHTML = "";
-  subtotalDisplay.textContent = "0.00";
-  totalDisplay.textContent = "0.00";
+  subtotalDisplay.textContent = "$ 0.00";
+  totalDisplay.textContent = "$ 0.00";
   getLastInvoice();
 };
 const printSale = async (saleId) => {
@@ -611,33 +567,16 @@ const printSale = async (saleId) => {
   const invoiceToPrint = resInvoices.sales.find(
     (invoice) => invoice.id === saleId,
   );
-
   invoiceToPrint.subtotal = invoiceToPrint.details.reduce(
     (acc, item) => acc + item.subtotal,
     0,
   );
-  console.log(invoiceToPrint);
-
-  if (Array.isArray(invoiceToPrint.impuestos)) {
-    const htmlImpuestos = invoiceToPrint.impuestos.map((imp) => {
-      return `
-      <div class="d-flex justify-content-between">
-          <strong>${imp.nombre} ${imp.porcentaje}%:</strong>
-          <span>$ ${imp.monto.toLocaleString("es-AR", {
-            minimumFractionDigits: 2,
-          })}</span>
-      </div>
-      `;
-    });
-
-    invoiceToPrint.impuestos = htmlImpuestos.join("");
-  }
   if (tipoComprobante.selectedOptions[0].innerText.includes("Ticket")) {
     window.prismaFunctions.openWindow({
       windowName: "printTicket",
       width: 200,
       height: 550,
-      frame: true,
+      frame: false,
       modal: false,
       data: invoiceToPrint,
     });
@@ -646,7 +585,7 @@ const printSale = async (saleId) => {
       windowName: "printInvoice",
       width: 450,
       height: 700,
-      frame: true,
+      frame: false,
       modal: false,
       data: invoiceToPrint,
     });
@@ -674,37 +613,31 @@ const updateStock = async () => {
   }
 };
 const updateTax = async (saleId) => {
-  const divs = impuestosDisplay.querySelectorAll("div");
+  const impuestos = calcularImpuestos(productsSales);
 
-  for (const div of divs) {
-    const text = div.textContent.trim(); // "Iva 21%: $ 33.600,00"
-    const match = text.match(/^(.+?)\s(\d+(?:[.,]\d+)?)%:\s\$?\s?([\d.,]+)/);
+  const taxData = Object.entries(impuestos).map(([nombre, valor]) => ({
+    venta: { id: saleId },
+    nombre,
+    valor,
+  }));
 
-    if (match) {
-      const nombre = match[1].trim();
-      const porcentaje = parseFloat(match[2]);
-      const monto = parseFloat(match[3].replace(/\./g, "").replace(",", "."));
+  try {
+    const res = await window.prismaFunctions.addTaxSale(taxData);
 
-      const taxData = [{ nombre, porcentaje, monto, sale: saleId }];
-      try {
-        const res = await window.prismaFunctions.addTaxSale(taxData);
-
-        if (!res.success) {
-          window.prismaFunctions.showMSG(
-            "error",
-            "Prisma",
-            `Error al agregar impuesto: ${res.message}`,
-          );
-          return;
-        }
-      } catch (error) {
-        window.prismaFunctions.showMSG(
-          "error",
-          "Prisma",
-          `Error inesperado: ${error.message || error}`,
-        );
-      }
+    if (!res.success) {
+      window.prismaFunctions.showMSG(
+        "error",
+        "Prisma",
+        `Error al agregar impuesto: ${res.message}`,
+      );
+      return;
     }
+  } catch (error) {
+    window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      `Error inesperado: ${error.message || error}`,
+    );
   }
 };
 const getLastInvoice = async () => {
