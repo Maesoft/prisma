@@ -5,16 +5,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
     <script defer src="../js/bootstrap.min.js"></script>
     <script defer src="../js/payment.js"></script>
     <title>Prisma</title>
 </head>
 <style>
-
     @media print {
         .btn {
             display: none;
         }
+
         #invoiceApply {
             height: auto !important;
             max-height: none !important;
@@ -22,11 +23,13 @@
             border: none;
         }
     }
+
     @page {
         size: A4 Portrait;
         margin: 0;
     }
 </style>
+
 <body>
     <div class="p-3">
         <h1 class="mb-0">Orden de Pago</h1>
@@ -83,7 +86,7 @@
 
                     </select>
                 </div>
-                <div class="form-group bg-dark text-white rounded p-2"> 
+                <div class="form-group bg-dark text-white rounded p-2">
                     <label for="observations" class="form-label">Observaciones</label>
                     <textarea class="form-control bg-secondary" id="observations" rows="3"></textarea>
                 </div>
@@ -100,7 +103,7 @@
     </div>
 </body>
 <div class="modal fade" id="modalProviders" data-bs-backdrop="static" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="max-width: 550px; max-height: 400px;">
         <div class="modal-content">
             <div class="modal-header bg-black text-white">
                 <h5 class="modal-title" id="providerSearchModalLabel">
@@ -111,21 +114,23 @@
             <div class="form-group p-4">
                 <input type="text" class="form-control bg-secondary" id="inputModalProviders" tabindex="1" />
             </div>
+            <div class="modal-body">
+                <div class="table-scroll">
+                    <table class="table table-striped text-center w-100" style="cursor: default; font-size: 0.8rem;">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Código</th>
+                                <th>Razon Social</th>
+                                <th>CUIT</th>
+                                <th>Regimen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listProviders" style="cursor: pointer;">
 
-            <table class="table text-center" style="cursor: default;">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Razon Social</th>
-                        <th>CUIT</th>
-                        <th>Regimen</th>
-                    </tr>
-                </thead>
-                <tbody id="listProviders" style="cursor: pointer;">
-
-                </tbody>
-            </table>
-
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

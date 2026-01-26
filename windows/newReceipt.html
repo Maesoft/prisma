@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
     <script defer src="../js/bootstrap.min.js"></script>
     <script defer src="../js/receipt.js"></script>
     <title>Prisma</title>
@@ -29,8 +30,7 @@
             <div class="col-4">
                 <div class="input-container text-center">
                     <label for="customerName" class="form-label mb-0">Cliente</label>
-                    <input type="text" id="clientName" class="form-control text-center"
-                        placeholder="F3 para buscar." />
+                    <input type="text" id="clientName" class="form-control text-center" placeholder="F3 para buscar." />
                     <p class="mb-0 text-dark" id="labelCliente"></p>
                 </div>
             </div>
@@ -66,7 +66,7 @@
 
                     </select>
                 </div>
-                <div class="form-group bg-dark text-white rounded p-2"> 
+                <div class="form-group bg-dark text-white rounded p-2">
                     <label for="observations" class="form-label">Observaciones</label>
                     <textarea class="form-control bg-secondary" id="observations" rows="3"></textarea>
                 </div>
@@ -83,7 +83,7 @@
     </div>
 </body>
 <div class="modal fade" id="modalClients" data-bs-backdrop="static" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="max-width: 550px; max-height: 400px;">
         <div class="modal-content">
             <div class="modal-header bg-black text-white">
                 <h5 class="modal-title" id="providerSearchModalLabel">
@@ -94,20 +94,23 @@
             <div class="form-group p-4">
                 <input type="text" class="form-control bg-secondary" id="inputModalClients" tabindex="1" />
             </div>
+            <div class="modal-body">
+                <div class="table-scroll">
+                    <table class="table table-striped w-100 text-center" style="cursor: default; font-size: 0.8rem;">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Código</th>
+                                <th>Razon Social</th>
+                                <th>CUIT</th>
+                                <th>Regimen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listClients" style="cursor: pointer;">
 
-            <table class="table text-center" style="cursor: default;">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Razon Social</th>
-                        <th>CUIT</th>
-                        <th>Regimen</th>
-                    </tr>
-                </thead>
-                <tbody id="listClients" style="cursor: pointer;">
-
-                </tbody>
-            </table>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
         </div>
     </div>
