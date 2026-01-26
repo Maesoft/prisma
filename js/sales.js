@@ -610,7 +610,7 @@ const printSale = async (saleId) => {
       windowName: "printInvoice",
       width: 450,
       height: 700,
-      frame: true,
+      frame: false,
       modal: false,
       data: invoiceToPrint,
     });

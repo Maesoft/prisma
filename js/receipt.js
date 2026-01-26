@@ -197,7 +197,6 @@ const newReceipt = async () => {
 // Event listeners
 invoiceList.addEventListener("dblclick", () => moveSelected(invoiceList, invoiceApply, +1));
 invoiceApply.addEventListener("dblclick", () => moveSelected(invoiceApply, invoiceList, -1));
-inputClient.addEventListener("focusout", selectClient);
 inputClient.addEventListener("keyup", async (e) => {
   if (e.key === "F3") {
     const clientSearchModal = new bootstrap.Modal(document.getElementById("modalClients"));
@@ -208,7 +207,15 @@ inputClient.addEventListener("keyup", async (e) => {
   }
   if (e.key === "Enter") selectClient();
 });
-
+inputModalClients.addEventListener("input", (e) => {
+  const criterio = e.target.value;
+  const filteredClients = clients.filter((client) =>
+    client.razon_social.toLowerCase().includes(criterio.toLowerCase()) ||
+    client.codigo.toLowerCase().includes(criterio.toLowerCase()) ||
+    client.cuit.toLowerCase().includes(criterio.toLowerCase())
+  );
+  renderClients(filteredClients);
+});
 btnGenerate.addEventListener("click", newReceipt);
 document.addEventListener("DOMContentLoaded", async () => {
   await getLastReceipt();
