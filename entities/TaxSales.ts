@@ -10,10 +10,7 @@ export class TaxSales {
     nombre: string;
 
     @Column({ type: 'decimal', precision: 15, scale: 2 })
-    porcentaje: number;
-
-    @Column({ type: 'decimal', precision: 15, scale: 2 })
-    monto: number;
+    valor: number;
 
     @ManyToOne(() => Sale, (sale) => sale.impuestos, { onDelete: "CASCADE" })
     sale: Sale;

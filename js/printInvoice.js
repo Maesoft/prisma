@@ -13,6 +13,7 @@ const domicilioCliente = document.getElementById("domicilio-cliente");
 const detalleFactura = document.getElementById("detalle-factura");
 const subtotalFactura = document.getElementById("subtotal");
 const impuestosFactura = document.getElementById("impuestos");
+const interesFactura = document.getElementById("interes");
 const totalFactura = document.getElementById("total");
 const observacion = document.getElementById("observacion");
 
@@ -96,9 +97,13 @@ const llenarCampos = () => {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
-    console.log(datosComprobante.impuestos);
   impuestosFactura.innerHTML = datosComprobante.impuestos
-
+  interesFactura.innerHTML =
+    "$" +
+    datosComprobante.interes.toLocaleString("es-AR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   totalFactura.innerHTML =
     "$" +
     datosComprobante.total.toLocaleString("es-AR", {

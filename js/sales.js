@@ -26,9 +26,6 @@ let productsSales = [];
 let saleDetail = [];
 let interes = 0;
 
-fechaVenta.value = fechaActual;
-inputCodigoCliente.focus();
-
 const formatearFecha = (fechaISO) => {
   const [anio, mes, dia] = fechaISO.split("-");
   return `${dia}-${mes}-${anio}`;
@@ -108,7 +105,7 @@ const renderProducts = (arrProducts) => {
       const modalProducts = bootstrap.Modal.getInstance(
         document.getElementById("modalProducts"),
       );
-      calculateTotal();
+      calcularTotal();
       modalProducts.hide();
     });
     listProducts.appendChild(row);
@@ -136,7 +133,7 @@ const renderProductSales = () => {
   });
 
   attachEventListeners();
-  calculateTotal();
+  calcularTotal();
 };
 const createProductRow = (product, index) => {
   const row = document.createElement("tr");
@@ -293,7 +290,7 @@ const deleteItem = (event) => {
   }
 
   row.remove();
-  calculateTotal();
+  calcularTotal();
 };
 const updateSubTotal = (event) => {
   const row = event.target.closest("tr");
@@ -318,9 +315,9 @@ const updateSubTotal = (event) => {
   }
 
   // 3️⃣ Recalcular totales
-  calculateTotal();
+  calcularTotal();
 };
-const calculateTotal = () => {
+const calcularTotal = () => {
   let subtotal = 0;
 
   productsSales.forEach((product) => {
@@ -332,7 +329,7 @@ const calculateTotal = () => {
   const impuestosObj = calcularImpuestos(productsSales);
   const impuestos = Object.values(impuestosObj).reduce((a, b) => a + b, 0);
 
-  interes = calculateInteres(subtotal + impuestos);
+  interes = calcularInteres(subtotal + impuestos);
   total = subtotal + impuestos + interes;
 
   subtotalDisplay.textContent = formatMoney(subtotal);
@@ -362,6 +359,7 @@ const calcularImpuestos = () => {
       impuestos[clave] += (subtotal * tax.porcentaje) / 100;
     });
   });
+  console.log(impuestos);
 
   return impuestos;
 };
@@ -385,7 +383,25 @@ const renderImpuestos = (impuestos) => {
     impuestosDisplay.appendChild(div);
   });
 };
-const calculateInteres = (base) => {
+const loadInteres = async () => {
+  const res = await window.prismaFunctions.getInstallments();
+  if (!res.success) {
+    window.prismaFunctions.showMSG("error", "Error", res.message);
+    return;
+  }
+  selectCondicion.innerHTML = "";
+  const optionDefault = document.createElement("option");
+  optionDefault.value = "0";
+  optionDefault.textContent = "Contado";
+  selectCondicion.appendChild(optionDefault);
+  res.installments.forEach((item) => {
+    const option = document.createElement("option");
+    option.value = item.porcentaje;
+    option.textContent = `${item.cuotas} cuotas (${item.porcentaje}%)`;
+    selectCondicion.appendChild(option);
+  });
+};
+const calcularInteres = (base) => {
   const value = Number(selectCondicion.value);
   return (base * value) / 100;
 };
@@ -571,6 +587,21 @@ const printSale = async (saleId) => {
     (acc, item) => acc + item.subtotal,
     0,
   );
+
+  if (Array.isArray(invoiceToPrint.impuestos)) {
+    const htmlImpuestos = invoiceToPrint.impuestos.map((imp) => {
+      return `
+      <div class="d-flex justify-content-between">
+          <strong>${imp.nombre}:</strong>
+          <span>$ ${imp.valor.toLocaleString("es-AR", {
+            minimumFractionDigits: 2,
+          })}</span>
+      </div>
+      `;
+    });
+
+    invoiceToPrint.impuestos = htmlImpuestos.join("");
+  }
   if (tipoComprobante.selectedOptions[0].innerText.includes("Ticket")) {
     window.prismaFunctions.openWindow({
       windowName: "printTicket",
@@ -616,7 +647,7 @@ const updateTax = async (saleId) => {
   const impuestos = calcularImpuestos(productsSales);
 
   const taxData = Object.entries(impuestos).map(([nombre, valor]) => ({
-    venta: { id: saleId },
+    sale: { id: saleId },
     nombre,
     valor,
   }));
@@ -659,6 +690,13 @@ const getLastInvoice = async () => {
   ptoVta.value = formattedPtoVta;
   nroComp.value = formattedNroComp;
 };
+const inicializar = async () => {
+  await loadInteres();
+  await getLastInvoice();
+  fechaVenta.value = fechaActual;
+  inputCodigoCliente.focus();
+};
+
 inputCodigoCliente.addEventListener("keyup", async (event) => {
   if (event.key === "F3") {
     const clientSearchModal = new bootstrap.Modal(
@@ -722,7 +760,7 @@ inputCodigoProducto.addEventListener("keyup", async (event) => {
     addProductToSale(codeToSearch);
     inputCodigoProducto.value = "";
     inputCodigoProducto.focus();
-    calculateTotal();
+    calcularTotal();
   }
 });
 inputModalClients.addEventListener("input", (e) => {
@@ -757,5 +795,5 @@ nroComp.addEventListener("focusout", () => {
   }
 });
 btnCobrar.addEventListener("click", collect);
-selectCondicion.addEventListener("change", calculateTotal);
-document.addEventListener("DOMContentLoaded", getLastInvoice);
+selectCondicion.addEventListener("change", calcularTotal);
+document.addEventListener("DOMContentLoaded", inicializar);

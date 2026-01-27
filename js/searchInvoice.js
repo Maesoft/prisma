@@ -48,8 +48,8 @@ const printInvoice = (invoice) => {
     const htmlImpuestos = invoice.impuestos.map((imp) => {
       return `
       <div class="d-flex justify-content-between">
-          <strong>${imp.nombre} ${imp.porcentaje}%:</strong>
-          <span>$ ${imp.monto.toLocaleString("es-AR", {
+          <strong>${imp.nombre}:</strong>
+          <span>$ ${imp.valor.toLocaleString("es-AR", {
             minimumFractionDigits: 2,
           })}</span>
       </div>

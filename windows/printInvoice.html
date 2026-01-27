@@ -131,9 +131,11 @@
         image-rendering: crisp-edges;
         box-shadow: none !important;
       }
+
       .toolbox {
         display: none;
       }
+
       .table {
         font-size: 12px;
       }
@@ -141,7 +143,7 @@
   </style>
 </head>
 
-<body >
+<body>
   <div class="modal-header bg-black toolbox">
     <button class="toolbox-btn btn" onclick="window.print()">
       <img src="../assets/impresora.png" alt="Imprimir">
@@ -217,12 +219,20 @@
         <div class="row mt-4">
           <div class="col-12 d-flex justify-content-end">
             <div class="col-4 text-start">
+
               <div class="d-flex justify-content-between">
                 <strong>Subtotal:</strong>
                 <span id="subtotal"></span>
               </div>
 
-              <span id="impuestos"></span>
+              <div class="text-end" id="impuestos">
+
+              </div>
+
+              <div class="d-flex justify-content-between">
+                <strong>Intereses:</strong>
+                <span id="interes"></span>
+              </div>
 
               <div class="d-flex justify-content-between border-top pt-2 mt-2">
                 <strong>Total:</strong>
