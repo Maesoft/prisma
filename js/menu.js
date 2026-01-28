@@ -41,7 +41,7 @@ const menuTemplate = [
       { label: 'Nuevo Articulo', click: () => { windowManager.createWindow("newProduct", 800, 600, true, false) } },
       { label: 'Eliminar Articulo', click: () => { windowManager.createWindow("deleteProduct", 600, 500, false, true) } },
       { label: 'Modificar Articulo', click: () => { windowManager.createWindow("modifyProduct", 800, 600, true, false) } },
-      { label: 'Ver Articulos', click: () => { windowManager.createWindow("viewProducts", 1100, 600, true, false) } },
+      { label: 'Ver Articulos', click: () => { windowManager.createWindow("viewProducts", 1300, 800, true, false) } },
       { type: 'separator' },
       { label: 'Modificador de Precios', click: () => {windowManager.createWindow("modifyPrices", 440, 470, true, false) } }
     ]

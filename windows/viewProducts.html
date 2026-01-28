@@ -41,16 +41,19 @@
 </head>
 
 <body>
-    <div class="container mt-5">
+    <div class="container mt-2">
         <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Artículos</h2>
-            <button class="btn btn-dark" onclick="window.close()">Cerrar</button>
         </div>
 
         <!-- Buscador y botones toggle -->
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
             <input type="text" id="searchInput" class="form-control shadow-sm" placeholder="Buscar artículo..." oninput="filterProducts()">
+            <select id="categorySelect" class="form-control shadow-sm">
+                <option value="all">Todas las categorías</option>
+                <!-- Las categorías se cargan dinámicamente aquí -->
+            </select>
             <div class="toggle-buttons d-flex gap-2">
                 <button class="btn btn-dark" onclick="setView('list')">Lista</button>
                 <button class="btn btn-secondary" onclick="setView('cards')">Tarjetas</button>

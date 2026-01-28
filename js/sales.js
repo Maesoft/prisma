@@ -397,6 +397,7 @@ const loadInteres = async () => {
   res.installments.forEach((item) => {
     const option = document.createElement("option");
     option.value = item.porcentaje;
+    option.cuotas = item.cuotas;
     option.textContent = `${item.cuotas} cuotas (${item.porcentaje}%)`;
     selectCondicion.appendChild(option);
   });
@@ -466,7 +467,6 @@ const collect = async () => {
   if (!hasSufficientStock()) return;
 
   const saleData = buildSaleData();
-
   const isBudget =
     tipoComprobante.selectedOptions[0].innerText === "Presupuesto";
 
@@ -696,7 +696,21 @@ const inicializar = async () => {
   fechaVenta.value = fechaActual;
   inputCodigoCliente.focus();
 };
+const detallarCondicionVenta = () => {
+  calcularTotal();
 
+  const selectedOption = selectCondicion.selectedOptions[0];
+  if (selectedOption.value === "0") {
+    observacion.value = "Venta al contado.";
+  } else {
+    observacion.value = `Venta en ${selectedOption.cuotas} cuotas de $${(
+      total / selectedOption.cuotas
+    ).toLocaleString("es-AR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }
+};
 inputCodigoCliente.addEventListener("keyup", async (event) => {
   if (event.key === "F3") {
     const clientSearchModal = new bootstrap.Modal(
@@ -795,5 +809,5 @@ nroComp.addEventListener("focusout", () => {
   }
 });
 btnCobrar.addEventListener("click", collect);
-selectCondicion.addEventListener("change", calcularTotal);
+selectCondicion.addEventListener("change", detallarCondicionVenta);
 document.addEventListener("DOMContentLoaded", inicializar);

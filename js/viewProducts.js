@@ -1,4 +1,8 @@
+const searchInput = document.getElementById("searchInput");
+const categorySelect = document.getElementById("categorySelect");
+
 let currentView = "cards";
+let products = [];
 
 const loadProducts = async () => {
   try {
@@ -14,7 +18,6 @@ const loadProducts = async () => {
       return;
     }
     products = response.products;
-    console.log(products);
 
     renderProducts(products);
   } catch (error) {
@@ -27,12 +30,42 @@ const loadProducts = async () => {
     );
   }
 };
-
+const loadCategories = async () => {
+  try {
+    const response = await window.prismaFunctions.getProductCategories();
+    if (!response.success) {
+      window.prismaFunctions.showMSG(
+        "error",
+        "Prisma",
+        response.message,
+        ["Aceptar"],
+        0
+      );
+      return;
+    }
+    const categories = response.categories;
+    categories.forEach((category) => {
+      const option = document.createElement("option");
+      option.value = category.id;
+      option.textContent = category.name;
+      categorySelect.appendChild(option);
+    });
+  } catch (error) {
+    window.prismaFunctions.showMSG(
+      "error",
+      "Prisma",
+      "Error al cargar las categorías",
+      ["Aceptar"],
+      0
+    );
+  }
+};
 const setView = (type) => {
   currentView = type;
+  categorySelect.value = "all";
+  searchInput.value = "";
   renderProducts(products);
 };
-
 const renderProducts = (products) => {
   const container = document.getElementById("itemsContainer");
   container.innerHTML = "";
@@ -82,5 +115,27 @@ const renderProducts = (products) => {
     container.appendChild(productCard);
   });
 };
+const inicializar = async () => {
+  await loadCategories();
+  await loadProducts();
+};
 
-document.addEventListener("DOMContentLoaded", loadProducts);
+searchInput.addEventListener("input", (e) => {
+  const query = e.target.value.toLowerCase();
+  const filteredProducts = products.filter((product) =>
+    product.nombre.toLowerCase().includes(query) ||
+    product.codigo.toLowerCase().includes(query) ||
+    product.descripcion.toLowerCase().includes(query)
+  );
+  renderProducts(filteredProducts);
+});
+categorySelect.addEventListener("change", (e) => {
+  const selectedCategory = e.target.value;
+  const filteredProducts = products.filter((product) =>
+    selectedCategory === "all" ? true :
+    product.categoria.id == selectedCategory
+  );
+
+  renderProducts(filteredProducts);
+});
+document.addEventListener("DOMContentLoaded", inicializar);
