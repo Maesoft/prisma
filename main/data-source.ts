@@ -12,13 +12,14 @@ import { Tax } from "../entities/Tax";
 import { DetailsPurchase } from "../entities/DetailsPurchase";
 import { Purchase } from "../entities/Purchase";
 import { Payment } from "../entities/Payment";
-import { CashManagement } from "../entities/CashManagement";
 import { Receipt } from "../entities/Receipt";
 import { TaxSales } from "../entities/TaxSales";
 import { TaxPurchases } from "../entities/TaxPurchases";
 import { Expenses } from "../entities/Expenses";
 import { ExpensesCategory } from "../entities/ExpensesCategory";
-
+import { CashBox } from "../entities/CashBox";
+import { CashBoxSession } from "../entities/CashBoxSession";
+import { CashMovement } from "../entities/CashMovement";
 
 export const AppDataSource = new DataSource({
     type: "sqlite",
@@ -41,10 +42,15 @@ export const AppDataSource = new DataSource({
         TaxSales,
         TaxPurchases,
         Payment,
-        CashManagement,
         Receipt,
         Expenses,
         ExpensesCategory, 
+        CashBox,
+        CashBoxSession,
+        CashMovement,
+    ],
+    migrations: [],
+    subscribers: [
     ]
 });
 
