@@ -55,40 +55,79 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-0">
-            <div class="col-4">
-                <div class="input-container text-center">
-                    <label for="paymentMethod" class="form-label mb-0">Método de Pago</label>
-                    <select class="form-select text-center" id="paymentMethod">
+        <!-- Métodos de Pago -->
+        <div class="row mt-2">
+            <div class="col-12">
+                <label class="form-label mb-0">Métodos de Pago</label>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped text-center align-middle mb-1">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 40%">Caja / Método</th>
+                                <th style="width: 40%">Importe</th>
+                                <th style="width: 20%"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentMethodsTable">
+                            <tr>
+                                <td>
+                                    <select class="form-select text-center paymentMethodSelect">
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control text-center paymentAmount"
+                                        placeholder="0.00">
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm remove-payment">
+                                        X
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                    </select>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="input-container text-center">
-                    <label for="amount" class="form-label mb-0">Monto</label>
-                    <input type="number" id="amount" class="form-control text-center" placeholder="Ingrese el monto" />
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="input-container text-center">
-                    <label for="invoice" class="form-label mb-0">Comprobante</label>
-                    <select class="form-select text-center" id="invoiceList">
-                    </select>
+                <div class="text-end">
+                    <button type="button" class="btn btn-outline-light btn-sm" id="btnAddPaymentMethod">
+                        + Agregar Método
+                    </button>
                 </div>
             </div>
         </div>
-        <div class="row mt-0">
+        <div class="row mt-2">
             <div class="col-12">
-                <div class="form-group mb-1">
-                    <label for="selectItems" class="form-label mb-0">Comprobantes Relacionados</label>
-                    <select multiple size="3" class="w-100 form-select text-center" id="invoiceApply">
-
-                    </select>
+                <label class="form-label mb-0">Comprobantes Relacionados</label>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped text-center align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Comprobante</th>
+                                <th>Saldo</th>
+                                <th>Aplicar</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoiceApply">
+                        </tbody>
+                    </table>
                 </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-12 text-end">
+                <h5 class="mb-0">
+                    Total: <span id="totalAmount" class="text-success">$ 0.00</span>
+                </h5>
+            </div>
+        </div>
+        <!-- Observaciones -->
+        <div class="row mt-2">
+            <div class="col-12">
                 <div class="form-group bg-dark text-white rounded p-2">
-                    <label for="observations" class="form-label">Observaciones</label>
-                    <textarea class="form-control bg-secondary" id="observations" rows="3"></textarea>
+                    <label for="observations" class="form-label mb-1">Observaciones</label>
+                    <textarea class="form-control bg-secondary text-white border-0" id="observations" rows="3"
+                        placeholder="Ingrese una observación opcional..."></textarea>
                 </div>
             </div>
         </div>

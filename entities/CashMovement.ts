@@ -1,21 +1,17 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { CashBoxSession } from "./CashBoxSession";
-import { CashMovementType } from "./CashMovementType";
+import { CashSession } from "./CashSession";
 
 @Entity()
 export class CashMovement {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => CashBoxSession, session => session.movements)
+  @ManyToOne(() => CashSession, session => session.movements)
   @JoinColumn()
-  cashSession: CashBoxSession;
+  cashSession: CashSession;
 
-  @Column({
-    type: 'enum',
-    enum: CashMovementType
-  })
-  type: CashMovementType;
+  @Column()
+  type: 'COBRO' | 'PAGO';
 
   @Column({ type: 'date' })
   date: Date;

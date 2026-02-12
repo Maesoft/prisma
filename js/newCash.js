@@ -7,18 +7,21 @@ const newCash = async () => {
         return;
     }
     const cashExists = await window.prismaFunctions.getCashes();
-
-    if(cashExists.cashes.find(cash => cash.codigo.toLowerCase() === inputCodigo.value.toLowerCase())) {
+    if (!cashExists.success) {
+        window.prismaFunctions.showMSG("error","Prisma", cashExists.message)
+        return        
+    }    
+    if(cashExists?.cashes.find(cash => cash.codigo.toLowerCase() === inputCodigo.value.toLowerCase())) {
         window.prismaFunctions.showMSG("error","Prisma","Ya existe una caja con ese código.");
         return;
     }
-    if (cashExists.cashes.find(cash => cash.nombre.toLowerCase() === inputNombre.value.toLowerCase())) {
+    if (cashExists?.cashes.find(cash => cash.nombre.toLowerCase() === inputNombre.value.toLowerCase())) {
         window.prismaFunctions.showMSG("error", "Prisma", "Ya existe una caja con ese nombre.");
         return;        
     }
     const cashData = {
-        codigo: inputCodigo.value,
-        nombre: inputNombre.value,
+        code: inputCodigo.value,
+        name: inputNombre.value,
     };
     const response = await window.prismaFunctions.addCash(cashData);
     if (response.success) {

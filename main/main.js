@@ -21,6 +21,7 @@ const { TaxPurchases } = require("../entities/TaxPurchases");
 const { Expenses } = require("../entities/Expenses");
 const { ExpensesCategory } = require("../entities/ExpensesCategory");
 const { CashBox } = require("../entities/CashBox");
+const { CashSession } = require("../entities/CashSession");
 
 //Manejo de la App
 app.on("ready", async () => {
@@ -39,7 +40,7 @@ app.on("activate", () => {
   }
 });
 
-//Funciones Genearales
+//Funciones Generales
 ipcMain.handle("open-window", async (event, windowData) => {
   const { windowName, width, height, frame, modal, data } = windowData;
   try {
@@ -66,6 +67,23 @@ ipcMain.handle("open-window", async (event, windowData) => {
 });
 
 //Funciones que interactuan con la BD
+ipcMain.handle("add-cash-session", async (event, cashData) => {
+  try {
+    const cashSessionRepository = AppDataSource.getRepository(CashSession);
+    const newCashSession = cashSessionRepository.create(cashData);
+    await cashSessionRepository.save(newCashSession);
+    return {
+      success: true,
+      message: "Caja abierta exitosamente.",
+      sessionId: newCashSession.id
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+});
 ipcMain.handle("add-cash", async (event, cashData) => {
   try {
     const cashRepository = AppDataSource.getRepository(CashBox);
@@ -87,16 +105,10 @@ ipcMain.handle("edit-cash", async (event, id, cashData) => {
     const cashRepository = AppDataSource.getRepository(CashBox);
 
     const editCash = await cashRepository.findOneBy({ id });
-    
-    //Esto ya no va mas porque no se pueden editar estos campos
-
-    // editCash.codigo = cashData.codigo;
-    // editCash.nombre = cashData.nombre;
-    // editCash.fecha_apertura = cashData.fecha_apertura;
-    // editCash.fecha_cierre = cashData.fecha_cierre;
-    // editCash.saldo_inicial = cashData.saldo_inicial;
-    // editCash.saldo_final = cashData.saldo_final;
-    // editCash.activa = cashData.activa;
+      
+    editCash.code = cashData.codigo;
+    editCash.name = cashData.nombre;
+    editCash.active = cashData.active;
 
     await cashRepository.save(editCash);
     return {
@@ -110,7 +122,18 @@ ipcMain.handle("edit-cash", async (event, id, cashData) => {
     };
   }
 });
-ipcMain.handle("get-cashBox", async () => {
+ipcMain.handle("get-cash-session", async () => {
+  try {
+    const cashRepository = AppDataSource.getRepository(CashSession);
+    const cashes = await cashRepository.find({
+      relations: ['cashBox']
+    });
+    return { success: true, cashes };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+ipcMain.handle("get-cashes", async () => {
   try {
     const cashRepository = AppDataSource.getRepository(CashBox);
     const cashes = await cashRepository.find();

@@ -3,7 +3,7 @@ import { CashBox } from "./CashBox";
 import { CashMovement } from "./CashMovement";
 
 @Entity()
-export class CashBoxSession {
+export class CashSession {
 
   @PrimaryGeneratedColumn()
   id: number;

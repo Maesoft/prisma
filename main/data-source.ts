@@ -18,7 +18,7 @@ import { TaxPurchases } from "../entities/TaxPurchases";
 import { Expenses } from "../entities/Expenses";
 import { ExpensesCategory } from "../entities/ExpensesCategory";
 import { CashBox } from "../entities/CashBox";
-import { CashBoxSession } from "../entities/CashBoxSession";
+import { CashSession } from "../entities/CashSession";
 import { CashMovement } from "../entities/CashMovement";
 
 export const AppDataSource = new DataSource({
@@ -46,7 +46,7 @@ export const AppDataSource = new DataSource({
         Expenses,
         ExpensesCategory, 
         CashBox,
-        CashBoxSession,
+        CashSession,
         CashMovement,
     ],
     migrations: [],

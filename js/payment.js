@@ -64,17 +64,17 @@ const getLastPayment = async () => {
   orderNumber.value = nextNumber;
 };
 const getPayMethods = async () => {
-  const resMethods = await window.prismaFunctions.getCashes();
+  const resMethods = await window.prismaFunctions.getCashSession();
   const paymentMethods = resMethods.cashes;
   paymentMethodSelect.innerHTML = "";
-
+  
   if (!paymentMethods || paymentMethods.length === 0) return;
 
   paymentMethods.forEach((method) => {
-    if (method.activa) {
+    if (method.open) {
       const option = document.createElement("option");
       option.value = method.id;
-      option.textContent = method.nombre;
+      option.textContent = method.cashBox.name;
       paymentMethodSelect.appendChild(option);
     }
   });

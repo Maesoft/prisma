@@ -16,19 +16,13 @@ export class Payment {
     nro_comprobante: string;
 
     @Column({ type: 'decimal', precision: 10, scale: 2 })
-    monto: number;
+    total: number;
 
-    @OneToMany(() => Purchase, (purchase) => purchase.payment, { onDelete: 'SET NULL', nullable: true })
+    @OneToMany(() => Purchase, (purchase) => purchase.payment)
     facturas: Purchase[];
 
-    @OneToOne(() => Expenses, (expense) => expense.payment)
-    gasto: Expenses;
-
-    @ManyToOne(() => Provider, (provider) => provider.payment, { onDelete: 'CASCADE', nullable: true })
+    @ManyToOne(() => Provider, (provider) => provider.payment)
     proveedor: Provider;
-
-    @ManyToOne(() => CashMovement, (cash) => cash.type)
-    movimiento: CashMovement
 
     @Column({ type: 'text', nullable: true })
     observaciones: string;

@@ -15,10 +15,6 @@ export class Expenses {
 
     @ManyToOne(() => ExpensesCategory, (category) => category.expenses)
     categoria: ExpensesCategory;
-
-    @OneToOne(() => Payment, (payment) => payment.gasto, { onDelete: 'SET NULL', nullable: true })
-    @JoinColumn()
-    payment: Payment;
     
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     total: number;
