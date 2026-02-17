@@ -49,7 +49,7 @@ class WindowManager {
       }
     });
   
-    // this.windows[name].webContents.openDevTools();
+    this.windows[name].webContents.openDevTools();
   
     this.windows[name].setMenu(null);
     this.windows[name].loadFile(path.join(__dirname, `../windows/${name}.html`));
