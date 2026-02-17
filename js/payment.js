@@ -197,8 +197,8 @@ const newPayment = async () => {
 };
 
 // Event listeners
-invoiceList.addEventListener("dblclick", () => moveSelected(invoiceList, invoiceApply, +1));
-invoiceApply.addEventListener("dblclick", () => moveSelected(invoiceApply, invoiceList, -1));
+// invoiceList.addEventListener("dblclick", () => moveSelected(invoiceList, invoiceApply, +1));
+// invoiceApply.addEventListener("dblclick", () => moveSelected(invoiceApply, invoiceList, -1));
 orderSupply.addEventListener("keyup", async (e) => {
   if (e.key === "F3") {
     const providerSearchModal = new bootstrap.Modal(document.getElementById("modalProviders"));

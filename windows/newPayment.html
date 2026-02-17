@@ -55,12 +55,34 @@
                 </div>
             </div>
         </div>
-        <!-- Métodos de Pago -->
-        <div class="row mt-2">
+        <div class="row mt-2 small">
+            <div class="col-12">
+                <label class="form-label mb-0">Comprobantes Relacionados</label>
+                <div class="table-responsive table-scroll" style="height: 100px;">
+                    <table class="table table-sm table-striped text-center align-middle mb-1" style="font-size: 0.8rem;">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width:5%"></th>
+                                <th style="width:20%">Comprobante</th>
+                                <th style="width:15%">Fecha</th>
+                                <th style="width:15%">Total</th>
+                                <th style="width:15%">Saldo</th>
+                                <th style="width:20%">Aplicar</th>
+                                <th style="width:10%"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoiceApply">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-2 small">
             <div class="col-12">
                 <label class="form-label mb-0">Métodos de Pago</label>
-                <div class="table-responsive">
-                    <table class="table table-sm table-striped text-center align-middle mb-1">
+                <div class="table-responsive table-scroll mb-1" style="height: 100px;">
+                    <table class="table table-sm table-striped text-center align-middle mb-1" style="font-size: 0.8rem;">
                         <thead class="table-dark">
                             <tr>
                                 <th style="width: 40%">Caja / Método</th>
@@ -71,15 +93,16 @@
                         <tbody id="paymentMethodsTable">
                             <tr>
                                 <td>
-                                    <select class="form-select text-center paymentMethodSelect">
+                                    <select class="text-center paymentMethodSelect">
+                                        <option value="">Seleccione una caja</option>
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control text-center paymentAmount"
+                                    <input type="number" class=" text-center paymentAmount"
                                         placeholder="0.00">
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger btn-sm remove-payment">
+                                    <button class="btn btn-danger btn-sm py-0 px-2 remove-payment">
                                         X
                                     </button>
                                 </td>
@@ -89,31 +112,14 @@
                 </div>
 
                 <div class="text-end">
-                    <button type="button" class="btn btn-outline-light btn-sm" id="btnAddPaymentMethod">
+                    <button type="button" class="btn btn-dark btn-sm py-1 px-2" id="btnAddPaymentMethod">
                         + Agregar Método
                     </button>
                 </div>
             </div>
         </div>
-        <div class="row mt-2">
-            <div class="col-12">
-                <label class="form-label mb-0">Comprobantes Relacionados</label>
-                <div class="table-responsive">
-                    <table class="table table-sm table-striped text-center align-middle">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Comprobante</th>
-                                <th>Saldo</th>
-                                <th>Aplicar</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="invoiceApply">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+
+
         <div class="row mt-2">
             <div class="col-12 text-end">
                 <h5 class="mb-0">
@@ -126,8 +132,7 @@
             <div class="col-12">
                 <div class="form-group bg-dark text-white rounded p-2">
                     <label for="observations" class="form-label mb-1">Observaciones</label>
-                    <textarea class="form-control bg-secondary text-white border-0" id="observations" rows="3"
-                        placeholder="Ingrese una observación opcional..."></textarea>
+                    <textarea class="form-control bg-secondary text-white border-0" id="observations" rows="3"></textarea>
                 </div>
             </div>
         </div>

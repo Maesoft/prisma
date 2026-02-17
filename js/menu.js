@@ -84,7 +84,7 @@ const menuTemplate = [
   {
     label: 'Caja',
     submenu: [
-      { label: 'Orden de Pago', click: () => { windowManager.createWindow("newPayment", 640,550,true,false) } },
+      { label: 'Orden de Pago', click: () => { windowManager.createWindow("newPayment", 850,680,true,false) } },
       { label: 'Recibo', click: () => { windowManager.createWindow("newReceipt", 640,550,true,false) } },
       { type: 'separator' },
       { label: 'Apertura de Caja', click: () => { windowManager.createWindow("openCash", 540, 360, true, false) } },
