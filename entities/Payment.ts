@@ -1,8 +1,8 @@
 import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Provider } from "./Provider";
 import { Purchase } from "./Purchase";
-import { CashManagement } from "./CashManagement";
 import { Expenses } from "./Expenses";
+import { CashMovement } from "./CashMovement";
 
 @Entity()
 export class Payment {
@@ -16,19 +16,13 @@ export class Payment {
     nro_comprobante: string;
 
     @Column({ type: 'decimal', precision: 10, scale: 2 })
-    monto: number;
+    total: number;
 
-    @OneToMany(() => Purchase, (purchase) => purchase.payment, { onDelete: 'SET NULL', nullable: true })
+    @OneToMany(() => Purchase, (purchase) => purchase.payment)
     facturas: Purchase[];
 
-    @OneToOne(() => Expenses, (expense) => expense.payment)
-    gasto: Expenses;
-
-    @ManyToOne(() => Provider, (provider) => provider.payment, { onDelete: 'CASCADE', nullable: true })
+    @ManyToOne(() => Provider, (provider) => provider.payment)
     proveedor: Provider;
-
-    @ManyToOne(() => CashManagement, (cash) => cash.payment)
-    caja: CashManagement
 
     @Column({ type: 'text', nullable: true })
     observaciones: string;

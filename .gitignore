@@ -1,5 +1,5 @@
 node_modules
 dist
-db/prisma_contable.sqlite
+db
 entities/*.js
 main/data-source.js

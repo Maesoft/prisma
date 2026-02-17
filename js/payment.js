@@ -1,5 +1,5 @@
 const dateNow = new Date().toISOString().split("T")[0];
-
+const inputModalProviders = document.querySelector("#inputModalProviders");
 const orderNumber = document.querySelector("#orderNumber");
 const orderDate = document.querySelector("#paymentDate");
 const orderSupply = document.querySelector("#customerName");
@@ -64,17 +64,17 @@ const getLastPayment = async () => {
   orderNumber.value = nextNumber;
 };
 const getPayMethods = async () => {
-  const resMethods = await window.prismaFunctions.getCashes();
+  const resMethods = await window.prismaFunctions.getCashSession();
   const paymentMethods = resMethods.cashes;
   paymentMethodSelect.innerHTML = "";
-
+  
   if (!paymentMethods || paymentMethods.length === 0) return;
 
   paymentMethods.forEach((method) => {
-    if (method.activa) {
+    if (method.open) {
       const option = document.createElement("option");
       option.value = method.id;
-      option.textContent = method.nombre;
+      option.textContent = method.cashBox.name;
       paymentMethodSelect.appendChild(option);
     }
   });
@@ -197,9 +197,8 @@ const newPayment = async () => {
 };
 
 // Event listeners
-invoiceList.addEventListener("dblclick", () => moveSelected(invoiceList, invoiceApply, +1));
-invoiceApply.addEventListener("dblclick", () => moveSelected(invoiceApply, invoiceList, -1));
-orderSupply.addEventListener("focusout", selectProvider);
+// invoiceList.addEventListener("dblclick", () => moveSelected(invoiceList, invoiceApply, +1));
+// invoiceApply.addEventListener("dblclick", () => moveSelected(invoiceApply, invoiceList, -1));
 orderSupply.addEventListener("keyup", async (e) => {
   if (e.key === "F3") {
     const providerSearchModal = new bootstrap.Modal(document.getElementById("modalProviders"));
@@ -209,6 +208,15 @@ orderSupply.addEventListener("keyup", async (e) => {
     setTimeout(() => inputModalProviders.focus(), 200);
   }
   if (e.key === "Enter") selectProvider();
+});
+inputModalProviders.addEventListener("input", (e) => {
+  const criterio = e.target.value;
+  const filteredProviders = providers.filter((provider) =>
+    provider.razon_social.toLowerCase().includes(criterio.toLowerCase()) ||
+    provider.codigo.toLowerCase().includes(criterio.toLowerCase()) ||
+    provider.cuit.toLowerCase().includes(criterio.toLowerCase())
+  );
+  renderProviders(filteredProviders);
 });
 btnGenerate.addEventListener("click", newPayment);
 document.addEventListener("DOMContentLoaded", async () => {

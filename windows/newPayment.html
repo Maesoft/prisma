@@ -5,16 +5,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
     <script defer src="../js/bootstrap.min.js"></script>
     <script defer src="../js/payment.js"></script>
     <title>Prisma</title>
 </head>
 <style>
-
     @media print {
         .btn {
             display: none;
         }
+
         #invoiceApply {
             height: auto !important;
             max-height: none !important;
@@ -22,11 +23,13 @@
             border: none;
         }
     }
+
     @page {
         size: A4 Portrait;
         margin: 0;
     }
 </style>
+
 <body>
     <div class="p-3">
         <h1 class="mb-0">Orden de Pago</h1>
@@ -52,40 +55,84 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-0">
-            <div class="col-4">
-                <div class="input-container text-center">
-                    <label for="paymentMethod" class="form-label mb-0">Método de Pago</label>
-                    <select class="form-select text-center" id="paymentMethod">
-
-                    </select>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="input-container text-center">
-                    <label for="amount" class="form-label mb-0">Monto</label>
-                    <input type="number" id="amount" class="form-control text-center" placeholder="Ingrese el monto" />
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="input-container text-center">
-                    <label for="invoice" class="form-label mb-0">Comprobante</label>
-                    <select class="form-select text-center" id="invoiceList">
-                    </select>
+        <div class="row mt-2 small">
+            <div class="col-12">
+                <label class="form-label mb-0">Comprobantes Relacionados</label>
+                <div class="table-responsive table-scroll" style="height: 100px;">
+                    <table class="table table-sm table-striped text-center align-middle mb-1" style="font-size: 0.8rem;">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width:5%"></th>
+                                <th style="width:20%">Comprobante</th>
+                                <th style="width:15%">Fecha</th>
+                                <th style="width:15%">Total</th>
+                                <th style="width:15%">Saldo</th>
+                                <th style="width:20%">Aplicar</th>
+                                <th style="width:10%"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoiceApply">
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-        <div class="row mt-0">
-            <div class="col-12">
-                <div class="form-group mb-1">
-                    <label for="selectItems" class="form-label mb-0">Comprobantes Relacionados</label>
-                    <select multiple size="3" class="w-100 form-select text-center" id="invoiceApply">
 
-                    </select>
+        <div class="row mt-2 small">
+            <div class="col-12">
+                <label class="form-label mb-0">Métodos de Pago</label>
+                <div class="table-responsive table-scroll mb-1" style="height: 100px;">
+                    <table class="table table-sm table-striped text-center align-middle mb-1" style="font-size: 0.8rem;">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width: 40%">Caja / Método</th>
+                                <th style="width: 40%">Importe</th>
+                                <th style="width: 20%"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentMethodsTable">
+                            <tr>
+                                <td>
+                                    <select class="text-center paymentMethodSelect">
+                                        <option value="">Seleccione una caja</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" class=" text-center paymentAmount"
+                                        placeholder="0.00">
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm py-0 px-2 remove-payment">
+                                        X
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="form-group bg-dark text-white rounded p-2"> 
-                    <label for="observations" class="form-label">Observaciones</label>
-                    <textarea class="form-control bg-secondary" id="observations" rows="3"></textarea>
+
+                <div class="text-end">
+                    <button type="button" class="btn btn-dark btn-sm py-1 px-2" id="btnAddPaymentMethod">
+                        + Agregar Método
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mt-2">
+            <div class="col-12 text-end">
+                <h5 class="mb-0">
+                    Total: <span id="totalAmount" class="text-success">$ 0.00</span>
+                </h5>
+            </div>
+        </div>
+        <!-- Observaciones -->
+        <div class="row mt-2">
+            <div class="col-12">
+                <div class="form-group bg-dark text-white rounded p-2">
+                    <label for="observations" class="form-label mb-1">Observaciones</label>
+                    <textarea class="form-control bg-secondary text-white border-0" id="observations" rows="3"></textarea>
                 </div>
             </div>
         </div>
@@ -100,7 +147,7 @@
     </div>
 </body>
 <div class="modal fade" id="modalProviders" data-bs-backdrop="static" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="max-width: 550px; max-height: 400px;">
         <div class="modal-content">
             <div class="modal-header bg-black text-white">
                 <h5 class="modal-title" id="providerSearchModalLabel">
@@ -111,21 +158,23 @@
             <div class="form-group p-4">
                 <input type="text" class="form-control bg-secondary" id="inputModalProviders" tabindex="1" />
             </div>
+            <div class="modal-body">
+                <div class="table-scroll">
+                    <table class="table table-striped text-center w-100" style="cursor: default; font-size: 0.8rem;">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Código</th>
+                                <th>Razon Social</th>
+                                <th>CUIT</th>
+                                <th>Regimen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listProviders" style="cursor: pointer;">
 
-            <table class="table text-center" style="cursor: default;">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Razon Social</th>
-                        <th>CUIT</th>
-                        <th>Regimen</th>
-                    </tr>
-                </thead>
-                <tbody id="listProviders" style="cursor: pointer;">
-
-                </tbody>
-            </table>
-
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

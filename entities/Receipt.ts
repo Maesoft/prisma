@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Client } from "./Client";
 import { Sale } from "./Sale";
-import { CashManagement } from "./CashManagement";
+import { CashMovement } from "./CashMovement";
 
 @Entity()
 export class Receipt {
@@ -23,6 +23,6 @@ export class Receipt {
     @ManyToOne(() => Client, (client) => client.sales)
     cliente: Client;
 
-    @ManyToOne(() => CashManagement, (cash) => cash.receipt)
-    caja: CashManagement[];
+    @ManyToOne(() => CashMovement, (cash) => cash.type)
+    movimiento: CashMovement;
 }

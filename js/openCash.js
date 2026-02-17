@@ -37,19 +37,48 @@ const getCashes = async () => {
   }
 };
 const openCash = async () => {
+
+  const cashSessionData = {
+    cashBox: {id: cashId},
+    openedAt: formatDateAndTime(),
+    openingAmount: Number(inputMontoInicial.value),
+    open: true,
+  }
+
+  const resCashSession = await window.prismaFunctions.addCashSession(cashSessionData)
+
+  if(!resCashSession.success){
+    window.prismaFunctions.showMSG("error","Prisma", resCashSession.message)
+    return
+  }
+
   const cashData = {
-    fecha_apertura: formatDateAndTime(),
-    saldo_inicial: parseFloat(inputMontoInicial.value) | 0,
-    activa: true,
+    active: true,
   };
 
-  const res = await window.prismaFunctions.editCash(cashId, cashData);
-  if (res.success) {
+  const resCash = await window.prismaFunctions.editCash(cashId, cashData);
+
+  if (!resCash.success) {
+    window.prismaFunctions.showMSG("error", "Prisma", `Error al abrir la caja: ${res.message}`);
+    return
+  } 
+
     window.prismaFunctions.showMSG(
       "info",
       "Prisma",
       `Caja abierta correctamente.`
     );
+   cleanFields();
+}
+const loadForm = (cash) => {
+  cashId = cash.id;
+  labelNombreCaja.innerText = cash.name;
+  inputFechaHora.value = formatDateAndTime();
+  modal.style.display = "none";
+  modal.classList.remove("show", "d-flex", "justify-content-center");
+  inputCash.focus();
+};
+const cleanFields = () => {
     inputMontoInicial.value = "";
     inputFechaHora.value = "";
     labelNombreCaja.innerText = "";
@@ -57,34 +86,19 @@ const openCash = async () => {
     modal.classList.add("show", "d-flex", "justify-content-center");
     inputCash.focus();
     renderCashesModal();
-  } else {
-    window.prismaFunctions.showMSG(
-      "error",
-      "Prisma",
-      `Error al abrir la caja: ${res.message}`
-    );
-  }
-};
-const loadForm = (cash) => {
-  cashId = cash.id;
-  labelNombreCaja.innerText = cash.nombre;
-  inputFechaHora.value = formatDateAndTime();
-  modal.style.display = "none";
-  modal.classList.remove("show", "d-flex", "justify-content-center");
-  inputCash.focus();
-};
+}
 const renderCashesModal = async () => {
   const cashes = await getCashes();
   const cashTable = document.querySelector("#cashTable tbody");
   cashTable.innerHTML = "";
   cashes.forEach((cash) => {
-    if (cash.activa) {
+    if (cash.active) {
       return;
     }
     const row = document.createElement("tr");
     row.innerHTML = `
-            <td>${cash.codigo}</td>
-            <td>${cash.nombre}</td>
+            <td>${cash.code}</td>
+            <td>${cash.name}</td>
             `;
     row.addEventListener("click", () => loadForm(cash));
     cashTable.appendChild(row);
