@@ -13,7 +13,7 @@ const calcularDiasMora = (fechaBase) => {
 
   return diffDays > 0 ? diffDays : 0;
 };
-const getClientsReceivables = async () => {
+const getClientsReceivables = async (minDiasMora = 0) => {
   try {
     const res = await window.prismaFunctions.getClients();
 
@@ -23,8 +23,7 @@ const getClientsReceivables = async () => {
     }
 
     const clients = res.clients;
-    console.log(clients);
-    
+
     const clientsReceivables = clients
       .map((client) => {
         const totalSales = client.sales.reduce(
@@ -39,12 +38,10 @@ const getClientsReceivables = async () => {
 
         const saldo = totalSales - totalReceipts;
 
-        // Fecha base para mora
         let fechaBase = null;
 
         if (client.receipt.length > 0) {
-          fechaBase =
-            client.receipt[client.receipt.length - 1].fecha;
+          fechaBase = client.receipt[client.receipt.length - 1].fecha;
         } else if (client.sales.length > 0) {
           fechaBase = client.sales[0].fecha;
         }
@@ -57,7 +54,10 @@ const getClientsReceivables = async () => {
           diasMora,
         };
       })
-      .filter((client) => client.saldo > 0)
+      .filter(
+        (client) =>
+          client.saldo > 0 && client.diasMora >= minDiasMora
+      )
       .sort((a, b) => b.diasMora - a.diasMora);
 
     return clientsReceivables;
@@ -71,8 +71,8 @@ const getClientsReceivables = async () => {
     return [];
   }
 };
-const renderClientsTable = async () => {
-  const clients = await getClientsReceivables();
+const renderClientsTable = async (minDiasMora = 0) => {
+  const clients = await getClientsReceivables(minDiasMora);
   const tableBody = document.getElementById("clientsTableBody");
 
   tableBody.innerHTML = "";
@@ -100,13 +100,13 @@ const renderClientsTable = async () => {
     tableBody.appendChild(row);
   });
 
-  // Actualizar resumen inferior
   document.getElementById("totalCobrar").innerText =
     "$ " +
     totalGeneral.toLocaleString("es-AR", {
       minimumFractionDigits: 2,
     });
 };
+
 document.addEventListener("DOMContentLoaded", () => {
   const fechaEmision = document.getElementById("fechaEmision");
   const fechaActual = new Date().toISOString().split("T")[0];
@@ -115,5 +115,34 @@ document.addEventListener("DOMContentLoaded", () => {
     fechaActual
   )}`;
 
-  renderClientsTable();
+  const modalElement = document.getElementById("filtroMoraModal");
+  const modal = new bootstrap.Modal(modalElement);
+
+  // Mostrar automáticamente
+  modal.show();
+
+  const input = document.getElementById("inputDiasMora");
+  input.focus();
+
+  // Permitir Enter
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      document.getElementById("btnAplicarFiltro").click();
+    }
+  });
+
+  // Aplicar filtro
+  document.getElementById("btnAplicarFiltro").addEventListener("click", () => {
+    const dias = parseInt(input.value);
+
+    if (isNaN(dias) || dias < 0) {
+      alert("Ingrese un número válido mayor o igual a 0");
+      input.focus();
+      return;
+    }
+
+    renderClientsTable(dias);
+    modal.hide();
+  });
 });
+
