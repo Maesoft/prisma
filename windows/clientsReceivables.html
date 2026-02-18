@@ -68,6 +68,13 @@
         width: 220px;
     }
 
+    .footer-report {
+        display: none;
+    }
+    .nombre-cobrador {
+        display: none;
+    }
+
     @media print {
 
         html,
@@ -97,6 +104,12 @@
         table {
             width: 100% !important;
         }
+        .footer-report {
+            display: block !important;
+        }
+        .nombre-cobrador {
+            display: block !important;
+        }
     }
 </style>
 
@@ -110,7 +123,7 @@
                 <strong>Reporte de Cobranza Domiciliaria</strong><br>
                 <span id="fechaEmision"></span>
             </div>
-            <div>
+            <div class="nombre-cobrador">
                 Cobrador: ___________________________<br>
                 Zona: _______________________________
             </div>
@@ -173,9 +186,8 @@
 
         <!-- BOTONES -->
         <div class="text-center mt-4">
-            <img src="../assets/impresora.png" alt="Imprimir..." class="boton-imprimir"
-                style="cursor:pointer; width:40px;" onclick="window.print()" />
             <button class="btn btn-dark ms-3" onclick="window.close()">Cerrar</button>
+            <button class="btn btn-secondary ms-3" onclick="window.print()">Imprimir</button>
         </div>
 
     </div>
@@ -184,6 +196,34 @@
         const fecha = new Date().toLocaleDateString();
         document.getElementById("fechaEmision").innerText = fecha;
     </script>
+
+    <!-- MODAL FILTRO DIAS MORA -->
+    <div class="modal fade" id="filtroMoraModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Filtrar Clientes por Días de Mora</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label class="form-label">Mostrar clientes con dias de mora mayor a:</label>
+                    <input type="number" id="inputDiasMora" class="form-control" min="0" value="0">
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-dark" id="btnAplicarFiltro">
+                        Aplicar Filtro
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 
 </body>
 
