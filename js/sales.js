@@ -398,7 +398,8 @@ const loadInteres = async () => {
     const option = document.createElement("option");
     option.value = item.porcentaje;
     option.cuotas = item.cuotas;
-    option.textContent = `${item.cuotas} cuotas (${item.porcentaje}%)`;
+    option.frecuencia = item.frecuencia;
+    option.textContent = `${item.cuotas} cuotas ${item.frecuencia} (${item.porcentaje}%)`;
     selectCondicion.appendChild(option);
   });
 };
@@ -703,7 +704,7 @@ const detallarCondicionVenta = () => {
   if (selectedOption.value === "0") {
     observacion.value = "Venta al contado.";
   } else {
-    observacion.value = `Venta en ${selectedOption.cuotas} cuotas de $${(
+    observacion.value = `Venta en ${selectedOption.cuotas} cuotas ${selectedOption.frecuencia} de $${(
       total / selectedOption.cuotas
     ).toLocaleString("es-AR", {
       minimumFractionDigits: 2,

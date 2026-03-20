@@ -8,6 +8,9 @@ export class Installments {
     @Column()
     cuotas: number
 
+    @Column({ default: "mensuales" })
+    frecuencia: string
+
     @Column()
     porcentaje: number
 }

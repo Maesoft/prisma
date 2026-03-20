@@ -2,6 +2,7 @@ const installmentsTableBody = document.getElementById("installmentsTableBody");
 const cuota = document.getElementById("cuota");
 const interes = document.getElementById("interes");
 const addInstallmentBtn = document.getElementById("addInstallmentBtn");
+const frecuencia = document.getElementById("frecuencia");
 
 const loadInstallments = async () => {
   const res = await window.prismaFunctions.getInstallments();
@@ -12,25 +13,32 @@ const loadInstallments = async () => {
   installments.forEach((installment) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-            <td>${installment.cuotas}</td>
-            <td>
-            <span class="mx-1">%${installment.porcentaje}</span> 
-              <button 
-              class="btn btn-dark btn-sm p-0 btn-remove delete-installment-btn" 
-              style="width: 20px; height: 20px; font-size: 0.6rem; line-height: 1; margin: 0;" 
-              data-id="${installment.id}">✖
-              </button>
-            </td>
-        `;
+  <td>${installment.cuotas}</td>
+  <td>
+    <span class="mx-1">${installment.frecuencia}</span> 
+
+  </td>
+  <td>
+  <span class="badge bg-secondary">%${installment.porcentaje}</span>
+      <button 
+      class="btn btn-dark btn-sm p-0 btn-remove delete-installment-btn" 
+      style="width: 20px; height: 20px; font-size: 0.6rem; line-height: 1; margin: 0;" 
+      data-id="${installment.id}">
+      ✖
+    </button>
+  </td>
+`;
     installmentsTableBody.appendChild(row);
   });
 };
 
 const createInstallment = async () => {
   if (!validationFields()) return;
+
   const installmentData = {
     cuotas: Number(cuota.value),
     porcentaje: Number(interes.value),
+    frecuencia: frecuencia.value,
   };
 
   const res = await window.prismaFunctions.addInstallment(installmentData);
@@ -45,8 +53,8 @@ const createInstallment = async () => {
 const cleanFields = () => {
   cuota.value = "";
   interes.value = "";
+  frecuencia.value = "mensual";
 };
-
 const validationFields = () => {
   if (cuota.value == "" || interes.value == "") {
     window.prismaFunctions.showMSG(
